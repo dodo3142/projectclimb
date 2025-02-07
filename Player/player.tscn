@@ -1,12 +1,16 @@
-[gd_scene load_steps=15 format=3 uid="uid://cxeijgsmqxr5s"]
+[gd_scene load_steps=21 format=3 uid="uid://cxeijgsmqxr5s"]
 
 [ext_resource type="Script" path="res://Player/player.gd" id="1_1kw6n"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="2_f8f2m"]
 [ext_resource type="Script" path="res://Player/camera_joint.gd" id="2_kypek"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="3_3lpyv"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="3_u1fyy"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="4_4vu8t"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_i72ff"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_putqt"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_2reyu"]
 [ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="7_wcfuw"]
+[ext_resource type="PackedScene" uid="uid://cggqb75a8w8r" path="res://addons/debug_menu/debug_menu.tscn" id="8_jrdd2"]
 [ext_resource type="ArrayMesh" uid="uid://deu06eho4c74" path="res://DustTest/dust.res" id="11_8m8p3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_74g7w"]
@@ -19,11 +23,29 @@ albedo_color = Color(0, 0, 0, 1)
 [sub_resource type="SphereMesh" id="SphereMesh_mdhr0"]
 material = SubResource("StandardMaterial3D_rkrj8")
 
-[sub_resource type="SphereMesh" id="SphereMesh_5n68b"]
+[sub_resource type="Resource" id="Resource_kbxdc"]
+script = ExtResource("3_3lpyv")
+duration = 1.0
+transition = 0
+ease = 2
+
+[sub_resource type="Resource" id="Resource_57wer"]
+script = ExtResource("4_4vu8t")
+cull_mask = 983039
+h_offset = 0.0
+v_offset = 0.0
+projection = 0
+fov = 75.0
+size = 1.0
+frustum_offset = Vector2(0, 0)
+near = 0.05
+far = 4000.0
 
 [sub_resource type="Curve" id="Curve_af5np"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.247813, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
+
+[sub_resource type="SphereMesh" id="SphereMesh_5n68b"]
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -34,21 +56,24 @@ Decla = 200.0
 JumpForce = 25.0
 JumpGravity = 70.0
 JumpStopMult = 0.5
+lean_speed = 3.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_74g7w")
 
-[node name="PlayerModle" type="MeshInstance3D" parent="."]
+[node name="ModlePovit" type="Node3D" parent="."]
+
+[node name="PlayerModle" type="MeshInstance3D" parent="ModlePovit"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_ouo5f")
-skeleton = NodePath("../CollisionShape3D")
+skeleton = NodePath("../../CollisionShape3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerModle"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ModlePovit/PlayerModle"]
 transform = Transform3D(0.227033, 0, 0, 0, 0.227033, 0, 0, 0, 0.227033, 0.187531, 0.528621, -0.434562)
 mesh = SubResource("SphereMesh_mdhr0")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="PlayerModle"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="ModlePovit/PlayerModle"]
 transform = Transform3D(0.227033, 0, 0, 0, 0.227033, 0, 0, 0, 0.227033, -0.19433, 0.528621, -0.434562)
 mesh = SubResource("SphereMesh_mdhr0")
 
@@ -57,6 +82,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="CameraJoint" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+visible = false
 script = ExtResource("2_kypek")
 Mouse_Sensitivity = 0.2
 
@@ -64,8 +90,31 @@ Mouse_Sensitivity = 0.2
 spring_length = 7.0
 margin = 0.02
 
-[node name="Camera3D" type="Camera3D" parent="CameraJoint/SpringArm3D"]
-cull_mask = 983039
+[node name="PhantomCamera3D" type="Node3D" parent="CameraJoint/SpringArm3D" node_paths=PackedStringArray("follow_target", "look_at_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+script = ExtResource("2_f8f2m")
+priority = 1
+follow_target = NodePath("../..")
+look_at_target = NodePath("../../..")
+tween_resource = SubResource("Resource_kbxdc")
+camera_3d_resource = SubResource("Resource_57wer")
+
+[node name="MovingParticles" type="CPUParticles3D" parent="."]
+transform = Transform3D(2.24883, 0, 0, 0, 2.24883, 0, 0, 0, 2.24883, 0, 0, 0)
+amount = 60
+mesh = ExtResource("11_8m8p3")
+emission_shape = 1
+emission_sphere_radius = 0.1
+particle_flag_align_y = true
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0.1, 0)
+scale_amount_min = 0.75
+scale_amount_curve = SubResource("Curve_af5np")
+
+[node name="GrassInteract" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.986852, 0, 0, 0, 0.986852, 0, 0, 0, 0.986852, 0, 0.481205, 0)
+layers = 65536
+mesh = SubResource("SphereMesh_5n68b")
 
 [node name="Timers" type="Node" parent="."]
 
@@ -168,22 +217,7 @@ grow_horizontal = 0
 grow_vertical = 1
 initial_node_to_watch = NodePath("../../StateManger")
 
-[node name="GrassInteract" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.986852, 0, 0, 0, 0.986852, 0, 0, 0, 0.986852, 0, 0.481205, 0)
-layers = 65536
-mesh = SubResource("SphereMesh_5n68b")
-
-[node name="MovingParticles" type="CPUParticles3D" parent="."]
-transform = Transform3D(2.24883, 0, 0, 0, 2.24883, 0, 0, 0, 2.24883, 0, 0, 0)
-amount = 60
-mesh = ExtResource("11_8m8p3")
-emission_shape = 1
-emission_sphere_radius = 0.1
-particle_flag_align_y = true
-direction = Vector3(0, 0, 0)
-gravity = Vector3(0, 0.1, 0)
-scale_amount_min = 0.75
-scale_amount_curve = SubResource("Curve_af5np")
+[node name="CanvasLayer" parent="Debug" instance=ExtResource("8_jrdd2")]
 
 [connection signal="timeout" from="Timers/JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]
