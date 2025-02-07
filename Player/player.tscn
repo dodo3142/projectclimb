@@ -33,14 +33,7 @@ Accel = 200.0
 Decla = 200.0
 JumpForce = 25.0
 JumpGravity = 70.0
-JumpApexMax = null
-JumpApexGravity = null
-FallGravity = null
-MaxFallSpeed = null
 JumpStopMult = 0.5
-RotationSpeed = null
-JumpBufferTime = null
-JumpCoyoteTime = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

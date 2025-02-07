@@ -31,6 +31,7 @@ var CanChangeInput : bool = true
 var CanJump : bool = false
 var TryingToJump : bool = false
 var CanRotate : bool = true
+var previously_floored : bool = false
 
 @onready var CameraJoint = $CameraJoint
 @onready var StateManger = $StateManger
@@ -47,7 +48,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	HandleInput(delta)
 	HandleStateEvents()
-	HandleEffects()
+	HandleEffects(delta)
 	Rotations(delta)
 	JumpingInput()
 
@@ -56,13 +57,18 @@ func _physics_process(delta: float) -> void:
 	velocity = AppliedVelocity
 	move_and_slide()
 
-func HandleEffects():
+func HandleEffects(delta):
 	if is_on_floor() and velocity != Vector3.ZERO:
 		$MovingParticles.emitting = true
 	else:
 		$MovingParticles.emitting = false
 	
 	PlayerModle.scale = PlayerModle.scale.lerp(Vector3(1, 1, 1), delta * 10)
+	
+	if is_on_floor() and AppliedVelocity.y < 2 and !previously_floored:
+		PlayerModle.scale = Vector3(1.25, 0.75, 1.25)
+	
+	previously_floored = is_on_floor()
 
 func SetTimers():
 	JumpBufferTimer.wait_time = JumpBufferTime
@@ -73,7 +79,7 @@ func Rotations(delta):
 		rotation_direction = Vector2(-LastInputDir.z, -LastInputDir.x).angle()
 	
 	if CanRotate:
-		$MeshInstance3D.rotation.y = lerp_angle($MeshInstance3D.rotation.y, rotation_direction, delta * RotationSpeed)
+		PlayerModle.rotation.y = lerp_angle(PlayerModle.rotation.y, rotation_direction, delta * RotationSpeed)
 
 func HandleStateEvents():
 	if is_on_floor() and AppliedVelocity.y <= 0:
@@ -137,6 +143,7 @@ func _on_jump_state_state_entered() -> void:
 	AppliedVelocity.y = JumpForce
 	TryingToJump = false
 	CanJump = false
+	PlayerModle.scale = Vector3(0.5, 1.5, 0.5)
 	if !Input.is_action_pressed("Jump"):
 		AppliedVelocity.y = AppliedVelocity.y * JumpStopMult
 
