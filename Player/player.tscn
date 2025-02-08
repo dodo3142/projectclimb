@@ -1,14 +1,14 @@
 [gd_scene load_steps=21 format=3 uid="uid://cxeijgsmqxr5s"]
 
-[ext_resource type="Script" path="res://Player/player.gd" id="1_1kw6n"]
-[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="2_f8f2m"]
-[ext_resource type="Script" path="res://Player/camera_joint.gd" id="2_kypek"]
-[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="3_3lpyv"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="3_u1fyy"]
-[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="4_4vu8t"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="4_i72ff"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="5_putqt"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="6_2reyu"]
+[ext_resource type="Script" uid="uid://dmp00kypbqwqu" path="res://Player/player.gd" id="1_1kw6n"]
+[ext_resource type="Script" uid="uid://7cgmmoakkjh4" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="2_f8f2m"]
+[ext_resource type="Script" uid="uid://dkq8hvijv3xtv" path="res://Player/camera_joint.gd" id="2_kypek"]
+[ext_resource type="Script" uid="uid://b12xtg1bxui0c" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="3_3lpyv"]
+[ext_resource type="Script" uid="uid://dvhdr6hrurgju" path="res://addons/godot_state_charts/state_chart.gd" id="3_u1fyy"]
+[ext_resource type="Script" uid="uid://c4ubq0pd57d04" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="4_4vu8t"]
+[ext_resource type="Script" uid="uid://c135mbmt88ngf" path="res://addons/godot_state_charts/compound_state.gd" id="4_i72ff"]
+[ext_resource type="Script" uid="uid://bxjee373rpgub" path="res://addons/godot_state_charts/atomic_state.gd" id="5_putqt"]
+[ext_resource type="Script" uid="uid://dgxi8p03sgu5y" path="res://addons/godot_state_charts/transition.gd" id="6_2reyu"]
 [ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="7_wcfuw"]
 [ext_resource type="PackedScene" uid="uid://cggqb75a8w8r" path="res://addons/debug_menu/debug_menu.tscn" id="8_jrdd2"]
 [ext_resource type="ArrayMesh" uid="uid://deu06eho4c74" path="res://DustTest/dust.res" id="11_8m8p3"]
@@ -90,12 +90,10 @@ Mouse_Sensitivity = 0.2
 spring_length = 7.0
 margin = 0.02
 
-[node name="PhantomCamera3D" type="Node3D" parent="CameraJoint/SpringArm3D" node_paths=PackedStringArray("follow_target", "look_at_target")]
+[node name="PhantomCamera3D" type="Node3D" parent="CameraJoint/SpringArm3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 script = ExtResource("2_f8f2m")
 priority = 1
-follow_target = NodePath("../..")
-look_at_target = NodePath("../../..")
 tween_resource = SubResource("Resource_kbxdc")
 camera_3d_resource = SubResource("Resource_57wer")
 

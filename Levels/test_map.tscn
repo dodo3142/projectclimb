@@ -1,11 +1,11 @@
 [gd_scene load_steps=14 format=4 uid="uid://jsc6conj0oli"]
 
-[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_h3q3j"]
+[ext_resource type="Script" uid="uid://wtvnqk6rsb2i" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_h3q3j"]
 [ext_resource type="Texture2D" uid="uid://bjjdtab86e5tq" path="res://addons/kenney_prototype_textures/dark/texture_08.png" id="3_00aqh"]
 [ext_resource type="PackedScene" uid="uid://cxeijgsmqxr5s" path="res://Player/player.tscn" id="3_trcud"]
-[ext_resource type="Shader" path="res://addons/simplegrasstextured/shaders/grass.gdshader" id="4_lqd3n"]
+[ext_resource type="Shader" uid="uid://dxq1016uxckpj" path="res://addons/simplegrasstextured/shaders/grass.gdshader" id="4_lqd3n"]
 [ext_resource type="Texture2D" uid="uid://c4ggdp0kg5wjk" path="res://addons/simplegrasstextured/textures/grassbushcc008.png" id="5_1kuxs"]
-[ext_resource type="Script" path="res://addons/simplegrasstextured/grass.gd" id="6_n010q"]
+[ext_resource type="Script" uid="uid://b076bq7rmhxps" path="res://addons/simplegrasstextured/grass.gd" id="6_n010q"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jlvxq"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -30,6 +30,7 @@ resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("4_lqd3n")
 shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = ExtResource("5_1kuxs")
 shader_parameter/texture_frames = Vector2(1, 1)
 shader_parameter/light_mode = 1
 shader_parameter/alpha_scissor_threshold = 0.5
@@ -51,7 +52,6 @@ shader_parameter/grass_size_y = 1.0
 shader_parameter/interactive_mode = true
 shader_parameter/interactive_level_xz = 10.0
 shader_parameter/interactive_level_y = 0.3
-shader_parameter/texture_albedo = ExtResource("5_1kuxs")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_qmmua"]
 _surfaces = [{
@@ -77,6 +77,9 @@ buffer = PackedFloat32Array(-0.687045, 0, 0.726615, -7.15873, 0, 1, 0, 0.5, -0.7
 [node name="Test_Map" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.50051, 2.5, 0.630947)
+cull_mask = 983039
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D"]
 process_priority = 300
@@ -92,6 +95,7 @@ shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("3_trcud")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.50051, 0.5, -0.369053)
+WalkSpeed = 900.0
 
 [node name="Level" type="Node3D" parent="."]
 
@@ -128,3 +132,6 @@ sgt_rotation_rand = 1.0
 sgt_dist_min = 0.25
 sgt_follow_normal = false
 metadata/SimpleGrassTextured = "2.0.5"
+
+[node name="Camera3D2" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58828, 5.10379)

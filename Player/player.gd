@@ -60,6 +60,7 @@ func _process(delta: float) -> void:
 	update_rotation(delta)
 	process_jump_input()
 
+
 func _physics_process(delta: float) -> void:
 	SimpleGrass.set_player_position(global_position)
 	velocity = AppliedVelocity
@@ -79,17 +80,16 @@ func handle_input(delta: float) -> void:
 	
 	if CanChangeInput and InputDir != Vector3.ZERO:
 		LastInputDir = InputDir
-	
-	MovementVelocity = InputDir * Speed
 
-func update_movement(delta: float) -> void:
+
+func handle_movement(delta: float) -> void:
 	"""Apply acceleration/deceleration to horizontal movement"""
-	var y_velocity = velocity.y
+	MovementVelocity = InputDir * Speed * delta
 	if MovementVelocity.length() >= AppliedVelocity.length():
 		AppliedVelocity = velocity.move_toward(MovementVelocity, Accel * delta)
 	else:
 		AppliedVelocity = velocity.move_toward(MovementVelocity, Decla * delta)
-	AppliedVelocity.y = y_velocity
+	AppliedVelocity.y = velocity.y
 
 func process_jump_input() -> void:
 	"""Handle jump input with buffer and coyote time"""
@@ -104,6 +104,14 @@ func process_jump_input() -> void:
 	
 	if CanJump and TryingToJump:
 		StateManager.send_event("StartJumping")
+
+func apply_gravity(delta):
+	if AppliedVelocity.y > JumpApexMax:
+		AppliedVelocity.y -= JumpApexGravity * delta
+	elif AppliedVelocity.y <= JumpApexMax and AppliedVelocity.y > MaxFallSpeed:
+		AppliedVelocity.y -= FallGravity * delta
+	elif AppliedVelocity.y < MaxFallSpeed:
+		AppliedVelocity.y = MaxFallSpeed
 #endregion
 
 #region Visual Effects
@@ -162,19 +170,18 @@ func handle_state_events() -> void:
 		StateManager.send_event("StopMoving")
 	else:
 		StateManager.send_event("StartMoving")
+	
+	if velocity.y < 0:
+		StateManager.send_event("StartFalling")
 #endregion
 
 #region State Handlers
 func _on_idle_state_state_physics_processing(delta: float) -> void:
 	Speed = WalkSpeed
-	update_movement(delta)
-	if velocity.y > 0:
-		StateManager.send_event("StartFalling")
+	handle_movement(delta)
 
 func _on_walking_state_physics_processing(delta: float) -> void:
-	update_movement(delta)
-	if velocity.y > 0:
-		StateManager.send_event("StartFalling")
+	handle_movement(delta)
 
 func _on_jump_state_state_entered() -> void:
 	"""Jump initialization with optional jump cut"""
@@ -187,7 +194,7 @@ func _on_jump_state_state_entered() -> void:
 		AppliedVelocity.y *= JumpStopMult
 
 func _on_jump_state_state_physics_processing(delta: float) -> void:
-	update_movement(delta)
+	handle_movement(delta)
 	AppliedVelocity.y -= JumpGravity * delta
 	
 	if Input.is_action_just_released("Jump"):
@@ -195,14 +202,8 @@ func _on_jump_state_state_physics_processing(delta: float) -> void:
 
 func _on_falling_state_state_physics_processing(delta: float) -> void:
 	"""Handle variable gravity during different fall phases"""
-	update_movement(delta)
-	
-	if AppliedVelocity.y > JumpApexMax:
-		AppliedVelocity.y -= JumpApexGravity * delta
-	elif AppliedVelocity.y <= JumpApexMax and AppliedVelocity.y > MaxFallSpeed:
-		AppliedVelocity.y -= FallGravity * delta
-	elif AppliedVelocity.y < MaxFallSpeed:
-		AppliedVelocity.y = MaxFallSpeed
+	handle_movement(delta)
+	apply_gravity(delta)
 #endregion
 
 #region Timer Signals
