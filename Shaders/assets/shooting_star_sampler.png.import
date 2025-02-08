@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bp4mebi8rt8wn"
-path.s3tc="res://.godot/imported/texture_02.png-814d4f515892bb8274d285748f4a73a0.s3tc.ctex"
+uid="uid://dvuwb0yce4sb7"
+path="res://.godot/imported/shooting_star_sampler.png-99859f0b9939b3d37a058751dd99aaf0.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/kenney_prototype_textures/dark/texture_02.png"
-dest_files=["res://.godot/imported/texture_02.png-814d4f515892bb8274d285748f4a73a0.s3tc.ctex"]
+source_file="res://Shaders/assets/shooting_star_sampler.png"
+dest_files=["res://.godot/imported/shooting_star_sampler.png-99859f0b9939b3d37a058751dd99aaf0.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

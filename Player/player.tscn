@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cxeijgsmqxr5s"]
+[gd_scene load_steps=22 format=3 uid="uid://cxeijgsmqxr5s"]
 
 [ext_resource type="Script" uid="uid://dmp00kypbqwqu" path="res://Player/player.gd" id="1_1kw6n"]
 [ext_resource type="Script" uid="uid://7cgmmoakkjh4" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="2_f8f2m"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="7_wcfuw"]
 [ext_resource type="PackedScene" uid="uid://cggqb75a8w8r" path="res://addons/debug_menu/debug_menu.tscn" id="8_jrdd2"]
 [ext_resource type="ArrayMesh" uid="uid://deu06eho4c74" path="res://DustTest/dust.res" id="11_8m8p3"]
+[ext_resource type="Texture2D" uid="uid://c5xhjafau8kxk" path="res://Sprites/blob_shadow.png" id="13_p5o4e"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_74g7w"]
 
@@ -66,15 +67,18 @@ shape = SubResource("CapsuleShape3D_74g7w")
 
 [node name="PlayerModle" type="MeshInstance3D" parent="ModlePovit"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+layers = 512
 mesh = SubResource("CapsuleMesh_ouo5f")
 skeleton = NodePath("../../CollisionShape3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ModlePovit/PlayerModle"]
 transform = Transform3D(0.227033, 0, 0, 0, 0.227033, 0, 0, 0, 0.227033, 0.187531, 0.528621, -0.434562)
+layers = 512
 mesh = SubResource("SphereMesh_mdhr0")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="ModlePovit/PlayerModle"]
 transform = Transform3D(0.227033, 0, 0, 0, 0.227033, 0, 0, 0, 0.227033, -0.19433, 0.528621, -0.434562)
+layers = 512
 mesh = SubResource("SphereMesh_mdhr0")
 
 [node name="CameraHeight" type="Marker3D" parent="."]
@@ -216,6 +220,12 @@ grow_vertical = 1
 initial_node_to_watch = NodePath("../../StateManger")
 
 [node name="CanvasLayer" parent="Debug" instance=ExtResource("8_jrdd2")]
+
+[node name="Shadow" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.95264, 0)
+size = Vector3(2, 15.9053, 2)
+texture_albedo = ExtResource("13_p5o4e")
+cull_mask = 982527
 
 [connection signal="timeout" from="Timers/JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]

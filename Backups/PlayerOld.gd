@@ -24,11 +24,11 @@ extends CharacterBody3D
 #endregion
 
 #region Internal Variables
-@onready var Speed: float = WalkSpeed     # Current movement speed
+var Speed: float                        # Current movement speed
 var InputDir: Vector3                    # Raw input direction
 var LastInputDir: Vector3               # Last valid input direction
-var CurrentVelocity: Vector3             # Final calculated velocity
-var TargetVelocity: Vector3            # Horizontal movement velocity
+var AppliedVelocity: Vector3             # Final calculated velocity
+var MovementVelocity: Vector3            # Horizontal movement velocity
 var rotation_direction: float            # Target rotation angle
 
 # State flags
@@ -49,6 +49,7 @@ var previously_floored: bool = false
 #endregion
 
 func _ready() -> void:
+	Speed = WalkSpeed
 	SimpleGrass.set_interactive(true)
 	setup_timers()
 
@@ -62,8 +63,8 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	SimpleGrass.set_player_position(global_position)
-	velocity = CurrentVelocity
 	handle_movement(delta)
+	velocity = AppliedVelocity
 	move_and_slide()
 
 #region Core Functions
@@ -84,14 +85,12 @@ func handle_input(delta: float) -> void:
 
 func handle_movement(delta: float) -> void:
 	"""Apply acceleration/deceleration to horizontal movement"""
-	TargetVelocity = InputDir * Speed * delta
-	if TargetVelocity.length() >= CurrentVelocity.length():
-		CurrentVelocity = velocity.move_toward(
-				Vector3(TargetVelocity.x,CurrentVelocity.y,TargetVelocity.z), Accel * delta)
+	MovementVelocity = InputDir * Speed * delta
+	if MovementVelocity.length() >= AppliedVelocity.length():
+		AppliedVelocity = velocity.move_toward(MovementVelocity, Accel * delta)
 	else:
-		CurrentVelocity = velocity.move_toward(
-				Vector3(TargetVelocity.x,CurrentVelocity.y,TargetVelocity.z), Decla * delta)
-
+		AppliedVelocity = velocity.move_toward(MovementVelocity, Decla * delta)
+	AppliedVelocity.y = velocity.y
 
 func process_jump_input() -> void:
 	"""Handle jump input with buffer and coyote time"""
@@ -108,12 +107,12 @@ func process_jump_input() -> void:
 		StateManager.send_event("StartJumping")
 
 func apply_gravity(delta):
-	if CurrentVelocity.y > JumpApexMax:
-		CurrentVelocity.y -= JumpApexGravity * delta
-	elif CurrentVelocity.y <= JumpApexMax and CurrentVelocity.y > MaxFallSpeed:
-		CurrentVelocity.y -= FallGravity * delta
-	elif CurrentVelocity.y < MaxFallSpeed:
-		CurrentVelocity.y = MaxFallSpeed
+	if AppliedVelocity.y > JumpApexMax:
+		AppliedVelocity.y -= JumpApexGravity * delta
+	elif AppliedVelocity.y <= JumpApexMax and AppliedVelocity.y > MaxFallSpeed:
+		AppliedVelocity.y -= FallGravity * delta
+	elif AppliedVelocity.y < MaxFallSpeed:
+		AppliedVelocity.y = MaxFallSpeed
 #endregion
 
 #region Visual Effects
@@ -141,7 +140,7 @@ func handle_effects(delta: float) -> void:
 		ModelPivot.rotation_degrees = lerp(ModelPivot.rotation_degrees, Vector3.ZERO, lean_speed * delta)
 	
 	# Landing squash effect
-	if is_on_floor() and CurrentVelocity.y < 2 and !previously_floored:
+	if is_on_floor() and AppliedVelocity.y < 2 and !previously_floored:
 		PlayerModel.scale = Vector3(1.25, 0.75, 1.25)
 	
 	previously_floored = is_on_floor()
@@ -162,10 +161,10 @@ func update_rotation(delta: float) -> void:
 #region State Management
 func handle_state_events() -> void:
 	"""Update state machine based on current conditions"""
-	if is_on_floor() and CurrentVelocity.y <= 0:
+	if is_on_floor() and AppliedVelocity.y <= 0:
 		StateManager.send_event("IsGrounded")
 	else:
-		if CurrentVelocity.y <= 0:
+		if AppliedVelocity.y <= 0:
 			StateManager.send_event("StartFalling")
 	
 	if InputDir == Vector3.ZERO:
@@ -187,19 +186,19 @@ func _on_walking_state_physics_processing(delta: float) -> void:
 
 func _on_jump_state_state_entered() -> void:
 	"""Jump initialization with optional jump cut"""
-	CurrentVelocity.y = JumpForce
+	AppliedVelocity.y = JumpForce
 	TryingToJump = false
 	CanJump = false
 	PlayerModel.scale = Vector3(0.5, 1.5, 0.5)
 	
 	if !Input.is_action_pressed("Jump"):
-		CurrentVelocity.y *= JumpStopMult
+		AppliedVelocity.y *= JumpStopMult
 
 func _on_jump_state_state_physics_processing(delta: float) -> void:
-	CurrentVelocity.y -= JumpGravity * delta
+	AppliedVelocity.y -= JumpGravity * delta
 	
 	if Input.is_action_just_released("Jump"):
-		CurrentVelocity.y *= JumpStopMult
+		AppliedVelocity.y *= JumpStopMult
 
 func _on_falling_state_state_physics_processing(delta: float) -> void:
 	"""Handle variable gravity during different fall phases"""

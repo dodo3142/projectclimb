@@ -1,28 +1,26 @@
 [gd_scene load_steps=14 format=4 uid="uid://jsc6conj0oli"]
 
 [ext_resource type="Script" uid="uid://wtvnqk6rsb2i" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_h3q3j"]
-[ext_resource type="Texture2D" uid="uid://bjjdtab86e5tq" path="res://addons/kenney_prototype_textures/dark/texture_08.png" id="3_00aqh"]
+[ext_resource type="Material" uid="uid://dh6ykun8bv60u" path="res://Shaders/examples/day_sky.tres" id="2_oldd8"]
 [ext_resource type="PackedScene" uid="uid://cxeijgsmqxr5s" path="res://Player/player.tscn" id="3_trcud"]
 [ext_resource type="Shader" uid="uid://dxq1016uxckpj" path="res://addons/simplegrasstextured/shaders/grass.gdshader" id="4_lqd3n"]
+[ext_resource type="Texture2D" uid="uid://cxp3jepi01nt7" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="4_oldd8"]
 [ext_resource type="Texture2D" uid="uid://c4ggdp0kg5wjk" path="res://addons/simplegrasstextured/textures/grassbushcc008.png" id="5_1kuxs"]
 [ext_resource type="Script" uid="uid://b076bq7rmhxps" path="res://addons/simplegrasstextured/grass.gd" id="6_n010q"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jlvxq"]
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-
-[sub_resource type="Sky" id="Sky_pccn6"]
-sky_material = SubResource("ProceduralSkyMaterial_jlvxq")
+[sub_resource type="Sky" id="Sky_7gqxu"]
+sky_material = ExtResource("2_oldd8")
 
 [sub_resource type="Environment" id="Environment_mdxb8"]
 background_mode = 2
-sky = SubResource("Sky_pccn6")
-tonemap_mode = 2
-ssao_enabled = true
+sky = SubResource("Sky_7gqxu")
+ambient_light_color = Color(0.45098, 0.333333, 0.309804, 1)
+ambient_light_energy = 0.5
 glow_enabled = true
+glow_bloom = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uv0n0"]
-albedo_texture = ExtResource("3_00aqh")
+albedo_texture = ExtResource("4_oldd8")
 uv1_triplanar = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xauud"]
@@ -78,7 +76,7 @@ buffer = PackedFloat32Array(-0.687045, 0, 0.726615, -7.15873, 0, 1, 0, 0.5, -0.7
 
 [node name="Camera3D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.50051, 2.5, 0.630947)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8298, 2.5, 0.630947)
 cull_mask = 983039
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D"]
@@ -90,11 +88,11 @@ script = ExtResource("1_h3q3j")
 environment = SubResource("Environment_mdxb8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.693402, -0.720551, -3.14963e-08, 0, -4.37114e-08, 1, -0.720551, 0.693402, 3.03096e-08, 0, 0, 0)
+transform = Transform3D(-0.158174, -0.164367, 0.973635, 0.67512, 0.701553, 0.228113, -0.720551, 0.693402, 9.17854e-08, 0, 0, 0)
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("3_trcud")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.50051, 0.5, -0.369053)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8298, 0.5, -0.369053)
 WalkSpeed = 900.0
 
 [node name="Level" type="Node3D" parent="."]
@@ -134,4 +132,4 @@ sgt_follow_normal = false
 metadata/SimpleGrassTextured = "2.0.5"
 
 [node name="Camera3D2" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58828, 5.10379)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3816, 1.58828, 3.01976)
