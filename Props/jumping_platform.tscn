@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://cr6i3n7ymeyk4"]
+
+[ext_resource type="PackedScene" uid="uid://bywbfndjunkfa" path="res://Props/jump_area.tscn" id="1_egt82"]
+[ext_resource type="Script" uid="uid://sl1gto7gajpf" path="res://Props/jumping_platform.gd" id="1_khlck"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_khlck"]
+albedo_color = Color(0.915736, 0, 0.147297, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_e6rvx"]
+material = SubResource("StandardMaterial3D_khlck")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_egt82"]
+size = Vector3(3.99414, 1, 3.95801)
+
+[node name="JumpingPlatform" type="Node3D"]
+script = ExtResource("1_khlck")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(4, 0, 0, 0, 0.2, 0, 0, 0, 4, 0, 0, 0)
+mesh = SubResource("CylinderMesh_e6rvx")
+
+[node name="JumpArea" parent="." instance=ExtResource("1_egt82")]
+
+[node name="CollisionShape3D" parent="JumpArea" index="0"]
+shape = SubResource("BoxShape3D_egt82")
+
+[connection signal="PlayerEntered" from="JumpArea" to="." method="_on_jump_area_player_entered"]
+
+[editable path="JumpArea"]

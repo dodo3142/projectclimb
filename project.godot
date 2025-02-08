@@ -21,10 +21,6 @@ PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_came
 SimpleGrass="*res://addons/simplegrasstextured/singleton.tscn"
 DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
 
-[display]
-
-window/vsync/vsync_mode=0
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/godot_state_charts/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")

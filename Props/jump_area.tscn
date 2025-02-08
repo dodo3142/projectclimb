@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bywbfndjunkfa"]
+
+[ext_resource type="Script" uid="uid://bcqlptrpu1quu" path="res://Props/jump_area.gd" id="1_pf20o"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7op4y"]
+
+[node name="JumpArea" type="Area3D"]
+script = ExtResource("1_pf20o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_7op4y")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

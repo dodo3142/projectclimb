@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://dtqoy5xdxpik2"]
+
+[ext_resource type="Texture2D" uid="uid://dfxm4411qkxti" path="res://addons/kenney_prototype_textures/orange/texture_06.png" id="1_4qfk4"]
+[ext_resource type="Script" uid="uid://dj1c27tj8rc3i" path="res://Props/moving_platform.gd" id="1_aw772"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gw6bp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kko4p"]
+albedo_texture = ExtResource("1_4qfk4")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_oakjf"]
+material = SubResource("StandardMaterial3D_kko4p")
+
+[sub_resource type="Animation" id="Animation_576j3"]
+resource_name = "Moving"
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PathFollow3D:progress_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_1yw2a"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PathFollow3D:progress_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_evtf3"]
+_data = {
+&"Moving": SubResource("Animation_576j3"),
+&"RESET": SubResource("Animation_1yw2a")
+}
+
+[node name="MovingPlatform" type="Path3D"]
+script = ExtResource("1_aw772")
+
+[node name="AnimatableBody3D" type="AnimatableBody3D" parent="."]
+transform = Transform3D(0.00197894, -0.00610231, -0.999974, 4.65659e-10, 0.999976, -0.00610233, 0.999992, 1.20757e-05, 0.0019789, 0.00167698, 0.0120322, -0.00741291)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AnimatableBody3D"]
+shape = SubResource("BoxShape3D_gw6bp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="AnimatableBody3D"]
+mesh = SubResource("BoxMesh_oakjf")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="."]
+transform = Transform3D(0.00197894, -0.00610231, -0.999974, 4.65659e-10, 0.999976, -0.00610233, 0.999992, 1.20757e-05, 0.0019789, 0.00167698, 0.0120322, -0.00741291)
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="PathFollow3D"]
+remote_path = NodePath("../../AnimatableBody3D")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_evtf3")
+}

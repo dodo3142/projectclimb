@@ -35,6 +35,7 @@ var rotation_direction: float            # Target rotation angle
 var CanChangeInput: bool = true
 var CanJump: bool = false
 var TryingToJump: bool = false
+var ManualJump:bool = false
 var CanRotate: bool = true
 var previously_floored: bool = false
 #endregion
@@ -53,18 +54,21 @@ func _ready() -> void:
 	setup_timers()
 
 func _process(delta: float) -> void:
-	handle_input(delta)
-	handle_state_events()
 	handle_effects(delta)
 	update_rotation(delta)
-	process_jump_input()
+
 
 
 func _physics_process(delta: float) -> void:
 	SimpleGrass.set_player_position(global_position)
+	process_jump_input()
+	handle_input(delta)
+	handle_state_events()
 	velocity = CurrentVelocity
+	print(velocity.y)
 	handle_movement(delta)
 	move_and_slide()
+
 
 #region Core Functions
 func setup_timers() -> void:
@@ -77,6 +81,7 @@ func handle_input(delta: float) -> void:
 	InputDir.x = Input.get_axis("MoveLeft", "MoveRight")
 	InputDir.z = Input.get_axis("MoveForward", "MoveBackward")
 	InputDir = InputDir.rotated(Vector3.UP, CameraJoint.rotation.y).normalized()
+	
 	
 	if CanChangeInput and InputDir != Vector3.ZERO:
 		LastInputDir = InputDir
@@ -105,7 +110,13 @@ func process_jump_input() -> void:
 		JumpBufferTimer.start()
 	
 	if CanJump and TryingToJump:
+		ManualJump = true
+		CurrentVelocity.y = JumpForce
 		StateManager.send_event("StartJumping")
+
+func ask_to_jump(_jumpForce):
+	CurrentVelocity.y = _jumpForce
+	StateManager.send_event("StartJumping")
 
 func apply_gravity(delta):
 	if CurrentVelocity.y > JumpApexMax:
@@ -114,6 +125,7 @@ func apply_gravity(delta):
 		CurrentVelocity.y -= FallGravity * delta
 	elif CurrentVelocity.y < MaxFallSpeed:
 		CurrentVelocity.y = MaxFallSpeed
+
 #endregion
 
 #region Visual Effects
@@ -187,19 +199,26 @@ func _on_walking_state_physics_processing(delta: float) -> void:
 
 func _on_jump_state_state_entered() -> void:
 	"""Jump initialization with optional jump cut"""
-	CurrentVelocity.y = JumpForce
 	TryingToJump = false
 	CanJump = false
 	PlayerModel.scale = Vector3(0.5, 1.5, 0.5)
 	
-	if !Input.is_action_pressed("Jump"):
+	if !Input.is_action_pressed("Jump") and ManualJump:
+		ManualJump = false
 		CurrentVelocity.y *= JumpStopMult
 
 func _on_jump_state_state_physics_processing(delta: float) -> void:
 	CurrentVelocity.y -= JumpGravity * delta
 	
-	if Input.is_action_just_released("Jump"):
+	if Input.is_action_just_released("Jump") and ManualJump:
+		ManualJump = false
 		CurrentVelocity.y *= JumpStopMult
+
+func _on_jump_state_state_exited() -> void:
+	ManualJump = false
+
+func _on_falling_state_state_entered() -> void:
+	TargetVelocity.y = 0
 
 func _on_falling_state_state_physics_processing(delta: float) -> void:
 	"""Handle variable gravity during different fall phases"""
@@ -213,3 +232,6 @@ func _on_jump_buffer_timeout():
 func _on_jump_coyote_timeout():
 	CanJump = false
 #endregion
+
+func _on_idle_state_state_entered() -> void:
+	CurrentVelocity.y = 0

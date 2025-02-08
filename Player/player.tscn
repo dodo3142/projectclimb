@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cxeijgsmqxr5s"]
+[gd_scene load_steps=25 format=3 uid="uid://cxeijgsmqxr5s"]
 
 [ext_resource type="Script" uid="uid://dmp00kypbqwqu" path="res://Player/player.gd" id="1_1kw6n"]
 [ext_resource type="Script" uid="uid://7cgmmoakkjh4" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="2_f8f2m"]
@@ -15,6 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://c5xhjafau8kxk" path="res://Sprites/blob_shadow.png" id="13_p5o4e"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_74g7w"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_p5o4e"]
+radius = 0.53906
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ouo5f"]
 
@@ -42,26 +45,41 @@ frustum_offset = Vector2(0, 0)
 near = 0.05
 far = 4000.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p5o4e"]
+albedo_color = Color(0.877563, 1, 0.631976, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_p5o4e"]
+material = SubResource("StandardMaterial3D_p5o4e")
+
 [sub_resource type="Curve" id="Curve_af5np"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.247813, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="SphereMesh" id="SphereMesh_5n68b"]
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" groups=["Player"]]
 collision_layer = 2
 script = ExtResource("1_1kw6n")
 WalkSpeed = 15.0
-Accel = 200.0
+Accel = 100.0
 Decla = 200.0
 JumpForce = 25.0
 JumpGravity = 70.0
+MaxFallSpeed = -30.0
 JumpStopMult = 0.5
 lean_speed = 3.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="PlayerCol" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_74g7w")
+debug_color = Color(0, 0.613017, 0.617733, 0.42)
+
+[node name="PlayerArea" type="Area3D" parent="." groups=["Player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerArea"]
+shape = SubResource("CapsuleShape3D_p5o4e")
+debug_color = Color(0.932942, 2.44504e-05, 0.646688, 0.42)
 
 [node name="ModlePovit" type="Node3D" parent="."]
 
@@ -69,7 +87,7 @@ shape = SubResource("CapsuleShape3D_74g7w")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 layers = 512
 mesh = SubResource("CapsuleMesh_ouo5f")
-skeleton = NodePath("../../CollisionShape3D")
+skeleton = NodePath("../../PlayerCol")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ModlePovit/PlayerModle"]
 transform = Transform3D(0.227033, 0, 0, 0, 0.227033, 0, 0, 0, 0.227033, 0.187531, 0.528621, -0.434562)
@@ -86,7 +104,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="CameraJoint" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-visible = false
 script = ExtResource("2_kypek")
 Mouse_Sensitivity = 0.2
 
@@ -94,12 +111,17 @@ Mouse_Sensitivity = 0.2
 spring_length = 7.0
 margin = 0.02
 
-[node name="PhantomCamera3D" type="Node3D" parent="CameraJoint/SpringArm3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+[node name="PhantomCamera3D" type="Node3D" parent="CameraJoint/SpringArm3D" node_paths=PackedStringArray("look_at_target")]
 script = ExtResource("2_f8f2m")
-priority = 1
+priority = 4
+look_at_target = NodePath("../../..")
 tween_resource = SubResource("Resource_kbxdc")
 camera_3d_resource = SubResource("Resource_57wer")
+
+[node name="DebugCamera" type="MeshInstance3D" parent="CameraJoint"]
+transform = Transform3D(0.3384, 0, 0, 0, 0.3384, 0, 0, 0, 0.3384, 0, 0, 0)
+visible = false
+mesh = SubResource("SphereMesh_p5o4e")
 
 [node name="MovingParticles" type="CPUParticles3D" parent="."]
 transform = Transform3D(2.24883, 0, 0, 0, 2.24883, 0, 0, 0, 2.24883, 0, 0, 0)
@@ -204,7 +226,7 @@ delay_in_seconds = "0.0"
 [node name="ToJumping" type="Node" parent="StateManger/PlayerMovementState/FallingState"]
 script = ExtResource("6_2reyu")
 to = NodePath("../../JumpState")
-event = &"StartJunping"
+event = &"StartJumping"
 delay_in_seconds = "0.0"
 
 [node name="Debug" type="CanvasLayer" parent="."]
@@ -229,8 +251,11 @@ cull_mask = 982527
 
 [connection signal="timeout" from="Timers/JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_physics_processing"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_entered"]
+[connection signal="state_exited" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_physics_processing"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/FallingState" to="." method="_on_falling_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/FallingState" to="." method="_on_falling_state_state_physics_processing"]
