@@ -65,8 +65,10 @@ Accel = 100.0
 Decla = 200.0
 JumpForce = 25.0
 JumpGravity = 70.0
-MaxFallSpeed = -30.0
 JumpStopMult = 0.5
+GroundSmashGravity = 400.0
+GroundSmashJumpForce = 35.0
+GroundSmashJumpGravity = 70.0
 lean_speed = 3.0
 
 [node name="PlayerCol" type="CollisionShape3D" parent="."]
@@ -111,10 +113,9 @@ Mouse_Sensitivity = 0.2
 spring_length = 7.0
 margin = 0.02
 
-[node name="PhantomCamera3D" type="Node3D" parent="CameraJoint/SpringArm3D" node_paths=PackedStringArray("look_at_target")]
+[node name="PhantomCamera3D" type="Node3D" parent="CameraJoint/SpringArm3D"]
 script = ExtResource("2_f8f2m")
 priority = 4
-look_at_target = NodePath("../../..")
 tween_resource = SubResource("Resource_kbxdc")
 camera_3d_resource = SubResource("Resource_57wer")
 
@@ -214,6 +215,12 @@ to = NodePath("../../FallingState")
 event = &"StartFalling"
 delay_in_seconds = "0.0"
 
+[node name="ToGroundSmash" type="Node" parent="StateManger/PlayerMovementState/JumpState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../GroundSmashingState")
+event = &"IsGroundSmashing"
+delay_in_seconds = "0.0"
+
 [node name="FallingState" type="Node" parent="StateManger/PlayerMovementState"]
 script = ExtResource("5_putqt")
 
@@ -227,6 +234,48 @@ delay_in_seconds = "0.0"
 script = ExtResource("6_2reyu")
 to = NodePath("../../JumpState")
 event = &"StartJumping"
+delay_in_seconds = "0.0"
+
+[node name="ToGroundSmash" type="Node" parent="StateManger/PlayerMovementState/FallingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../GroundSmashingState")
+event = &"IsGroundSmashing"
+delay_in_seconds = "0.0"
+
+[node name="GroundSmashingState" type="Node" parent="StateManger/PlayerMovementState"]
+script = ExtResource("5_putqt")
+
+[node name="ToIdle" type="Node" parent="StateManger/PlayerMovementState/GroundSmashingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../IdleState")
+event = &"IsGrounded"
+delay_in_seconds = "0.2"
+
+[node name="ToJump" type="Node" parent="StateManger/PlayerMovementState/GroundSmashingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../GroundSmashJumpState")
+event = &"StartJumping"
+delay_in_seconds = "0.0"
+
+[node name="GroundSmashJumpState" type="Node" parent="StateManger/PlayerMovementState"]
+script = ExtResource("5_putqt")
+
+[node name="ToIdle" type="Node" parent="StateManger/PlayerMovementState/GroundSmashJumpState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../IdleState")
+event = &"IsGrounded"
+delay_in_seconds = "0.0"
+
+[node name="ToFalling" type="Node" parent="StateManger/PlayerMovementState/GroundSmashJumpState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../FallingState")
+event = &"StartFalling"
+delay_in_seconds = "0.0"
+
+[node name="ToGroundSmash" type="Node" parent="StateManger/PlayerMovementState/GroundSmashJumpState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../GroundSmashingState")
+event = &"IsGroundSmashing"
 delay_in_seconds = "0.0"
 
 [node name="Debug" type="CanvasLayer" parent="."]
@@ -259,3 +308,8 @@ cull_mask = 982527
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/FallingState" to="." method="_on_falling_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/FallingState" to="." method="_on_falling_state_state_physics_processing"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_entered"]
+[connection signal="state_exited" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_exited"]
+[connection signal="state_physics_processing" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_physics_processing"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/GroundSmashJumpState" to="." method="_on_ground_smash_jump_state_state_entered"]
+[connection signal="state_physics_processing" from="StateManger/PlayerMovementState/GroundSmashJumpState" to="." method="_on_ground_smash_jump_state_state_physics_processing"]

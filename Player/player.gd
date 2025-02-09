@@ -15,6 +15,12 @@ extends CharacterBody3D
 @export var MaxFallSpeed: float = -70    # Terminal velocity
 @export_range(0, 1) var JumpStopMult: float = 0.75  # Jump cut multiplier
 
+@export_group("GroundSmash")
+@export var GroundSmashGravity : float = 200
+@export var GroundSmashMaxGravity : float = -100
+@export var GroundSmashJumpForce : float = 50
+@export var GroundSmashJumpGravity : float = 120
+
 @export_group("Others")
 @export var RotationSpeed: float = 10     # Character rotation speed
 @export var JumpBufferTime: float = 0.1  # Time window for jump input buffering
@@ -30,9 +36,11 @@ var LastInputDir: Vector3               # Last valid input direction
 var CurrentVelocity: Vector3             # Final calculated velocity
 var TargetVelocity: Vector3            # Horizontal movement velocity
 var rotation_direction: float            # Target rotation angle
+var CurrentJumpForce: float
 
 # State flags
 var CanChangeInput: bool = true
+var CanMove: bool = true
 var CanJump: bool = false
 var TryingToJump: bool = false
 var ManualJump:bool = false
@@ -61,12 +69,15 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	SimpleGrass.set_player_position(global_position)
-	process_jump_input()
 	handle_input(delta)
 	handle_state_events()
 	velocity = CurrentVelocity
-	print(velocity.y)
-	handle_movement(delta)
+	if CanMove:
+		handle_movement(delta)
+	else:
+		CurrentVelocity.x = 0
+		CurrentVelocity.z = 0
+	process_jump_input()
 	move_and_slide()
 
 
@@ -100,7 +111,7 @@ func handle_movement(delta: float) -> void:
 
 func process_jump_input() -> void:
 	"""Handle jump input with buffer and coyote time"""
-	if is_on_floor() and velocity.y == 0:
+	if is_on_floor() and velocity.y <= 0:
 		CanJump = true
 	elif JumpCoyoteTimer.time_left > 0:
 		JumpCoyoteTimer.start()
@@ -111,11 +122,21 @@ func process_jump_input() -> void:
 	
 	if CanJump and TryingToJump:
 		ManualJump = true
-		CurrentVelocity.y = JumpForce
+		CurrentJumpForce = JumpForce
 		StateManager.send_event("StartJumping")
 
-func ask_to_jump(_jumpForce):
+func Jump(_jumpForce):
 	CurrentVelocity.y = _jumpForce
+	TryingToJump = false
+	CanJump = false
+	PlayerModel.scale = Vector3(0.5, 1.5, 0.5)
+	
+	if !Input.is_action_pressed("Jump") and ManualJump:
+		ManualJump = false
+		CurrentVelocity.y *= JumpStopMult
+
+func lunch_player(_jumpForce):
+	CurrentJumpForce = _jumpForce
 	StateManager.send_event("StartJumping")
 
 func apply_gravity(delta):
@@ -187,6 +208,9 @@ func handle_state_events() -> void:
 	
 	if velocity.y < 0:
 		StateManager.send_event("StartFalling")
+	
+	if Input.is_action_just_pressed("GroundSmash"):
+		StateManager.send_event("IsGroundSmashing")
 #endregion
 
 #region State Handlers
@@ -199,13 +223,7 @@ func _on_walking_state_physics_processing(delta: float) -> void:
 
 func _on_jump_state_state_entered() -> void:
 	"""Jump initialization with optional jump cut"""
-	TryingToJump = false
-	CanJump = false
-	PlayerModel.scale = Vector3(0.5, 1.5, 0.5)
-	
-	if !Input.is_action_pressed("Jump") and ManualJump:
-		ManualJump = false
-		CurrentVelocity.y *= JumpStopMult
+	Jump(CurrentJumpForce)
 
 func _on_jump_state_state_physics_processing(delta: float) -> void:
 	CurrentVelocity.y -= JumpGravity * delta
@@ -213,6 +231,7 @@ func _on_jump_state_state_physics_processing(delta: float) -> void:
 	if Input.is_action_just_released("Jump") and ManualJump:
 		ManualJump = false
 		CurrentVelocity.y *= JumpStopMult
+
 
 func _on_jump_state_state_exited() -> void:
 	ManualJump = false
@@ -235,3 +254,31 @@ func _on_jump_coyote_timeout():
 
 func _on_idle_state_state_entered() -> void:
 	CurrentVelocity.y = 0
+
+func _on_ground_smashing_state_state_entered() -> void:
+	CurrentVelocity.y = 0
+	CanMove = false
+
+func _on_ground_smashing_state_state_physics_processing(delta: float) -> void:
+	if is_on_floor():
+		CanMove = true
+	else:
+		if CurrentVelocity.y > JumpApexMax:
+			CurrentVelocity.y -= JumpApexGravity * delta
+		elif CurrentVelocity.y <= JumpApexMax and CurrentVelocity.y > GroundSmashMaxGravity:
+			CurrentVelocity.y -= GroundSmashGravity * delta
+		elif CurrentVelocity.y < GroundSmashMaxGravity and !is_on_floor():
+			CurrentVelocity.y = GroundSmashMaxGravity
+
+func _on_ground_smashing_state_state_exited() -> void:
+	CanMove = true
+
+
+func _on_ground_smash_jump_state_state_entered() -> void:
+	Jump(GroundSmashJumpForce)
+
+func _on_ground_smash_jump_state_state_physics_processing(delta: float) -> void:
+	CurrentVelocity.y -= GroundSmashJumpGravity * delta
+	
+	if Input.is_action_just_released("Jump"):
+		CurrentVelocity.y = CurrentVelocity.y * JumpStopMult
