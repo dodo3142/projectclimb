@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://wtvnqk6rsb2i" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_h3q3j"]
 [ext_resource type="Material" uid="uid://dh6ykun8bv60u" path="res://Shaders/examples/day_sky.tres" id="2_oldd8"]
-[ext_resource type="PackedScene" uid="uid://cxeijgsmqxr5s" path="res://Player/player.tscn" id="3_trcud"]
 [ext_resource type="Shader" uid="uid://dxq1016uxckpj" path="res://addons/simplegrasstextured/shaders/grass.gdshader" id="4_lqd3n"]
 [ext_resource type="Texture2D" uid="uid://cxp3jepi01nt7" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="4_oldd8"]
 [ext_resource type="Texture2D" uid="uid://c4ggdp0kg5wjk" path="res://addons/simplegrasstextured/textures/grassbushcc008.png" id="5_1kuxs"]
@@ -10,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bywbfndjunkfa" path="res://Props/jump_area.tscn" id="8_f1wxt"]
 [ext_resource type="PackedScene" uid="uid://dtqoy5xdxpik2" path="res://Props/moving_platform.tscn" id="9_r4m6u"]
 [ext_resource type="PackedScene" uid="uid://cr6i3n7ymeyk4" path="res://Props/jumping_platform.tscn" id="10_djnbu"]
+[ext_resource type="PackedScene" uid="uid://cxeijgsmqxr5s" path="res://Player/player.tscn" id="10_f56q2"]
 
 [sub_resource type="Sky" id="Sky_7gqxu"]
 sky_material = ExtResource("2_oldd8")
@@ -104,7 +104,7 @@ point_count = 6
 
 [node name="Camera3D" type="Camera3D" parent="."]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8298, 2.5, -0.369053)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3344, 9.08722, -5.08321)
 cull_mask = 983039
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D"]
@@ -118,10 +118,6 @@ environment = SubResource("Environment_mdxb8")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.158174, -0.164367, 0.973635, 0.67512, 0.701553, 0.228113, -0.720551, 0.693402, 9.17854e-08, 0, 0, 0)
 shadow_enabled = true
-
-[node name="Player" parent="." instance=ExtResource("3_trcud")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8298, 0.5, -0.369053)
-WalkSpeed = 900.0
 
 [node name="Level" type="Node3D" parent="."]
 
@@ -200,5 +196,17 @@ curve = SubResource("Curve3D_djnbu")
 Loop = false
 SpeedScale = 0.2
 
-[node name="Camera3D2" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.3816, 1.58828, 3.01976)
+[node name="Player" parent="." instance=ExtResource("10_f56q2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3344, 7.08722, -5.08321)
+jump_force = 30.0
+jump_gravity = 120.0
+jump_apex_max_speed = -5.0
+jump_apex_gravity = 50.0
+fall_gravity = 100.0
+max_fall_speed = -70.0
+jump_cut_multiplier = 0.75
+ground_smash_max_speed = -100.0
+rotation_speed = 10.0
+jump_buffer_time = 0.1
+jump_coyote_time = 0.1
+max_lean_angle = 20.0

@@ -15,6 +15,12 @@ extends CharacterBody3D
 @export var MaxFallSpeed: float = -70    # Terminal velocity
 @export_range(0, 1) var JumpStopMult: float = 0.75  # Jump cut multiplier
 
+@export_group("GroundSmash")
+@export var GroundSmashGravity : float = 200
+@export var GroundSmashMaxGravity : float = -100
+@export var GroundSmashJumpForce : float = 50
+@export var GroundSmashJumpGravity : float = 120
+
 @export_group("Others")
 @export var RotationSpeed: float = 10     # Character rotation speed
 @export var JumpBufferTime: float = 0.1  # Time window for jump input buffering
@@ -24,17 +30,20 @@ extends CharacterBody3D
 #endregion
 
 #region Internal Variables
-var Speed: float                        # Current movement speed
+@onready var Speed: float = WalkSpeed     # Current movement speed
 var InputDir: Vector3                    # Raw input direction
 var LastInputDir: Vector3               # Last valid input direction
-var AppliedVelocity: Vector3             # Final calculated velocity
-var MovementVelocity: Vector3            # Horizontal movement velocity
+var CurrentVelocity: Vector3             # Final calculated velocity
+var TargetVelocity: Vector3            # Horizontal movement velocity
 var rotation_direction: float            # Target rotation angle
+var CurrentJumpForce: float
 
 # State flags
 var CanChangeInput: bool = true
+var CanMove: bool = true
 var CanJump: bool = false
 var TryingToJump: bool = false
+var ManualJump:bool = false
 var CanRotate: bool = true
 var previously_floored: bool = false
 #endregion
@@ -49,23 +58,28 @@ var previously_floored: bool = false
 #endregion
 
 func _ready() -> void:
-	Speed = WalkSpeed
 	SimpleGrass.set_interactive(true)
 	setup_timers()
 
 func _process(delta: float) -> void:
-	handle_input(delta)
-	handle_state_events()
 	handle_effects(delta)
 	update_rotation(delta)
-	process_jump_input()
+
 
 
 func _physics_process(delta: float) -> void:
 	SimpleGrass.set_player_position(global_position)
-	handle_movement(delta)
-	velocity = AppliedVelocity
+	handle_input(delta)
+	handle_state_events()
+	velocity = CurrentVelocity
+	if CanMove:
+		handle_movement(delta)
+	else:
+		CurrentVelocity.x = 0
+		CurrentVelocity.z = 0
+	process_jump_input()
 	move_and_slide()
+
 
 #region Core Functions
 func setup_timers() -> void:
@@ -79,22 +93,25 @@ func handle_input(delta: float) -> void:
 	InputDir.z = Input.get_axis("MoveForward", "MoveBackward")
 	InputDir = InputDir.rotated(Vector3.UP, CameraJoint.rotation.y).normalized()
 	
+	
 	if CanChangeInput and InputDir != Vector3.ZERO:
 		LastInputDir = InputDir
 
 
 func handle_movement(delta: float) -> void:
 	"""Apply acceleration/deceleration to horizontal movement"""
-	MovementVelocity = InputDir * Speed * delta
-	if MovementVelocity.length() >= AppliedVelocity.length():
-		AppliedVelocity = velocity.move_toward(MovementVelocity, Accel * delta)
+	TargetVelocity = InputDir * Speed * delta
+	if TargetVelocity.length() >= CurrentVelocity.length():
+		CurrentVelocity = velocity.move_toward(
+				Vector3(TargetVelocity.x,CurrentVelocity.y,TargetVelocity.z), Accel * delta)
 	else:
-		AppliedVelocity = velocity.move_toward(MovementVelocity, Decla * delta)
-	AppliedVelocity.y = velocity.y
+		CurrentVelocity = velocity.move_toward(
+				Vector3(TargetVelocity.x,CurrentVelocity.y,TargetVelocity.z), Decla * delta)
+
 
 func process_jump_input() -> void:
 	"""Handle jump input with buffer and coyote time"""
-	if is_on_floor() and velocity.y == 0:
+	if is_on_floor() and velocity.y <= 0:
 		CanJump = true
 	elif JumpCoyoteTimer.time_left > 0:
 		JumpCoyoteTimer.start()
@@ -104,15 +121,32 @@ func process_jump_input() -> void:
 		JumpBufferTimer.start()
 	
 	if CanJump and TryingToJump:
+		ManualJump = true
+		CurrentJumpForce = JumpForce
 		StateManager.send_event("StartJumping")
 
+func Jump(_jumpForce):
+	CurrentVelocity.y = _jumpForce
+	TryingToJump = false
+	CanJump = false
+	PlayerModel.scale = Vector3(0.5, 1.5, 0.5)
+	
+	if !Input.is_action_pressed("Jump") and ManualJump:
+		ManualJump = false
+		CurrentVelocity.y *= JumpStopMult
+
+func lunch_player(_jumpForce):
+	CurrentJumpForce = _jumpForce
+	StateManager.send_event("StartJumping")
+
 func apply_gravity(delta):
-	if AppliedVelocity.y > JumpApexMax:
-		AppliedVelocity.y -= JumpApexGravity * delta
-	elif AppliedVelocity.y <= JumpApexMax and AppliedVelocity.y > MaxFallSpeed:
-		AppliedVelocity.y -= FallGravity * delta
-	elif AppliedVelocity.y < MaxFallSpeed:
-		AppliedVelocity.y = MaxFallSpeed
+	if CurrentVelocity.y > JumpApexMax:
+		CurrentVelocity.y -= JumpApexGravity * delta
+	elif CurrentVelocity.y <= JumpApexMax and CurrentVelocity.y > MaxFallSpeed:
+		CurrentVelocity.y -= FallGravity * delta
+	elif CurrentVelocity.y < MaxFallSpeed:
+		CurrentVelocity.y = MaxFallSpeed
+
 #endregion
 
 #region Visual Effects
@@ -140,7 +174,7 @@ func handle_effects(delta: float) -> void:
 		ModelPivot.rotation_degrees = lerp(ModelPivot.rotation_degrees, Vector3.ZERO, lean_speed * delta)
 	
 	# Landing squash effect
-	if is_on_floor() and AppliedVelocity.y < 2 and !previously_floored:
+	if is_on_floor() and CurrentVelocity.y < 2 and !previously_floored:
 		PlayerModel.scale = Vector3(1.25, 0.75, 1.25)
 	
 	previously_floored = is_on_floor()
@@ -161,10 +195,10 @@ func update_rotation(delta: float) -> void:
 #region State Management
 func handle_state_events() -> void:
 	"""Update state machine based on current conditions"""
-	if is_on_floor() and AppliedVelocity.y <= 0:
+	if is_on_floor() and CurrentVelocity.y <= 0:
 		StateManager.send_event("IsGrounded")
 	else:
-		if AppliedVelocity.y <= 0:
+		if CurrentVelocity.y <= 0:
 			StateManager.send_event("StartFalling")
 	
 	if InputDir == Vector3.ZERO:
@@ -174,6 +208,9 @@ func handle_state_events() -> void:
 	
 	if velocity.y < 0:
 		StateManager.send_event("StartFalling")
+	
+	if Input.is_action_just_pressed("GroundSmash"):
+		StateManager.send_event("IsGroundSmashing")
 #endregion
 
 #region State Handlers
@@ -186,19 +223,21 @@ func _on_walking_state_physics_processing(delta: float) -> void:
 
 func _on_jump_state_state_entered() -> void:
 	"""Jump initialization with optional jump cut"""
-	AppliedVelocity.y = JumpForce
-	TryingToJump = false
-	CanJump = false
-	PlayerModel.scale = Vector3(0.5, 1.5, 0.5)
-	
-	if !Input.is_action_pressed("Jump"):
-		AppliedVelocity.y *= JumpStopMult
+	Jump(CurrentJumpForce)
 
 func _on_jump_state_state_physics_processing(delta: float) -> void:
-	AppliedVelocity.y -= JumpGravity * delta
+	CurrentVelocity.y -= JumpGravity * delta
 	
-	if Input.is_action_just_released("Jump"):
-		AppliedVelocity.y *= JumpStopMult
+	if Input.is_action_just_released("Jump") and ManualJump:
+		ManualJump = false
+		CurrentVelocity.y *= JumpStopMult
+
+
+func _on_jump_state_state_exited() -> void:
+	ManualJump = false
+
+func _on_falling_state_state_entered() -> void:
+	TargetVelocity.y = 0
 
 func _on_falling_state_state_physics_processing(delta: float) -> void:
 	"""Handle variable gravity during different fall phases"""
@@ -212,3 +251,34 @@ func _on_jump_buffer_timeout():
 func _on_jump_coyote_timeout():
 	CanJump = false
 #endregion
+
+func _on_idle_state_state_entered() -> void:
+	CurrentVelocity.y = 0
+
+func _on_ground_smashing_state_state_entered() -> void:
+	CurrentVelocity.y = 0
+	CanMove = false
+
+func _on_ground_smashing_state_state_physics_processing(delta: float) -> void:
+	if is_on_floor():
+		CanMove = true
+	else:
+		if CurrentVelocity.y > JumpApexMax:
+			CurrentVelocity.y -= JumpApexGravity * delta
+		elif CurrentVelocity.y <= JumpApexMax and CurrentVelocity.y > GroundSmashMaxGravity:
+			CurrentVelocity.y -= GroundSmashGravity * delta
+		elif CurrentVelocity.y < GroundSmashMaxGravity and !is_on_floor():
+			CurrentVelocity.y = GroundSmashMaxGravity
+
+func _on_ground_smashing_state_state_exited() -> void:
+	CanMove = true
+
+
+func _on_ground_smash_jump_state_state_entered() -> void:
+	Jump(GroundSmashJumpForce)
+
+func _on_ground_smash_jump_state_state_physics_processing(delta: float) -> void:
+	CurrentVelocity.y -= GroundSmashJumpGravity * delta
+	
+	if Input.is_action_just_released("Jump"):
+		CurrentVelocity.y = CurrentVelocity.y * JumpStopMult

@@ -16,9 +16,6 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_74g7w"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_p5o4e"]
-radius = 0.53906
-
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ouo5f"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rkrj8"]
@@ -26,6 +23,9 @@ albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_mdhr0"]
 material = SubResource("StandardMaterial3D_rkrj8")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_p5o4e"]
+radius = 0.53906
 
 [sub_resource type="Resource" id="Resource_kbxdc"]
 script = ExtResource("3_3lpyv")
@@ -59,29 +59,20 @@ point_count = 3
 
 [node name="Player" type="CharacterBody3D" groups=["Player"]]
 collision_layer = 2
+floor_snap_length = 0.2
 script = ExtResource("1_1kw6n")
-WalkSpeed = 15.0
-Accel = 100.0
-Decla = 200.0
-JumpForce = 25.0
-JumpGravity = 70.0
-JumpStopMult = 0.5
-GroundSmashGravity = 400.0
-GroundSmashJumpForce = 35.0
-GroundSmashJumpGravity = 70.0
+walk_speed = 900.0
+acceleration = 200.0
+deceleration = 200.0
+ground_smash_gravity = 400.0
+ground_smash_jump_force = 40.0
+ground_smash_jump_gravity = 70.0
 lean_speed = 3.0
 
 [node name="PlayerCol" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_74g7w")
 debug_color = Color(0, 0.613017, 0.617733, 0.42)
-
-[node name="PlayerArea" type="Area3D" parent="." groups=["Player"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerArea"]
-shape = SubResource("CapsuleShape3D_p5o4e")
-debug_color = Color(0.932942, 2.44504e-05, 0.646688, 0.42)
 
 [node name="ModlePovit" type="Node3D" parent="."]
 
@@ -100,6 +91,13 @@ mesh = SubResource("SphereMesh_mdhr0")
 transform = Transform3D(0.227033, 0, 0, 0, 0.227033, 0, 0, 0, 0.227033, -0.19433, 0.528621, -0.434562)
 layers = 512
 mesh = SubResource("SphereMesh_mdhr0")
+
+[node name="PlayerArea" type="Area3D" parent="." groups=["Player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerArea"]
+shape = SubResource("CapsuleShape3D_p5o4e")
+debug_color = Color(0.932942, 2.44504e-05, 0.646688, 0.42)
 
 [node name="CameraHeight" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
@@ -300,7 +298,6 @@ cull_mask = 982527
 
 [connection signal="timeout" from="Timers/JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]
-[connection signal="state_entered" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_physics_processing"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_entered"]
@@ -312,4 +309,5 @@ cull_mask = 982527
 [connection signal="state_exited" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/GroundSmashJumpState" to="." method="_on_ground_smash_jump_state_state_entered"]
+[connection signal="state_exited" from="StateManger/PlayerMovementState/GroundSmashJumpState" to="." method="_on_ground_smash_jump_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/GroundSmashJumpState" to="." method="_on_ground_smash_jump_state_state_physics_processing"]
