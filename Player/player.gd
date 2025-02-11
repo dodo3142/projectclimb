@@ -19,7 +19,12 @@ extends CharacterBody3D
 @export var ground_smash_gravity: float = 200
 @export var ground_smash_max_speed: float = -100
 @export var ground_smash_jump_force: float = 50
-@export var ground_smash_jump_gravity: float = 120
+@export var ground_smash_jump_gravity_unused: float = 120
+@export var ground_smash_time: float = 0.2
+
+@export_group("Swinging")
+@export var swing_speed: float = 2.0  # Speed of swinging
+@export var swing_radius: float = 3.0 # Distance from the swing anchor
 
 @export_group("Others")
 @export var rotation_speed: float = 10     # Character rotation speed
@@ -36,6 +41,7 @@ var last_input_direction: Vector3               # Last valid input direction
 var target_velocity: Vector3                    # Horizontal movement velocity
 var rotation_direction: float                   # Target rotation angle
 var current_jump_force: float
+var swing_angle: float = 0.0
 
 # State flags
 var can_change_input: bool = true
@@ -48,6 +54,7 @@ var previously_floored: bool = false
 var is_jumping: bool = false
 var is_falling: bool = false
 var is_groundsmashing: bool = false
+var is_swinging: bool = false
 
 #endregion
 
@@ -58,6 +65,9 @@ var is_groundsmashing: bool = false
 @onready var model_pivot: Node3D = $ModlePovit
 @onready var jump_coyote_timer: Timer = $Timers/JumpCoyote
 @onready var jump_buffer_timer: Timer = $Timers/JumpBuffer
+@onready var ground_smashing_timer: Timer = $Timers/GroundSmashing
+@onready var speed_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer/SpeedNumber
+@onready var swing_joint: Marker3D = $SwingJoint
 #endregion
 
 func _ready() -> void:
@@ -67,7 +77,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	handle_visual_effects(delta)
 	update_rotation(delta)
-	debug_line()
+	debug()
 
 func _physics_process(delta: float) -> void:
 	SimpleGrass.set_player_position(global_position)
@@ -81,18 +91,22 @@ func _physics_process(delta: float) -> void:
 		velocity.x = 0
 		velocity.z = 0
 	print(velocity.y)
+	if Input.is_action_just_pressed("TestInput"):
+		state_manager.send_event("StartSwinging")
 	move_and_slide()
 
 
 #region Core Functions
-func debug_line() -> void:
+func debug() -> void:
 	DebugDraw3D.draw_arrow(position,position + (velocity * 0.2),Color(0.0, 0.831, 0.841),0.1)
 	DebugDraw3D.draw_arrow(position,position + (input_direction.normalized() * 3),Color(0.0, 0.0, 0.0),0.1)
+	speed_number.text = str(velocity.length_squared()).pad_decimals(2)
 
 func setup_timers() -> void:
 	"""Configure jump timing-related timers."""
 	jump_buffer_timer.wait_time = jump_buffer_time
 	jump_coyote_timer.wait_time = jump_coyote_time
+	ground_smashing_timer.wait_time = ground_smash_time
 
 func handle_input(delta: float) -> void:
 	"""Process player input and calculate movement direction."""
@@ -125,8 +139,11 @@ func process_jump_input() -> void:
 		jump_buffer_timer.start()
 	
 	if can_jump and trying_to_jump:
-		manual_jump = true
-		current_jump_force = jump_force
+		if is_groundsmashing:
+			current_jump_force = ground_smash_jump_force
+		else:
+			manual_jump = true
+			current_jump_force = jump_force
 		state_manager.send_event("StartJumping")
 
 func jump(jump_force: float) -> void:
@@ -268,19 +285,12 @@ func _on_ground_smashing_state_state_physics_processing(delta: float) -> void:
 		can_move = true
 
 func _on_ground_smashing_state_state_exited() -> void:
-	is_groundsmashing = false
+	ground_smashing_timer.start()
 	can_move = true
 
-#GROUNDSMASHINGJUMP
-func _on_ground_smash_jump_state_state_entered() -> void:
-	is_jumping = true
-	jump(ground_smash_jump_force)
+#SWINGING
 
-func _on_ground_smash_jump_state_state_physics_processing(delta: float) -> void:
-	pass
 
-func _on_ground_smash_jump_state_state_exited() -> void:
-	is_jumping = false
 
 #region Timer Signals
 func _on_jump_buffer_timeout():
@@ -288,4 +298,17 @@ func _on_jump_buffer_timeout():
 
 func _on_jump_coyote_timeout():
 	can_jump = false
+
+func _on_ground_smashing_timeout() -> void:
+	is_groundsmashing = false
 #endregion
+
+
+func _on_swinging_state_state_physics_processing(delta: float) -> void:
+	# Calculate the new position based on the swing angle
+	swing_angle += swing_speed * delta
+	var x = swing_radius * sin(swing_angle)
+	var y = -swing_radius * cos(swing_angle)
+	
+	# Update the player's position relative to the swing anchor
+	global_position = swing_joint.global_position + Vector3(x, y, 0)

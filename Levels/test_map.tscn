@@ -198,15 +198,3 @@ SpeedScale = 0.2
 
 [node name="Player" parent="." instance=ExtResource("10_f56q2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3344, 7.08722, -5.08321)
-jump_force = 30.0
-jump_gravity = 120.0
-jump_apex_max_speed = -5.0
-jump_apex_gravity = 50.0
-fall_gravity = 100.0
-max_fall_speed = -70.0
-jump_cut_multiplier = 0.75
-ground_smash_max_speed = -100.0
-rotation_speed = 10.0
-jump_buffer_time = 0.1
-jump_coyote_time = 0.1
-max_lean_angle = 20.0
