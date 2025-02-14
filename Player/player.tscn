@@ -66,6 +66,7 @@ acceleration = 200.0
 deceleration = 200.0
 ground_smash_gravity = 400.0
 ground_smash_jump_force = 40.0
+dash_duration = 0.5
 lean_speed = 3.0
 
 [node name="PlayerCol" type="CollisionShape3D" parent="."]
@@ -156,6 +157,10 @@ one_shot = true
 wait_time = 0.2
 one_shot = true
 
+[node name="Dashing" type="Timer" parent="Timers"]
+wait_time = 2.0
+one_shot = true
+
 [node name="StateManger" type="Node" parent="."]
 script = ExtResource("3_u1fyy")
 
@@ -184,6 +189,12 @@ to = NodePath("../../FallingState")
 event = &"StartFalling"
 delay_in_seconds = "0.0"
 
+[node name="ToDash" type="Node" parent="StateManger/PlayerMovementState/IdleState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../DashingState")
+event = &"isDashing"
+delay_in_seconds = "0.0"
+
 [node name="WalkingState" type="Node" parent="StateManger/PlayerMovementState"]
 script = ExtResource("5_putqt")
 
@@ -203,6 +214,12 @@ delay_in_seconds = "0.0"
 script = ExtResource("6_2reyu")
 to = NodePath("../../FallingState")
 event = &"StartFalling"
+delay_in_seconds = "0.0"
+
+[node name="ToDash" type="Node" parent="StateManger/PlayerMovementState/WalkingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../DashingState")
+event = &"isDashing"
 delay_in_seconds = "0.0"
 
 [node name="JumpState" type="Node" parent="StateManger/PlayerMovementState"]
@@ -277,6 +294,21 @@ to = NodePath("../../JumpState")
 event = &"StartJumping"
 delay_in_seconds = "0.0"
 
+[node name="DashingState" type="Node" parent="StateManger/PlayerMovementState"]
+script = ExtResource("5_putqt")
+
+[node name="ToIdle" type="Node" parent="StateManger/PlayerMovementState/DashingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../IdleState")
+event = &"DoneDashing"
+delay_in_seconds = "0.0"
+
+[node name="ToFall" type="Node" parent="StateManger/PlayerMovementState/DashingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../FallingState")
+event = &"StartFalling"
+delay_in_seconds = "0.0"
+
 [node name="Debug" type="CanvasLayer" parent="."]
 
 [node name="StateChartDebugger" parent="Debug" instance=ExtResource("7_wcfuw")]
@@ -326,8 +358,10 @@ cull_mask = 982527
 [connection signal="timeout" from="Timers/JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]
 [connection signal="timeout" from="Timers/GroundSmashing" to="." method="_on_ground_smashing_timeout"]
+[connection signal="timeout" from="Timers/Dashing" to="." method="_on_dashing_timeout"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_physics_processing"]
-[connection signal="state_physics_processing" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_physics_processing"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_state_entered"]
+[connection signal="state_physics_processing" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_entered"]
 [connection signal="state_exited" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_physics_processing"]
@@ -337,3 +371,6 @@ cull_mask = 982527
 [connection signal="state_exited" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_physics_processing"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/SwingingState" to="." method="_on_swinging_state_state_physics_processing"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/DashingState" to="." method="_on_dashing_state_state_entered"]
+[connection signal="state_exited" from="StateManger/PlayerMovementState/DashingState" to="." method="_on_dashing_state_state_exited"]
+[connection signal="state_physics_processing" from="StateManger/PlayerMovementState/DashingState" to="." method="_on_dashing_state_state_physics_processing"]

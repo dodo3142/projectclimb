@@ -22,6 +22,10 @@ extends CharacterBody3D
 @export var ground_smash_jump_gravity_unused: float = 120
 @export var ground_smash_time: float = 0.2
 
+@export_group("Dashing")
+@export var dash_speed: float = 1500
+@export var dash_duration: float = 2
+
 @export_group("Swinging")
 @export var swing_speed: float = 2.0  # Speed of swinging
 @export var swing_radius: float = 3.0 # Distance from the swing anchor
@@ -66,6 +70,7 @@ var is_swinging: bool = false
 @onready var jump_coyote_timer: Timer = $Timers/JumpCoyote
 @onready var jump_buffer_timer: Timer = $Timers/JumpBuffer
 @onready var ground_smashing_timer: Timer = $Timers/GroundSmashing
+@onready var dash_timer: Timer = $Timers/Dashing
 @onready var speed_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer/SpeedNumber
 @onready var swing_joint: Marker3D = $SwingJoint
 #endregion
@@ -90,9 +95,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = 0
 		velocity.z = 0
-	print(velocity.y)
 	if Input.is_action_just_pressed("TestInput"):
-		state_manager.send_event("StartSwinging")
+		current_speed = 1200
 	move_and_slide()
 
 
@@ -100,13 +104,14 @@ func _physics_process(delta: float) -> void:
 func debug() -> void:
 	DebugDraw3D.draw_arrow(position,position + (velocity * 0.2),Color(0.0, 0.831, 0.841),0.1)
 	DebugDraw3D.draw_arrow(position,position + (input_direction.normalized() * 3),Color(0.0, 0.0, 0.0),0.1)
-	speed_number.text = str(velocity.length_squared()).pad_decimals(2)
+	speed_number.text = str(Vector2(velocity.x,velocity.z).length_squared()).pad_decimals(2)
 
 func setup_timers() -> void:
 	"""Configure jump timing-related timers."""
 	jump_buffer_timer.wait_time = jump_buffer_time
 	jump_coyote_timer.wait_time = jump_coyote_time
 	ground_smashing_timer.wait_time = ground_smash_time
+	dash_timer.wait_time = dash_duration
 
 func handle_input(delta: float) -> void:
 	"""Process player input and calculate movement direction."""
@@ -247,12 +252,23 @@ func handle_state_events() -> void:
 	
 	if Input.is_action_just_pressed("GroundSmash"):
 		state_manager.send_event("IsGroundSmashing")
+	
+	if Input.is_action_just_pressed("Dash"):
+		state_manager.send_event("isDashing")
 #endregion
 
 
 #IDLESTATE
 func _on_idle_state_state_physics_processing(delta: float) -> void:
 	current_speed = walk_speed
+
+
+#WALKINGSTATE
+func _on_walking_state_state_entered() -> void:
+	pass
+
+func _on_walking_state_state_physics_processing(delta: float) -> void:
+	current_speed = move_toward(current_speed,walk_speed,2000*delta)
 
 #JUMPINGSTATE
 func _on_jump_state_state_entered() -> void:
@@ -288,9 +304,17 @@ func _on_ground_smashing_state_state_exited() -> void:
 	ground_smashing_timer.start()
 	can_move = true
 
-#SWINGING
+#DASHING
+func _on_dashing_state_state_entered() -> void:
+	current_speed = dash_speed
+	can_change_input = false
+	dash_timer.start()
 
+func _on_dashing_state_state_physics_processing(delta: float) -> void:
+	pass # Replace with function body.
 
+func _on_dashing_state_state_exited() -> void:
+	can_change_input = true
 
 #region Timer Signals
 func _on_jump_buffer_timeout():
@@ -301,9 +325,14 @@ func _on_jump_coyote_timeout():
 
 func _on_ground_smashing_timeout() -> void:
 	is_groundsmashing = false
+
+func _on_dashing_timeout() -> void:
+	state_manager.send_event("DoneDashing")
 #endregion
 
 
+
+#WIP
 func _on_swinging_state_state_physics_processing(delta: float) -> void:
 	# Calculate the new position based on the swing angle
 	swing_angle += swing_speed * delta
