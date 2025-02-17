@@ -41,7 +41,7 @@ extends CharacterBody3D
 #region Internal Variables
 @onready var current_speed: float = walk_speed  # Current movement speed
 var input_direction: Vector3                    # Raw input direction
-var last_input_direction: Vector3               # Last valid input direction
+var last_input_direction: Vector3 = Vector3.FORWARD              # Last valid input direction
 var target_velocity: Vector3                    # Horizontal movement velocity
 var rotation_direction: float                   # Target rotation angle
 var current_jump_force: float
@@ -59,11 +59,13 @@ var is_jumping: bool = false
 var is_falling: bool = false
 var is_groundsmashing: bool = false
 var is_swinging: bool = false
+var is_dashing: bool = false
 
 #endregion
 
 #region Node References
 @onready var camera_joint: Node3D = $CameraJoint
+@onready var current_camera: PhantomCamera3D = $CameraJoint/SpringArm3D/PhantomCamera3D
 @onready var state_manager: StateChart = $StateManger
 @onready var player_model: MeshInstance3D = $ModlePovit/PlayerModle
 @onready var model_pivot: Node3D = $ModlePovit
@@ -72,6 +74,7 @@ var is_swinging: bool = false
 @onready var ground_smashing_timer: Timer = $Timers/GroundSmashing
 @onready var dash_timer: Timer = $Timers/Dashing
 @onready var speed_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer/SpeedNumber
+@onready var velocity_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer2/VelocityNumber
 @onready var swing_joint: Marker3D = $SwingJoint
 #endregion
 
@@ -88,15 +91,7 @@ func _physics_process(delta: float) -> void:
 	SimpleGrass.set_player_position(global_position)
 	handle_input(delta)
 	handle_state_events()
-	apply_gravity(delta)
 	process_jump_input()
-	if can_move:
-		handle_movement(delta)
-	else:
-		velocity.x = 0
-		velocity.z = 0
-	if Input.is_action_just_pressed("TestInput"):
-		current_speed = 1200
 	move_and_slide()
 
 
@@ -105,6 +100,7 @@ func debug() -> void:
 	DebugDraw3D.draw_arrow(position,position + (velocity * 0.2),Color(0.0, 0.831, 0.841),0.1)
 	DebugDraw3D.draw_arrow(position,position + (input_direction.normalized() * 3),Color(0.0, 0.0, 0.0),0.1)
 	speed_number.text = str(Vector2(velocity.x,velocity.z).length_squared()).pad_decimals(2)
+	velocity_number.text = str(velocity)
 
 func setup_timers() -> void:
 	"""Configure jump timing-related timers."""
@@ -115,10 +111,11 @@ func setup_timers() -> void:
 
 func handle_input(delta: float) -> void:
 	"""Process player input and calculate movement direction."""
+	var forward = current_camera.global_basis.z
+	var right = current_camera.global_basis.x
 	input_direction.x = Input.get_axis("MoveLeft", "MoveRight")
 	input_direction.z = Input.get_axis("MoveForward", "MoveBackward")
 	input_direction = input_direction.rotated(Vector3.UP, camera_joint.rotation.y).normalized()
-	
 	if can_change_input and input_direction != Vector3.ZERO:
 		last_input_direction = input_direction
 
@@ -167,27 +164,6 @@ func launch_player(jump_force: float) -> void:
 	current_jump_force = jump_force
 	state_manager.send_event("StartJumping")
 
-func apply_gravity(delta: float) -> void:
-	"""Apply gravity based on the current state (jumping, falling, etc.)."""
-	if not is_on_floor():
-		if velocity.y > 0:
-			velocity.y -= jump_gravity * delta
-		elif is_groundsmashing:
-			if velocity.y > jump_apex_max_speed:
-				velocity.y -= jump_apex_gravity * delta
-			elif velocity.y <= jump_apex_max_speed and velocity.y > ground_smash_max_speed:
-				velocity.y -= ground_smash_gravity * delta
-			elif velocity.y < ground_smash_max_speed and !is_on_floor():
-				velocity.y = ground_smash_max_speed
-		else:
-			if velocity.y > jump_apex_max_speed:
-				velocity.y -= jump_apex_gravity * delta
-			elif velocity.y <= jump_apex_max_speed and velocity.y > max_fall_speed:
-				velocity.y -= fall_gravity * delta
-			elif velocity.y < max_fall_speed:
-				velocity.y = max_fall_speed
-	elif not is_jumping:
-		velocity.y = 0
 #endregion
 
 #region Visual Effects
@@ -236,7 +212,7 @@ func update_rotation(delta: float) -> void:
 #region State Management
 func handle_state_events() -> void:
 	"""Update state machine based on current conditions."""
-	if is_on_floor() and velocity.y <= 0:
+	if is_on_floor():
 		state_manager.send_event("IsGrounded")
 	else:
 		if velocity.y <= 0:
@@ -247,9 +223,6 @@ func handle_state_events() -> void:
 	else:
 		state_manager.send_event("StartMoving")
 	
-	if velocity.y < 0:
-		state_manager.send_event("StartFalling")
-	
 	if Input.is_action_just_pressed("GroundSmash"):
 		state_manager.send_event("IsGroundSmashing")
 	
@@ -259,7 +232,11 @@ func handle_state_events() -> void:
 
 
 #IDLESTATE
+func _on_idle_state_state_entered() -> void:
+	velocity.y = 0
+
 func _on_idle_state_state_physics_processing(delta: float) -> void:
+	handle_movement(delta)
 	current_speed = walk_speed
 
 
@@ -268,7 +245,7 @@ func _on_walking_state_state_entered() -> void:
 	pass
 
 func _on_walking_state_state_physics_processing(delta: float) -> void:
-	current_speed = move_toward(current_speed,walk_speed,2000*delta)
+	handle_movement(delta)
 
 #JUMPINGSTATE
 func _on_jump_state_state_entered() -> void:
@@ -277,6 +254,8 @@ func _on_jump_state_state_entered() -> void:
 	jump(current_jump_force)
 
 func _on_jump_state_state_physics_processing(delta: float) -> void:
+	handle_movement(delta)
+	velocity.y -= jump_gravity * delta
 	if Input.is_action_just_released("Jump") and manual_jump:
 		manual_jump = false
 		velocity.y *= jump_cut_multiplier
@@ -288,15 +267,28 @@ func _on_jump_state_state_exited() -> void:
 #FALLINGSTATE
 func _on_falling_state_state_physics_processing(delta: float) -> void:
 	"""Handle variable gravity during different fall phases."""
-	pass
+	handle_movement(delta)
+	if velocity.y > jump_apex_max_speed:
+		velocity.y -= jump_apex_gravity * delta
+	elif velocity.y <= jump_apex_max_speed and velocity.y > max_fall_speed:
+		velocity.y -= fall_gravity * delta
+	elif velocity.y < max_fall_speed:
+		velocity.y = max_fall_speed
 
 #GROUNDSMASHING
 func _on_ground_smashing_state_state_entered() -> void:
 	is_groundsmashing = true
-	velocity.y = 0
+	velocity = Vector3.ZERO
 	can_move = false
 
 func _on_ground_smashing_state_state_physics_processing(delta: float) -> void:
+	if velocity.y > jump_apex_max_speed:
+		velocity.y -= jump_apex_gravity * delta
+	elif velocity.y <= jump_apex_max_speed and velocity.y > ground_smash_max_speed:
+		velocity.y -= ground_smash_gravity * delta
+	elif velocity.y < ground_smash_max_speed and !is_on_floor():
+		velocity.y = ground_smash_max_speed
+	
 	if is_on_floor():
 		can_move = true
 
@@ -306,14 +298,20 @@ func _on_ground_smashing_state_state_exited() -> void:
 
 #DASHING
 func _on_dashing_state_state_entered() -> void:
-	current_speed = dash_speed
+	is_dashing = true
 	can_change_input = false
 	dash_timer.start()
+	velocity = last_input_direction * dash_speed
+	velocity.y = 0
 
 func _on_dashing_state_state_physics_processing(delta: float) -> void:
-	pass # Replace with function body.
+	if get_slide_collision_count() > 0:
+		var collision_normal = get_slide_collision(0).get_normal()
+		var bouncedir =  (last_input_direction * dash_speed).normalized().bounce(collision_normal)
+		print(bouncedir)
 
 func _on_dashing_state_state_exited() -> void:
+	is_dashing = false
 	can_change_input = true
 
 #region Timer Signals

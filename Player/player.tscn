@@ -66,7 +66,8 @@ acceleration = 200.0
 deceleration = 200.0
 ground_smash_gravity = 400.0
 ground_smash_jump_force = 40.0
-dash_duration = 0.5
+dash_speed = 50.0
+dash_duration = 0.2
 lean_speed = 3.0
 
 [node name="PlayerCol" type="CollisionShape3D" parent="."]
@@ -225,12 +226,6 @@ delay_in_seconds = "0.0"
 [node name="JumpState" type="Node" parent="StateManger/PlayerMovementState"]
 script = ExtResource("5_putqt")
 
-[node name="ToIdle" type="Node" parent="StateManger/PlayerMovementState/JumpState"]
-script = ExtResource("6_2reyu")
-to = NodePath("../../IdleState")
-event = &"IsGrounded"
-delay_in_seconds = "0.0"
-
 [node name="ToFalling" type="Node" parent="StateManger/PlayerMovementState/JumpState"]
 script = ExtResource("6_2reyu")
 to = NodePath("../../FallingState")
@@ -241,6 +236,12 @@ delay_in_seconds = "0.0"
 script = ExtResource("6_2reyu")
 to = NodePath("../../GroundSmashingState")
 event = &"IsGroundSmashing"
+delay_in_seconds = "0.0"
+
+[node name="ToDash" type="Node" parent="StateManger/PlayerMovementState/JumpState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../DashingState")
+event = &"isDashing"
 delay_in_seconds = "0.0"
 
 [node name="FallingState" type="Node" parent="StateManger/PlayerMovementState"]
@@ -268,6 +269,12 @@ delay_in_seconds = "0.0"
 script = ExtResource("6_2reyu")
 to = NodePath("../../SwingingState")
 event = &"StartSwinging"
+delay_in_seconds = "0.0"
+
+[node name="ToDash" type="Node" parent="StateManger/PlayerMovementState/FallingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../DashingState")
+event = &"isDashing"
 delay_in_seconds = "0.0"
 
 [node name="GroundSmashingState" type="Node" parent="StateManger/PlayerMovementState"]
@@ -301,12 +308,6 @@ script = ExtResource("5_putqt")
 script = ExtResource("6_2reyu")
 to = NodePath("../../IdleState")
 event = &"DoneDashing"
-delay_in_seconds = "0.0"
-
-[node name="ToFall" type="Node" parent="StateManger/PlayerMovementState/DashingState"]
-script = ExtResource("6_2reyu")
-to = NodePath("../../FallingState")
-event = &"StartFalling"
 delay_in_seconds = "0.0"
 
 [node name="Debug" type="CanvasLayer" parent="."]
@@ -349,6 +350,16 @@ text = "Speed:"
 [node name="SpeedNumber" type="Label" parent="Debug/DebugText/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="Debug/DebugText/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Debug/DebugText/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Velocity:"
+
+[node name="VelocityNumber" type="Label" parent="Debug/DebugText/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
 [node name="Shadow" type="Decal" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.95264, 0)
 size = Vector3(2, 15.9053, 2)
@@ -359,6 +370,7 @@ cull_mask = 982527
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]
 [connection signal="timeout" from="Timers/GroundSmashing" to="." method="_on_ground_smashing_timeout"]
 [connection signal="timeout" from="Timers/Dashing" to="." method="_on_dashing_timeout"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_state_physics_processing"]
