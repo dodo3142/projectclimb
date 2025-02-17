@@ -66,9 +66,10 @@ acceleration = 200.0
 deceleration = 200.0
 ground_smash_gravity = 400.0
 ground_smash_jump_force = 40.0
-walljump_force_xz = 50.0
+walljump_force_xz = 30.0
 dash_speed = 50.0
 dash_duration = 0.2
+dash_cooldown = 0.7
 wall_jump_ray_lenght = 1.0
 lean_speed = 3.0
 
@@ -171,6 +172,10 @@ one_shot = true
 
 [node name="Dashing" type="Timer" parent="Timers"]
 wait_time = 2.0
+one_shot = true
+
+[node name="DashCooldown" type="Timer" parent="Timers"]
+wait_time = 0.5
 one_shot = true
 
 [node name="StateManger" type="Node" parent="."]
@@ -396,6 +401,7 @@ layout_mode = 2
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]
 [connection signal="timeout" from="Timers/GroundSmashing" to="." method="_on_ground_smashing_timeout"]
 [connection signal="timeout" from="Timers/Dashing" to="." method="_on_dashing_timeout"]
+[connection signal="timeout" from="Timers/DashCooldown" to="." method="_on_dash_cooldown_timeout"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/IdleState" to="." method="_on_idle_state_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/WalkingState" to="." method="_on_walking_state_state_entered"]

@@ -29,6 +29,7 @@ extends CharacterBody3D
 @export_group("Dashing")
 @export var dash_speed: float = 1500
 @export var dash_duration: float = 2
+@export var dash_cooldown: float = 0.5
 
 @export_group("Swinging")
 @export var swing_speed: float = 2.0  # Speed of swinging
@@ -66,6 +67,7 @@ var is_falling: bool = false
 var is_groundsmashing: bool = false
 var is_swinging: bool = false
 var is_dashing: bool = false
+var can_dash:bool = true
 
 #endregion
 
@@ -79,6 +81,7 @@ var is_dashing: bool = false
 @onready var jump_buffer_timer: Timer = $Timers/JumpBuffer
 @onready var ground_smashing_timer: Timer = $Timers/GroundSmashing
 @onready var dash_timer: Timer = $Timers/Dashing
+@onready var dash_cooldown_timer: Timer = $Timers/DashCooldown
 @onready var speed_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer/SpeedNumber
 @onready var velocity_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer2/VelocityNumber
 @onready var wall_jump_ray_cast: RayCast3D = $Raycasts/WallJumpRayCast
@@ -114,6 +117,7 @@ func setup_timers() -> void:
 	jump_coyote_timer.wait_time = jump_coyote_time
 	ground_smashing_timer.wait_time = ground_smash_time
 	dash_timer.wait_time = dash_duration
+	dash_cooldown_timer.wait_time = dash_cooldown
 
 func handle_input(delta: float) -> void:
 	"""Process player input and calculate movement direction."""
@@ -232,7 +236,7 @@ func handle_state_events() -> void:
 	if Input.is_action_just_pressed("GroundSmash"):
 		state_manager.send_event("IsGroundSmashing")
 	
-	if Input.is_action_just_pressed("Dash"):
+	if Input.is_action_just_pressed("Dash") and can_dash:
 		state_manager.send_event("isDashing")
 #endregion
 
@@ -305,11 +309,13 @@ func _on_ground_smashing_state_state_exited() -> void:
 #DASHING
 func _on_dashing_state_state_entered() -> void:
 	is_dashing = true
+	can_dash = false
 	can_change_input = false
+	wall_jump_ray_cast.target_position = last_input_direction.normalized() * wall_jump_ray_lenght
 	dash_timer.start()
+	dash_cooldown_timer.start()
 	velocity = last_input_direction * dash_speed
 	velocity.y = 0
-	wall_jump_ray_cast.target_position = last_input_direction.normalized() * wall_jump_ray_lenght
 
 func _on_dashing_state_state_physics_processing(delta: float) -> void:
 	if wall_jump_ray_cast.is_colliding():
@@ -343,6 +349,9 @@ func _on_ground_smashing_timeout() -> void:
 
 func _on_dashing_timeout() -> void:
 	state_manager.send_event("DoneDashing")
+
+func _on_dash_cooldown_timeout() -> void:
+	can_dash = true
 #endregion
 
 
