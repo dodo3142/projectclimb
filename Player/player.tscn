@@ -24,6 +24,10 @@ albedo_color = Color(0, 0, 0, 1)
 [sub_resource type="SphereMesh" id="SphereMesh_mdhr0"]
 material = SubResource("StandardMaterial3D_rkrj8")
 
+[sub_resource type="Curve" id="Curve_af5np"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.247813, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_p5o4e"]
 radius = 0.53906
 
@@ -51,10 +55,6 @@ albedo_color = Color(0.877563, 1, 0.631976, 1)
 [sub_resource type="SphereMesh" id="SphereMesh_p5o4e"]
 material = SubResource("StandardMaterial3D_p5o4e")
 
-[sub_resource type="Curve" id="Curve_af5np"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.247813, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
 [sub_resource type="SphereMesh" id="SphereMesh_5n68b"]
 
 [node name="Player" type="CharacterBody3D" groups=["Player"]]
@@ -66,8 +66,10 @@ acceleration = 200.0
 deceleration = 200.0
 ground_smash_gravity = 400.0
 ground_smash_jump_force = 40.0
+walljump_force_xz = 50.0
 dash_speed = 50.0
 dash_duration = 0.2
+wall_jump_ray_lenght = 1.0
 lean_speed = 3.0
 
 [node name="PlayerCol" type="CollisionShape3D" parent="."]
@@ -92,6 +94,19 @@ mesh = SubResource("SphereMesh_mdhr0")
 transform = Transform3D(0.227033, 0, 0, 0, 0.227033, 0, 0, 0, 0.227033, -0.19433, 0.528621, -0.434562)
 layers = 512
 mesh = SubResource("SphereMesh_mdhr0")
+
+[node name="MovingParticles" type="CPUParticles3D" parent="ModlePovit"]
+unique_name_in_owner = true
+transform = Transform3D(2.24883, 0, 0, 0, 2.24883, 0, 0, 0, 2.24883, 0, 0, 0)
+amount = 60
+mesh = ExtResource("11_8m8p3")
+emission_shape = 1
+emission_sphere_radius = 0.1
+particle_flag_align_y = true
+direction = Vector3(0, 0, 0)
+gravity = Vector3(0, 0.1, 0)
+scale_amount_min = 0.75
+scale_amount_curve = SubResource("Curve_af5np")
 
 [node name="PlayerArea" type="Area3D" parent="." groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -123,26 +138,22 @@ transform = Transform3D(0.3384, 0, 0, 0, 0.3384, 0, 0, 0, 0.3384, 0, 0, 0)
 visible = false
 mesh = SubResource("SphereMesh_p5o4e")
 
-[node name="MovingParticles" type="CPUParticles3D" parent="."]
-transform = Transform3D(2.24883, 0, 0, 0, 2.24883, 0, 0, 0, 2.24883, 0, 0, 0)
-amount = 60
-mesh = ExtResource("11_8m8p3")
-emission_shape = 1
-emission_sphere_radius = 0.1
-particle_flag_align_y = true
-direction = Vector3(0, 0, 0)
-gravity = Vector3(0, 0.1, 0)
-scale_amount_min = 0.75
-scale_amount_curve = SubResource("Curve_af5np")
+[node name="Raycasts" type="Node3D" parent="."]
+
+[node name="WallJumpRayCast" type="RayCast3D" parent="Raycasts"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -1)
 
 [node name="GrassInteract" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.986852, 0, 0, 0, 0.986852, 0, 0, 0, 0.986852, 0, 0.481205, 0)
 layers = 65536
 mesh = SubResource("SphereMesh_5n68b")
 
-[node name="SwingJoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-top_level = true
+[node name="Shadow" type="Decal" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.95264, 0)
+size = Vector3(2, 15.9053, 2)
+texture_albedo = ExtResource("13_p5o4e")
+cull_mask = 982527
 
 [node name="Timers" type="Node" parent="."]
 
@@ -310,6 +321,27 @@ to = NodePath("../../IdleState")
 event = &"DoneDashing"
 delay_in_seconds = "0.0"
 
+[node name="ToWallJump" type="Node" parent="StateManger/PlayerMovementState/DashingState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../WallJumpState")
+event = &"WallJump"
+delay_in_seconds = "0.0"
+
+[node name="WallJumpState" type="Node" parent="StateManger/PlayerMovementState"]
+script = ExtResource("5_putqt")
+
+[node name="ToFalling" type="Node" parent="StateManger/PlayerMovementState/WallJumpState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../FallingState")
+event = &"StartFalling"
+delay_in_seconds = "0.0"
+
+[node name="ToDash" type="Node" parent="StateManger/PlayerMovementState/WallJumpState"]
+script = ExtResource("6_2reyu")
+to = NodePath("../../DashingState")
+event = &"isDashing"
+delay_in_seconds = "0.0"
+
 [node name="Debug" type="CanvasLayer" parent="."]
 
 [node name="StateChartDebugger" parent="Debug" instance=ExtResource("7_wcfuw")]
@@ -360,12 +392,6 @@ text = "Velocity:"
 [node name="VelocityNumber" type="Label" parent="Debug/DebugText/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Shadow" type="Decal" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.95264, 0)
-size = Vector3(2, 15.9053, 2)
-texture_albedo = ExtResource("13_p5o4e")
-cull_mask = 982527
-
 [connection signal="timeout" from="Timers/JumpBuffer" to="." method="_on_jump_buffer_timeout"]
 [connection signal="timeout" from="Timers/JumpCoyote" to="." method="_on_jump_coyote_timeout"]
 [connection signal="timeout" from="Timers/GroundSmashing" to="." method="_on_ground_smashing_timeout"]
@@ -377,12 +403,12 @@ cull_mask = 982527
 [connection signal="state_entered" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_entered"]
 [connection signal="state_exited" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/JumpState" to="." method="_on_jump_state_state_physics_processing"]
-[connection signal="state_entered" from="StateManger/PlayerMovementState/FallingState" to="." method="_on_falling_state_state_entered"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/FallingState" to="." method="_on_falling_state_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_entered"]
 [connection signal="state_exited" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/GroundSmashingState" to="." method="_on_ground_smashing_state_state_physics_processing"]
-[connection signal="state_physics_processing" from="StateManger/PlayerMovementState/SwingingState" to="." method="_on_swinging_state_state_physics_processing"]
 [connection signal="state_entered" from="StateManger/PlayerMovementState/DashingState" to="." method="_on_dashing_state_state_entered"]
 [connection signal="state_exited" from="StateManger/PlayerMovementState/DashingState" to="." method="_on_dashing_state_state_exited"]
 [connection signal="state_physics_processing" from="StateManger/PlayerMovementState/DashingState" to="." method="_on_dashing_state_state_physics_processing"]
+[connection signal="state_entered" from="StateManger/PlayerMovementState/WallJumpState" to="." method="_on_wall_jump_state_state_entered"]
+[connection signal="state_physics_processing" from="StateManger/PlayerMovementState/WallJumpState" to="." method="_on_wall_jump_state_state_physics_processing"]

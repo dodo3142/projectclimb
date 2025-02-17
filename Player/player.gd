@@ -22,6 +22,10 @@ extends CharacterBody3D
 @export var ground_smash_jump_gravity_unused: float = 120
 @export var ground_smash_time: float = 0.2
 
+@export_group("WallJump")
+@export var walljump_force_up: float = 30
+@export var walljump_force_xz: float = 20
+
 @export_group("Dashing")
 @export var dash_speed: float = 1500
 @export var dash_duration: float = 2
@@ -34,6 +38,7 @@ extends CharacterBody3D
 @export var rotation_speed: float = 10     # Character rotation speed
 @export var jump_buffer_time: float = 0.1  # Time window for jump input buffering
 @export var jump_coyote_time: float = 0.1  # Time window for coyote time
+@export var wall_jump_ray_lenght: float = 0.5
 @export var max_lean_angle: float = 20.0   # Maximum tilt angle in degrees
 @export var lean_speed: float = 5.0        # How fast to tilt/recover
 #endregion
@@ -45,6 +50,7 @@ var last_input_direction: Vector3 = Vector3.FORWARD              # Last valid in
 var target_velocity: Vector3                    # Horizontal movement velocity
 var rotation_direction: float                   # Target rotation angle
 var current_jump_force: float
+var bouncedir: Vector3
 var swing_angle: float = 0.0
 
 # State flags
@@ -75,7 +81,7 @@ var is_dashing: bool = false
 @onready var dash_timer: Timer = $Timers/Dashing
 @onready var speed_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer/SpeedNumber
 @onready var velocity_number: Label = $Debug/DebugText/VBoxContainer/HBoxContainer2/VelocityNumber
-@onready var swing_joint: Marker3D = $SwingJoint
+@onready var wall_jump_ray_cast: RayCast3D = $Raycasts/WallJumpRayCast
 #endregion
 
 func _ready() -> void:
@@ -170,7 +176,7 @@ func launch_player(jump_force: float) -> void:
 func handle_visual_effects(delta: float) -> void:
 	"""Manage visual effects and model scaling."""
 	# Movement particles
-	$MovingParticles.emitting = is_on_floor() and velocity != Vector3.ZERO
+	%MovingParticles.emitting = is_on_floor() and velocity != Vector3.ZERO
 	
 	# Model scale interpolation
 	player_model.scale = player_model.scale.lerp(Vector3.ONE, delta * 10)
@@ -303,16 +309,27 @@ func _on_dashing_state_state_entered() -> void:
 	dash_timer.start()
 	velocity = last_input_direction * dash_speed
 	velocity.y = 0
+	wall_jump_ray_cast.target_position = last_input_direction.normalized() * wall_jump_ray_lenght
 
 func _on_dashing_state_state_physics_processing(delta: float) -> void:
-	if get_slide_collision_count() > 0:
-		var collision_normal = get_slide_collision(0).get_normal()
-		var bouncedir =  (last_input_direction * dash_speed).normalized().bounce(collision_normal)
-		print(bouncedir)
+	if wall_jump_ray_cast.is_colliding():
+		var collision_normal = wall_jump_ray_cast.get_collision_normal()
+		bouncedir =  (last_input_direction * dash_speed).normalized().bounce(collision_normal)
+		state_manager.send_event("WallJump")
 
 func _on_dashing_state_state_exited() -> void:
 	is_dashing = false
 	can_change_input = true
+
+#WALLJUMPING
+func _on_wall_jump_state_state_entered() -> void:
+	velocity = bouncedir * walljump_force_xz
+	velocity.y = walljump_force_up
+
+
+func _on_wall_jump_state_state_physics_processing(delta: float) -> void:
+	handle_movement(delta)
+	velocity.y -= jump_gravity * delta
 
 #region Timer Signals
 func _on_jump_buffer_timeout():
@@ -331,11 +348,11 @@ func _on_dashing_timeout() -> void:
 
 
 #WIP
-func _on_swinging_state_state_physics_processing(delta: float) -> void:
-	# Calculate the new position based on the swing angle
-	swing_angle += swing_speed * delta
-	var x = swing_radius * sin(swing_angle)
-	var y = -swing_radius * cos(swing_angle)
-	
-	# Update the player's position relative to the swing anchor
-	global_position = swing_joint.global_position + Vector3(x, y, 0)
+#func _on_swinging_state_state_physics_processing(delta: float) -> void:
+	## Calculate the new position based on the swing angle
+	#swing_angle += swing_speed * delta
+	#var x = swing_radius * sin(swing_angle)
+	#var y = -swing_radius * cos(swing_angle)
+	#
+	## Update the player's position relative to the swing anchor
+	#global_position = swing_joint.global_position + Vector3(x, y, 0)
