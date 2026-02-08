@@ -24,6 +24,7 @@ extends CharacterBody2D
 @export var dash_duration: float = 0.2
 @export var dash_cooldown: float = 1.0
 
+
 # --- INTERNAL VARIABLES ---
 
 # Calculated Gravity Variables
@@ -41,6 +42,10 @@ enum State { IDLE, RUN, JUMP, FALL, DASH }
 var current_state: int = State.FALL
 var can_dash: bool = true
 
+enum Personality {SAD,ANGRY,HAPPY,LOVE}
+var current_personality : int = Personality.SAD
+var tween: Tween
+
 func _ready() -> void:
 	# Calculate gravity and jump velocity based on the configuration numbers
 	# Formula: h = 1/2 * g * t^2  =>  g = 2h / t^2
@@ -49,6 +54,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	RenderingServer.global_shader_parameter_set("player_pos", global_position)
+	ChangePersonality()
 	# 1. Update Timers
 	if not is_on_floor():
 		coyote_timer -= delta
@@ -183,3 +189,10 @@ func check_fall_transition() -> void:
 	# If we walk off a ledge, we aren't jumping, we are falling
 	if not is_on_floor() and velocity.y > 0:
 		change_state(State.FALL)
+
+
+func ChangePersonality():
+	if Input.is_action_just_pressed("Change"):
+		current_personality = (current_personality + 1) % Personality.size()
+		GameManger.ChangePersonality(current_personality)
+		$AnimatedSprite2D.frame = current_personality

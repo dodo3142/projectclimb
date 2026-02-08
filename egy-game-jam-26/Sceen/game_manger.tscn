@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bnymj65od67fe"]
+
+[ext_resource type="Script" uid="uid://iftcpfgs3yeq" path="res://Scripts/game_manger.gd" id="1_enjny"]
+[ext_resource type="Shader" uid="uid://hn81lrqn8xfk" path="res://Shader/ShockWave.gdshader" id="2_wp6qv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cgi0e"]
+shader = ExtResource("2_wp6qv")
+shader_parameter/strength = 0.0
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/radius = 0.25
+shader_parameter/aberration = 0.425
+shader_parameter/width = 0.04
+shader_parameter/feather = 0.05600000266
+
+[node name="GameManger" type="Node" unique_id=1517116595]
+script = ExtResource("1_enjny")
+max_pulse_radius = 5000.0
+close_speed = 8000.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1478123247]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=2120821984]
+visible = false
+material = SubResource("ShaderMaterial_cgi0e")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
