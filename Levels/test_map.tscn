@@ -1,14 +1,13 @@
-[gd_scene load_steps=21 format=4 uid="uid://jsc6conj0oli"]
+[gd_scene format=4 uid="uid://jsc6conj0oli"]
 
-[ext_resource type="Script" uid="uid://wtvnqk6rsb2i" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_h3q3j"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="1_h3q3j"]
 [ext_resource type="Material" uid="uid://dh6ykun8bv60u" path="res://Shaders/examples/day_sky.tres" id="2_oldd8"]
 [ext_resource type="Shader" uid="uid://dxq1016uxckpj" path="res://addons/simplegrasstextured/shaders/grass.gdshader" id="4_lqd3n"]
 [ext_resource type="Texture2D" uid="uid://cxp3jepi01nt7" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="4_oldd8"]
 [ext_resource type="Texture2D" uid="uid://c4ggdp0kg5wjk" path="res://addons/simplegrasstextured/textures/grassbushcc008.png" id="5_1kuxs"]
 [ext_resource type="Script" uid="uid://b076bq7rmhxps" path="res://addons/simplegrasstextured/grass.gd" id="6_n010q"]
-[ext_resource type="PackedScene" uid="uid://bywbfndjunkfa" path="res://Props/jump_area.tscn" id="8_f1wxt"]
+[ext_resource type="Texture2D" uid="uid://docd7tl0vdehw" path="res://addons/kenney_prototype_textures/orange/texture_10.png" id="7_f56q2"]
 [ext_resource type="PackedScene" uid="uid://dtqoy5xdxpik2" path="res://Props/moving_platform.tscn" id="9_r4m6u"]
-[ext_resource type="PackedScene" uid="uid://cr6i3n7ymeyk4" path="res://Props/jumping_platform.tscn" id="10_djnbu"]
 [ext_resource type="PackedScene" uid="uid://cxeijgsmqxr5s" path="res://Player/player.tscn" id="10_f56q2"]
 
 [sub_resource type="Sky" id="Sky_7gqxu"]
@@ -19,6 +18,8 @@ background_mode = 2
 sky = SubResource("Sky_7gqxu")
 ambient_light_color = Color(0.45098, 0.333333, 0.309804, 1)
 ambient_light_energy = 0.5
+tonemap_mode = 2
+tonemap_exposure = 0.7
 glow_enabled = true
 glow_bloom = 0.2
 
@@ -79,6 +80,10 @@ uv1_triplanar = true
 albedo_texture = ExtResource("4_oldd8")
 uv1_triplanar = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a80br"]
+albedo_texture = ExtResource("7_f56q2")
+uv1_triplanar = true
+
 [sub_resource type="Curve3D" id="Curve3D_a80br"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4.544, 0, 0),
@@ -100,28 +105,29 @@ _data = {
 }
 point_count = 6
 
-[node name="Test_Map" type="Node3D"]
+[node name="Test_Map" type="Node3D" unique_id=413220470]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=922978589]
 physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3344, 9.08722, -5.08321)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.646035, 2.4999957, -5.0070696)
+top_level = true
 cull_mask = 983039
 
-[node name="PhantomCameraHost" type="Node" parent="Camera3D"]
+[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=703357901]
 process_priority = 300
 process_physics_priority = 300
 script = ExtResource("1_h3q3j")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=706813203]
 environment = SubResource("Environment_mdxb8")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=844196159]
 transform = Transform3D(-0.158174, -0.164367, 0.973635, 0.67512, 0.701553, 0.228113, -0.720551, 0.693402, 9.17854e-08, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Level" type="Node3D" parent="."]
+[node name="Level" type="Node3D" parent="." unique_id=280570619]
 
-[node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level"]
+[node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1586275493]
 multimesh = SubResource("MultiMesh_f56q2")
 script = ExtResource("6_n010q")
 texture_albedo = ExtResource("5_1kuxs")
@@ -135,66 +141,73 @@ sgt_dist_min = 0.25
 sgt_follow_normal = false
 metadata/SimpleGrassTextured = "2.0.5"
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Level"]
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Level" unique_id=1651932232]
 use_collision = true
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Level/CSGCombiner3D"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=1231697567]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.73145, 1.5, -16)
 size = Vector3(8.46289, 4, 1)
 material = SubResource("StandardMaterial3D_uv0n0")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Level/CSGCombiner3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=1823060840]
 use_collision = true
 size = Vector3(175.604, 1, 165.431)
 material = SubResource("StandardMaterial3D_uv0n0")
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Level/CSGCombiner3D"]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Level/CSGCombiner3D" unique_id=1491644836]
 transform = Transform3D(1, 0, 0, 0, 0.778188, -0.628031, 0, 0.628031, 0.778188, -15.6039, 1.64591, -3.96233)
 use_collision = true
 radius = 2.15738
 height = 6.26564
 material = SubResource("StandardMaterial3D_uv0n0")
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Level/CSGCombiner3D"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=980149526]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.667, 5.15381, -18.9709)
 size = Vector3(9.047, 9.30762, 6.38672)
 material = SubResource("StandardMaterial3D_djnbu")
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Level/CSGCombiner3D"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=586782263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.3878, 5.15381, -43.6058)
+size = Vector3(1.69537, 9.30762, 45.4385)
+material = SubResource("StandardMaterial3D_a80br")
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=251186769]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.0668, 5.15381, -43.6058)
+size = Vector3(1.69537, 9.30762, 45.4385)
+material = SubResource("StandardMaterial3D_a80br")
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=746362290]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -51.25241, 5.15381, 2.2851238)
+size = Vector3(1.69537, 9.30762, 45.4385)
+material = SubResource("StandardMaterial3D_a80br")
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=484364710]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -51.25241, 5.15381, 19.96412)
+size = Vector3(1.69537, 9.30762, 45.4385)
+material = SubResource("StandardMaterial3D_a80br")
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Level/CSGCombiner3D" unique_id=2074720340]
 transform = Transform3D(1, 0, 0, 0, 0.5, -0.866025, 0, 0.866025, 0.5, 42.667, 0.0509125, -30.0728)
 size = Vector3(9.047, 23.6982, 9.1416)
 material = SubResource("StandardMaterial3D_djnbu")
 
-[node name="JumpArea" parent="Level" instance=ExtResource("8_f1wxt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4269, 0.500002, 6.25508)
-
-[node name="JumpArea2" parent="Level" instance=ExtResource("8_f1wxt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.91643, 0.500002, 6.25508)
-JumpForce = 100.0
-
-[node name="MovingPlatform" parent="Level" instance=ExtResource("9_r4m6u")]
+[node name="MovingPlatform" parent="Level" unique_id=1383052640 instance=ExtResource("9_r4m6u")]
 transform = Transform3D(3.05116, 0, 0, 0, 1, 0, 0, 0, 3.04168, 7.87873, 2.71971, 8.17327)
 curve = SubResource("Curve3D_a80br")
 Loop = false
 SpeedScale = 0.5
 
-[node name="MovingPlatform2" parent="Level" instance=ExtResource("9_r4m6u")]
+[node name="MovingPlatform2" parent="Level" unique_id=645402272 instance=ExtResource("9_r4m6u")]
 transform = Transform3D(4.38619, 0, 0, 0, 1, 0, 0, 0, 4.72321, 26.6682, 0.991007, 4.67148)
 curve = SubResource("Curve3D_r4m6u")
 Loop = false
 SpeedScale = 0.5
 
-[node name="JumpingPlatform" parent="Level" instance=ExtResource("10_djnbu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39, 1, 6)
-
-[node name="JumpingPlatform2" parent="Level" instance=ExtResource("10_djnbu")]
-transform = Transform3D(1.03416, 0, 0, 0, 1.03416, 0, 0, 0, 1.03416, 42, 1, 14)
-
-[node name="MovingPlatform3" parent="Level" instance=ExtResource("9_r4m6u")]
+[node name="MovingPlatform3" parent="Level" unique_id=360012283 instance=ExtResource("9_r4m6u")]
 transform = Transform3D(4.24518, 0, 0, 0, 1, 0, 0, 0, 4.31807, 26.7902, 0.991005, -5.54325)
 curve = SubResource("Curve3D_djnbu")
 Loop = false
 SpeedScale = 0.2
 
-[node name="Player" parent="." instance=ExtResource("10_f56q2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.3344, 7.08722, -5.08321)
+[node name="Player" parent="." unique_id=1782823360 instance=ExtResource("10_f56q2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.646035, 0.4999957, -5.0070696)
