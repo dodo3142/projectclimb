@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bbtcfb25mumsh"]
+
+[ext_resource type="Script" uid="uid://btat6lg2xdicn" path="res://Scripts/player.gd" id="1_ukytw"]
+[ext_resource type="Texture2D" uid="uid://d21o152ecdjqm" path="res://icon.svg" id="2_igdd3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_57i3r"]
+size = Vector2(126, 126)
+
+[node name="Player" type="CharacterBody2D" unique_id=167461092]
+script = ExtResource("1_ukytw")
+speed = 1200.0
+acceleration = 3600.0
+friction = 4000.0
+jump_height = 240.0
+jump_time_to_peak = 0.2
+hang_time_threshold = 10.0
+dash_speed = 2000.0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1357406216]
+texture = ExtResource("2_igdd3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1425792876]
+shape = SubResource("RectangleShape2D_57i3r")

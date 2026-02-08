@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cyxwyhfpb7q0x"]
+
+[ext_resource type="Texture2D" uid="uid://d21o152ecdjqm" path="res://icon.svg" id="1_okd0l"]
+[ext_resource type="PackedScene" uid="uid://bbtcfb25mumsh" path="res://Sceen/player.tscn" id="2_2rfvf"]
+[ext_resource type="Shader" uid="uid://cbeukll1ny1dr" path="res://Shader/OutLine.gdshader" id="2_yq216"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_ji36m"]
+[ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="4_ecgay"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="5_yq216"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2rfvf"]
+size = Vector2(130, 124)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ecgay"]
+render_priority = 0
+shader = ExtResource("2_yq216")
+
+[sub_resource type="Resource" id="Resource_dc0v6"]
+script = ExtResource("5_yq216")
+
+[node name="TestMap" type="Node2D" unique_id=438535392]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1232100571]
+position = Vector2(-197, 470)
+scale = Vector2(80.14653, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1743819702]
+texture = ExtResource("1_okd0l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1054158528]
+shape = SubResource("RectangleShape2D_2rfvf")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="." unique_id=1314960066]
+position = Vector2(407, 218)
+scale = Vector2(2.265178, 3.114599)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D2" unique_id=979575709]
+material = SubResource("ShaderMaterial_ecgay")
+texture = ExtResource("1_okd0l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2" unique_id=567384535]
+shape = SubResource("RectangleShape2D_2rfvf")
+
+[node name="Player" parent="." unique_id=167461092 instance=ExtResource("2_2rfvf")]
+position = Vector2(-235, -256)
+acceleration = 7200.0
+friction = 8000.0
+jump_time_to_peak = 0.3
+jump_time_to_descent = 0.2
+dash_speed = 4000.0
+dash_duration = 0.1
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1606168316]
+top_level = true
+position = Vector2(-235, -256)
+zoom = Vector2(0.43, 0.43)
+editor_draw_limits = true
+
+[node name="PhantomCameraHost" type="Node" parent="Camera2D" unique_id=488027934]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("3_ji36m")
+metadata/_custom_type_script = "uid://bd046eokvcnu2"
+
+[node name="PhantomCamera2D" type="Node2D" parent="." unique_id=312504963]
+position = Vector2(-235, -256)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.43, 0.43)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
