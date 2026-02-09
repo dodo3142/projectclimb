@@ -54,6 +54,14 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	RenderingServer.global_shader_parameter_set("player_pos", global_position)
+	var screen_pos = get_global_transform_with_canvas().origin
+	RenderingServer.global_shader_parameter_set("player_screen_pos", screen_pos)
+	var current_zoom = 1.0
+	var cam = get_viewport().get_camera_2d()
+	if cam:
+		current_zoom = cam.zoom.x
+		
+	RenderingServer.global_shader_parameter_set("camera_zoom", current_zoom)
 	ChangePersonality()
 	# 1. Update Timers
 	if not is_on_floor():
@@ -108,7 +116,7 @@ func _physics_process(delta: float) -> void:
 		State.DASH:
 			dash_timer -= delta
 			if dash_timer <= 0:
-				velocity.x = 0 # Optional: Stop momentum after dash
+				#velocity.x = 0 # Optional: Stop momentum after dash
 				change_state(State.FALL)
 
 	move_and_slide()
@@ -193,6 +201,11 @@ func check_fall_transition() -> void:
 
 func ChangePersonality():
 	if Input.is_action_just_pressed("Change"):
-		current_personality = (current_personality + 1) % Personality.size()
+		Engine.time_scale = 0.2
+		$CanvasLayer/SelectionWheel.show()
+	elif Input.is_action_just_released("Change"):
+		Engine.time_scale = 1
+		current_personality= $CanvasLayer/SelectionWheel.close() 
 		GameManger.ChangePersonality(current_personality)
-		$AnimatedSprite2D.frame = current_personality
+		$PlayerSprite/Face.frame = current_personality
+		

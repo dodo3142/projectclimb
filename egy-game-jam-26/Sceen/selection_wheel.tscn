@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://dbtcet84e8j74"]
+
+[ext_resource type="Script" uid="uid://cy0cqc7tqyk7k" path="res://Scripts/selection_wheel.gd" id="1_1kkiy"]
+[ext_resource type="Script" uid="uid://h88uk6ilqxni" path="res://WheelOption.gd" id="2_fch6c"]
+[ext_resource type="Texture2D" uid="uid://d21o152ecdjqm" path="res://icon.svg" id="3_n1esh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fch6c"]
+atlas = ExtResource("3_n1esh")
+region = Rect2(0, 0, 128, 128)
+script = ExtResource("2_fch6c")
+name = "Lol"
+metadata/_custom_type_script = "uid://h88uk6ilqxni"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mqqtr"]
+atlas = ExtResource("3_n1esh")
+region = Rect2(0, 0, 128, 128)
+script = ExtResource("2_fch6c")
+name = "Sad"
+metadata/_custom_type_script = "uid://h88uk6ilqxni"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iyw21"]
+atlas = ExtResource("3_n1esh")
+region = Rect2(0, 0, 128, 128)
+script = ExtResource("2_fch6c")
+name = "Angry"
+metadata/_custom_type_script = "uid://h88uk6ilqxni"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ksarm"]
+atlas = ExtResource("3_n1esh")
+region = Rect2(0, 0, 128, 128)
+script = ExtResource("2_fch6c")
+name = "Happy"
+metadata/_custom_type_script = "uid://h88uk6ilqxni"
+
+[node name="SelectionWheel" type="Control" unique_id=428102102]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1kkiy")
+bkg_color = Color(0.22670749, 0.22670749, 0.22670746, 1)
+line_color = Color(0.7204674, 0.7204675, 0.7204674, 1)
+highlight_color = Color(0.44291076, 0.44291076, 0.44291073, 1)
+options = Array[ExtResource("2_fch6c")]([SubResource("AtlasTexture_fch6c"), SubResource("AtlasTexture_mqqtr"), SubResource("AtlasTexture_iyw21"), SubResource("AtlasTexture_ksarm")])

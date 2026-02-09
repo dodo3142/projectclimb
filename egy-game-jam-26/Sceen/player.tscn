@@ -1,28 +1,13 @@
 [gd_scene format=3 uid="uid://bbtcfb25mumsh"]
 
 [ext_resource type="Script" uid="uid://btat6lg2xdicn" path="res://Scripts/player.gd" id="1_ukytw"]
-[ext_resource type="Texture2D" uid="uid://fxx84oaxspg0" path="res://Sprites/Zonder_titel72_20260208235729.png" id="2_fcjix"]
-[ext_resource type="Texture2D" uid="uid://bi5lsgn6pnbpf" path="res://Sprites/Zonder_titel72_20260208235749.png" id="3_xv6io"]
-[ext_resource type="Texture2D" uid="uid://d2k2e2g17ro8c" path="res://Sprites/Zonder_titel72_20260208235757.png" id="4_t5mpp"]
-[ext_resource type="Texture2D" uid="uid://c1rosre8wde2v" path="res://Sprites/Zonder_titel72_20260208235805.png" id="5_3cp08"]
+[ext_resource type="PackedScene" uid="uid://dbtcet84e8j74" path="res://Sceen/selection_wheel.tscn" id="6_xv6io"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_hb638"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("4_t5mpp")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_fcjix")
-}, {
-"duration": 1.0,
-"texture": ExtResource("3_xv6io")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_3cp08")
-}],
+"frames": [],
 "loop": true,
-"name": &"Idle",
+"name": &"Faces",
 "speed": 5.0
 }]
 
@@ -39,11 +24,19 @@ jump_height = 240.0
 jump_time_to_peak = 0.2
 hang_time_threshold = 10.0
 dash_speed = 2000.0
+dash_duration = 0.5
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=733508201]
+[node name="PlayerSprite" type="Node2D" parent="." unique_id=1229482326]
+
+[node name="Face" type="AnimatedSprite2D" parent="PlayerSprite" unique_id=733508201]
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_hb638")
-animation = &"Idle"
+animation = &"Faces"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1425792876]
 shape = SubResource("CapsuleShape2D_fcjix")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=447623359]
+
+[node name="SelectionWheel" parent="CanvasLayer" unique_id=428102102 instance=ExtResource("6_xv6io")]
+visible = false

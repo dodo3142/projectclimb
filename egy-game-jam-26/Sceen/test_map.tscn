@@ -2,42 +2,13 @@
 
 [ext_resource type="Texture2D" uid="uid://d21o152ecdjqm" path="res://icon.svg" id="1_okd0l"]
 [ext_resource type="PackedScene" uid="uid://bbtcfb25mumsh" path="res://Sceen/player.tscn" id="2_2rfvf"]
-[ext_resource type="Script" uid="uid://du2jdcgp8547c" path="res://Scripts/hide_able_object.gd" id="2_dc0v6"]
-[ext_resource type="Shader" uid="uid://cbeukll1ny1dr" path="res://Shader/AngryOutLine.gdshader" id="2_yq216"]
+[ext_resource type="PackedScene" uid="uid://8g72ex0sya4p" path="res://Sceen/HideableObject.tscn" id="2_yq216"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_ji36m"]
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="4_ecgay"]
-[ext_resource type="Shader" uid="uid://littsc76xsrx" path="res://Shader/HappyOutLine.gdshader" id="4_mfdc4"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="5_yq216"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2rfvf"]
 size = Vector2(130, 124)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_yq216"]
-frequency = 0.02
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dc0v6"]
-noise = SubResource("FastNoiseLite_yq216")
-seamless = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ecgay"]
-shader = ExtResource("2_yq216")
-shader_parameter/color = Color(0.8288101, 2.7193873e-06, 5.7756904e-07, 1)
-shader_parameter/inner_stroke_thickness = 4.9370002345075
-shader_parameter/inner_stroke_opacity = 1.0
-shader_parameter/frequency = 9.046000429685
-shader_parameter/phase_speed = 3.1030001473925
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_dc0v6")
-shader_parameter/dissolve_smoothness = 0.10000000149012
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rfslm"]
-shader = ExtResource("4_mfdc4")
-shader_parameter/color = Color(0.9105914, 0.64977694, 0.10279838, 1)
-shader_parameter/inner_stroke_thickness = 4.9370002345075
-shader_parameter/inner_stroke_opacity = 1.0
-shader_parameter/frequency = 9.046000429685
-shader_parameter/phase_speed = 3.1030001473925
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_dc0v6")
-shader_parameter/dissolve_smoothness = 0.10000000149012
 
 [sub_resource type="Resource" id="Resource_dc0v6"]
 script = ExtResource("5_yq216")
@@ -55,50 +26,8 @@ texture = ExtResource("1_okd0l")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1054158528]
 shape = SubResource("RectangleShape2D_2rfvf")
 
-[node name="HideAbleObject" type="StaticBody2D" parent="." unique_id=1314960066 node_paths=PackedStringArray("collision")]
-position = Vector2(-284.00003, 616)
-scale = Vector2(2.265178, 3.114599)
-script = ExtResource("2_dc0v6")
-ShowPersonality = 1
-collision = NodePath("CollisionShape2D")
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="HideAbleObject" unique_id=979575709]
-material = SubResource("ShaderMaterial_ecgay")
-texture = ExtResource("1_okd0l")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HideAbleObject" unique_id=567384535]
-shape = SubResource("RectangleShape2D_2rfvf")
-
-[node name="HideAbleObject2" type="StaticBody2D" parent="." unique_id=1682741974 node_paths=PackedStringArray("collision")]
-position = Vector2(162, 623)
-scale = Vector2(2.265178, 3.114599)
-script = ExtResource("2_dc0v6")
-ShowPersonality = 1
-collision = NodePath("CollisionShape2D")
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="HideAbleObject2" unique_id=1215826858]
-material = SubResource("ShaderMaterial_ecgay")
-texture = ExtResource("1_okd0l")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HideAbleObject2" unique_id=784830551]
-shape = SubResource("RectangleShape2D_2rfvf")
-
-[node name="HideAbleObject3" type="StaticBody2D" parent="." unique_id=477747287 node_paths=PackedStringArray("collision")]
+[node name="HideAbleObject3" parent="." unique_id=1625888095 instance=ExtResource("2_yq216")]
 position = Vector2(601, 620)
-scale = Vector2(2.265178, 3.114599)
-script = ExtResource("2_dc0v6")
-ShowPersonality = 2
-collision = NodePath("CollisionShape2D")
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="HideAbleObject3" unique_id=1669849785]
-material = SubResource("ShaderMaterial_rfslm")
-texture = ExtResource("1_okd0l")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HideAbleObject3" unique_id=2117769539]
-shape = SubResource("RectangleShape2D_2rfvf")
 
 [node name="Player" parent="." unique_id=167461092 instance=ExtResource("2_2rfvf")]
 position = Vector2(-1198, 130)
@@ -128,3 +57,11 @@ zoom = Vector2(0.43, 0.43)
 tween_resource = SubResource("Resource_dc0v6")
 draw_limits = true
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="HideAbleObject4" parent="." unique_id=739299474 instance=ExtResource("2_yq216")]
+position = Vector2(-479, 642)
+ShowPersonality = 2
+
+[node name="HideAbleObject5" parent="." unique_id=281542724 instance=ExtResource("2_yq216")]
+position = Vector2(68, 628)
+ShowPersonality = 1
