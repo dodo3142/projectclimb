@@ -47,21 +47,14 @@ var current_personality : int = Personality.SAD
 var tween: Tween
 
 func _ready() -> void:
+	GameManger.ChangePersonality(current_personality)
 	# Calculate gravity and jump velocity based on the configuration numbers
 	# Formula: h = 1/2 * g * t^2  =>  g = 2h / t^2
 	jump_gravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)
 	fall_gravity = (2.0 * jump_height) / (jump_time_to_descent * jump_time_to_descent)
 
 func _physics_process(delta: float) -> void:
-	RenderingServer.global_shader_parameter_set("player_pos", global_position)
-	var screen_pos = get_global_transform_with_canvas().origin
-	RenderingServer.global_shader_parameter_set("player_screen_pos", screen_pos)
-	var current_zoom = 1.0
-	var cam = get_viewport().get_camera_2d()
-	if cam:
-		current_zoom = cam.zoom.x
-		
-	RenderingServer.global_shader_parameter_set("camera_zoom", current_zoom)
+	update_shader()
 	ChangePersonality()
 	# 1. Update Timers
 	if not is_on_floor():
@@ -205,7 +198,19 @@ func ChangePersonality():
 		$CanvasLayer/SelectionWheel.show()
 	elif Input.is_action_just_released("Change"):
 		Engine.time_scale = 1
-		current_personality= $CanvasLayer/SelectionWheel.close() 
+		if $CanvasLayer/SelectionWheel.close() != -1:
+			current_personality= $CanvasLayer/SelectionWheel.close() 
 		GameManger.ChangePersonality(current_personality)
 		$PlayerSprite/Face.frame = current_personality
+
+
+func update_shader():
+	RenderingServer.global_shader_parameter_set("player_pos", global_position)
+	var screen_pos = get_global_transform_with_canvas().origin
+	RenderingServer.global_shader_parameter_set("player_screen_pos", screen_pos)
+	var current_zoom = 1.0
+	var cam = get_viewport().get_camera_2d()
+	if cam:
+		current_zoom = cam.zoom.x
 		
+	RenderingServer.global_shader_parameter_set("camera_zoom", current_zoom)

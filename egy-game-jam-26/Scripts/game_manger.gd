@@ -7,11 +7,11 @@ var current_personality: int = Personality.SAD
 @export var max_pulse_radius: float = 1500.0
 @export var min_pulse_radius: float = 0.0
 
-@export_group("Speeds")
-@export var open_speed: float = 1500.0  # How fast it grows
-@export var close_speed: float = 4000.0 # How fast it shrinks (Make this huge for snap)
+@export_group("Durations (Seconds)")
+@export var open_duration: float = 1.0   # Time it takes to fully grow
+@export var close_duration: float = 0.2  # Time it takes to shrink (Low number = fast snap)
 
-# Dictionary to track the size of every personality circle independently
+# Dictionary to track the size of every personality circle
 var radii: Dictionary = {
 	Personality.SAD: 0.0,
 	Personality.ANGRY: 0.0,
@@ -19,26 +19,65 @@ var radii: Dictionary = {
 	Personality.LOVE: 0.0
 }
 
-func _process(delta: float) -> void:
-	# Loop through every personality (SAD, ANGRY, etc.)
-	for p in Personality.values():
-		var target = min_pulse_radius
-		var current_speed = close_speed 
-		
-		# If this is the Active Personality, we want to grow
-		if p == current_personality:
-			target = max_pulse_radius
-			current_speed = open_speed
-		
-		# Move the radius towards the target using the correct speed
-		radii[p] = move_toward(radii[p], target, current_speed * delta)
+# Store the active tween so we can interrupt it if personality changes fast
+var _tween: Tween
+
+func _ready() -> void:
+	# Initialize the shader values immediately on start
+	_update_all_shader_params()
+
+func ChangePersonality(new_personality: int) -> void:
+	current_personality = new_personality
 	
-	# Send the calculated sizes to the Shaders
+	# update the integer uniform immediately
+	RenderingServer.global_shader_parameter_set("current_personality", current_personality)
+	
+	# If a tween is already running, kill it so we don't have fighting animations
+	if _tween:
+		_tween.kill()
+	
+	_tween = create_tween()
+	# IMPORTANT: This makes all animations happen simultaneously 
+	# (e.g., Sad closes WHILE Happy opens)
+	_tween.set_parallel(true)
+	
+	for p in Personality.values():
+		var target_radius = min_pulse_radius
+		var duration = close_duration
+		
+		# If this is the new active personality, set targets to Open
+		if p == current_personality:
+			target_radius = max_pulse_radius
+			duration = open_duration
+			
+		# We use tween_method so we can run a function every frame of the animation
+		# We bind 'p' (the personality type) to the function
+		_tween.tween_method(
+			_update_single_radius.bind(p), # Function to call
+			radii[p],                      # Start value (current size)
+			target_radius,                 # End value
+			duration                       # Time to complete
+		).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC) 
+
+# This function is called by the Tween every frame during animation
+func _update_single_radius(value: float, p: int) -> void:
+	# 1. Update internal dictionary
+	radii[p] = value
+	
+	# 2. Update the specific Shader Parameter
+	var param_name = ""
+	match p:
+		Personality.SAD: param_name = "sad_vision_radius"
+		Personality.ANGRY: param_name = "angry_vision_radius"
+		Personality.HAPPY: param_name = "happy_vision_radius"
+		Personality.LOVE: param_name = "love_vision_radius"
+	
+	RenderingServer.global_shader_parameter_set(param_name, value)
+
+# Helper to force set all values (used in _ready)
+func _update_all_shader_params() -> void:
 	RenderingServer.global_shader_parameter_set("sad_vision_radius", radii[Personality.SAD])
 	RenderingServer.global_shader_parameter_set("angry_vision_radius", radii[Personality.ANGRY])
 	RenderingServer.global_shader_parameter_set("happy_vision_radius", radii[Personality.HAPPY])
 	RenderingServer.global_shader_parameter_set("love_vision_radius", radii[Personality.LOVE])
 	RenderingServer.global_shader_parameter_set("current_personality", current_personality)
-
-func ChangePersonality(new_personality: int) -> void:
-	current_personality = new_personality

@@ -1,40 +1,71 @@
 [gd_scene format=3 uid="uid://bbtcfb25mumsh"]
 
 [ext_resource type="Script" uid="uid://btat6lg2xdicn" path="res://Scripts/player.gd" id="1_ukytw"]
+[ext_resource type="Texture2D" uid="uid://cvioomkenanxr" path="res://Sprites/face (1).png" id="2_t5mpp"]
+[ext_resource type="Texture2D" uid="uid://dynh5grjfd3gw" path="res://Sprites/angry (1).png" id="3_3cp08"]
+[ext_resource type="Texture2D" uid="uid://c8qunuaffbb2q" path="res://Sprites/happy (2).png" id="4_hb638"]
+[ext_resource type="Texture2D" uid="uid://dq0ris7xdrm7l" path="res://Sprites/love (2).png" id="5_773cy"]
+[ext_resource type="Texture2D" uid="uid://dpqpuf6aoc0q0" path="res://Sprites/sad (2).png" id="6_v7kt4"]
 [ext_resource type="PackedScene" uid="uid://dbtcet84e8j74" path="res://Sceen/selection_wheel.tscn" id="6_xv6io"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_hb638"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_igdd3"]
+size = Vector2(62, 59.5)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v0eaq"]
 animations = [{
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_v7kt4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_3cp08")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_hb638")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_773cy")
+}],
 "loop": true,
-"name": &"Faces",
+"name": &"default",
 "speed": 5.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fcjix"]
-radius = 111.0
-height = 570.0
-
 [node name="Player" type="CharacterBody2D" unique_id=167461092]
 script = ExtResource("1_ukytw")
-speed = 1200.0
+speed = 800.0
 acceleration = 3600.0
 friction = 4000.0
 jump_height = 240.0
 jump_time_to_peak = 0.2
 hang_time_threshold = 10.0
-dash_speed = 2000.0
-dash_duration = 0.5
-
-[node name="PlayerSprite" type="Node2D" parent="." unique_id=1229482326]
-
-[node name="Face" type="AnimatedSprite2D" parent="PlayerSprite" unique_id=733508201]
-scale = Vector2(0.2, 0.2)
-sprite_frames = SubResource("SpriteFrames_hb638")
-animation = &"Faces"
+dash_duration = 0.1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1425792876]
-shape = SubResource("CapsuleShape2D_fcjix")
+position = Vector2(4, -20.75)
+shape = SubResource("RectangleShape2D_igdd3")
+
+[node name="HitBox" type="Area2D" parent="." unique_id=371118379 groups=["Player"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=2010833107]
+position = Vector2(4, -20.75)
+shape = SubResource("RectangleShape2D_igdd3")
+
+[node name="PlayerSprite" type="Node2D" parent="." unique_id=1229482326]
+position = Vector2(0, 10)
+scale = Vector2(2.365, 2.365)
+
+[node name="Sprite2D" type="Sprite2D" parent="PlayerSprite" unique_id=1488909516]
+position = Vector2(-0.9999999, -9)
+scale = Vector2(0.21111113, 0.22745098)
+texture = ExtResource("2_t5mpp")
+
+[node name="Face" type="AnimatedSprite2D" parent="PlayerSprite" unique_id=733508201]
+position = Vector2(4.9999995, -11)
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_v0eaq")
+frame = 3
+frame_progress = 0.9138151
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=447623359]
 

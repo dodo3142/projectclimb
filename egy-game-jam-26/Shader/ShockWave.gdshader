@@ -30,6 +30,8 @@ void fragment() {
 	wave += cos(angle * 20.0 - TIME * (distortion_speed * 1.5)) * (distortion_strength * 0.5);
 	float distorted_dist = dist + wave;
 	
+	distorted_dist = max(distorted_dist, 0.0);
+	
 	// 2. Scale Radii by Zoom
 	float r_angry = angry_vision_radius * camera_zoom;
 	float r_happy = happy_vision_radius * camera_zoom;

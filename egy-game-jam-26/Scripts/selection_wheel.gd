@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const SPRITE_SIZE = Vector2(32,32)
+const SPRITE_SIZE = Vector2(128 * 2,90 * 2)
 
 @export var bkg_color : Color
 @export var line_color : Color

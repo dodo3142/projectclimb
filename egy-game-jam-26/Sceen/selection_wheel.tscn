@@ -2,32 +2,35 @@
 
 [ext_resource type="Script" uid="uid://cy0cqc7tqyk7k" path="res://Scripts/selection_wheel.gd" id="1_1kkiy"]
 [ext_resource type="Script" uid="uid://h88uk6ilqxni" path="res://WheelOption.gd" id="2_fch6c"]
-[ext_resource type="Texture2D" uid="uid://d21o152ecdjqm" path="res://icon.svg" id="3_n1esh"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fch6c"]
-atlas = ExtResource("3_n1esh")
-region = Rect2(0, 0, 128, 128)
-script = ExtResource("2_fch6c")
-name = "Lol"
-metadata/_custom_type_script = "uid://h88uk6ilqxni"
+[ext_resource type="Texture2D" uid="uid://dynh5grjfd3gw" path="res://Sprites/angry (1).png" id="3_iyw21"]
+[ext_resource type="Texture2D" uid="uid://dpqpuf6aoc0q0" path="res://Sprites/sad (2).png" id="4_ksarm"]
+[ext_resource type="Texture2D" uid="uid://c8qunuaffbb2q" path="res://Sprites/happy (2).png" id="5_jns86"]
+[ext_resource type="Texture2D" uid="uid://dq0ris7xdrm7l" path="res://Sprites/love (2).png" id="6_qa72u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mqqtr"]
-atlas = ExtResource("3_n1esh")
-region = Rect2(0, 0, 128, 128)
+atlas = ExtResource("4_ksarm")
+region = Rect2(0, 0, 360, 255)
 script = ExtResource("2_fch6c")
 name = "Sad"
 metadata/_custom_type_script = "uid://h88uk6ilqxni"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_fch6c"]
+atlas = ExtResource("3_iyw21")
+region = Rect2(0, 0, 360, 255)
+script = ExtResource("2_fch6c")
+name = "Lol"
+metadata/_custom_type_script = "uid://h88uk6ilqxni"
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_iyw21"]
-atlas = ExtResource("3_n1esh")
-region = Rect2(0, 0, 128, 128)
+atlas = ExtResource("5_jns86")
+region = Rect2(0, 0, 360, 255)
 script = ExtResource("2_fch6c")
 name = "Angry"
 metadata/_custom_type_script = "uid://h88uk6ilqxni"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ksarm"]
-atlas = ExtResource("3_n1esh")
-region = Rect2(0, 0, 128, 128)
+atlas = ExtResource("6_qa72u")
+region = Rect2(0, 0, 360, 255)
 script = ExtResource("2_fch6c")
 name = "Happy"
 metadata/_custom_type_script = "uid://h88uk6ilqxni"
@@ -45,4 +48,4 @@ script = ExtResource("1_1kkiy")
 bkg_color = Color(0.22670749, 0.22670749, 0.22670746, 1)
 line_color = Color(0.7204674, 0.7204675, 0.7204674, 1)
 highlight_color = Color(0.44291076, 0.44291076, 0.44291073, 1)
-options = Array[ExtResource("2_fch6c")]([SubResource("AtlasTexture_fch6c"), SubResource("AtlasTexture_mqqtr"), SubResource("AtlasTexture_iyw21"), SubResource("AtlasTexture_ksarm")])
+options = Array[ExtResource("2_fch6c")]([SubResource("AtlasTexture_mqqtr"), SubResource("AtlasTexture_fch6c"), SubResource("AtlasTexture_iyw21"), SubResource("AtlasTexture_ksarm")])

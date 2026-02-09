@@ -1,4 +1,3 @@
-@tool
 extends StaticBody2D
 
 enum Personality {SAD, ANGRY, HAPPY, LOVE}

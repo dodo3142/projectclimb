@@ -24,6 +24,10 @@ GameManger="*uid://bnymj65od67fe"
 
 enabled=PackedStringArray("res://addons/phantom_camera/plugin.cfg")
 
+[global_group]
+
+Player=""
+
 [input]
 
 move_left={

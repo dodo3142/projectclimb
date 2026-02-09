@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://cyxwyhfpb7q0x"]
 
+[ext_resource type="Script" uid="uid://dqldfpwlsw5kc" path="res://Scripts/room_camera_area.gd" id="1_dc0v6"]
 [ext_resource type="Texture2D" uid="uid://d21o152ecdjqm" path="res://icon.svg" id="1_okd0l"]
 [ext_resource type="PackedScene" uid="uid://bbtcfb25mumsh" path="res://Sceen/player.tscn" id="2_2rfvf"]
 [ext_resource type="PackedScene" uid="uid://8g72ex0sya4p" path="res://Sceen/HideableObject.tscn" id="2_yq216"]
@@ -7,41 +8,141 @@
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="4_ecgay"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="5_yq216"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_2rfvf"]
-size = Vector2(130, 124)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mfdc4"]
+size = Vector2(1919, 1084)
 
 [sub_resource type="Resource" id="Resource_dc0v6"]
 script = ExtResource("5_yq216")
+duration = 0.6
+transition = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2rfvf"]
+size = Vector2(130, 124)
 
 [node name="TestMap" type="Node2D" unique_id=438535392]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1232100571]
-position = Vector2(-1160, 491)
-scale = Vector2(5.586527, 1)
+[node name="Room1" type="Node2D" parent="." unique_id=1340462363]
+
+[node name="RoomCameraArea" type="Area2D" parent="Room1" unique_id=894348433 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(-4698, 2256)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/RoomCameraArea" unique_id=1326061836]
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Room1/RoomCameraArea" unique_id=312504963]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.6, 0.6)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Room1" unique_id=1232100571]
+position = Vector2(-4620, 2613)
+scale = Vector2(14.706532, 1)
 metadata/_edit_group_ = true
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D" unique_id=1743819702]
+[node name="Sprite2D" type="Sprite2D" parent="Room1/StaticBody2D" unique_id=1743819702]
 texture = ExtResource("1_okd0l")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1054158528]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/StaticBody2D" unique_id=1054158528]
 shape = SubResource("RectangleShape2D_2rfvf")
 
-[node name="HideAbleObject3" parent="." unique_id=1625888095 instance=ExtResource("2_yq216")]
-position = Vector2(601, 620)
+[node name="HideAbleObject5" parent="Room1" unique_id=281542724 instance=ExtResource("2_yq216")]
+position = Vector2(-5010, 2495)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
+
+[node name="HideAbleObject6" parent="Room1" unique_id=1625888095 instance=ExtResource("2_yq216")]
+position = Vector2(-4762, 2346)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
+
+[node name="HideAbleObject7" parent="Room1" unique_id=740879024 instance=ExtResource("2_yq216")]
+position = Vector2(-5092, 2249)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
+
+[node name="HideAbleObject8" parent="Room1" unique_id=1018438365 instance=ExtResource("2_yq216")]
+position = Vector2(-4745, 2053)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
+
+[node name="HideAbleObject9" parent="Room1" unique_id=2112929569 instance=ExtResource("2_yq216")]
+position = Vector2(-4354, 1987)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
+
+[node name="HideAbleObject10" parent="Room1" unique_id=1794158341 instance=ExtResource("2_yq216")]
+position = Vector2(-4050, 2034)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
+
+[node name="HideAbleObject11" parent="Room1" unique_id=675711086 instance=ExtResource("2_yq216")]
+position = Vector2(-3732, 2091)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
+
+[node name="Room2" type="Node2D" parent="." unique_id=1792315409]
+position = Vector2(1945, 3)
+
+[node name="RoomCameraArea" type="Area2D" parent="Room2" unique_id=1127869779 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(-4698, 2256)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/RoomCameraArea" unique_id=1457841232]
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Room2/RoomCameraArea" unique_id=252283440]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.6, 0.6)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Room2" unique_id=1775012827]
+position = Vector2(-4620, 2613)
+scale = Vector2(14.706532, 1)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room2/StaticBody2D" unique_id=770120012]
+texture = ExtResource("1_okd0l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/StaticBody2D" unique_id=1320939657]
+shape = SubResource("RectangleShape2D_2rfvf")
+
+[node name="HideAbleObject3" parent="Room2" unique_id=1812082155 instance=ExtResource("2_yq216")]
+position = Vector2(-4350, 2017)
+scale = Vector2(0.5753175, 0.92134154)
+
+[node name="HideAbleObject4" parent="Room2" unique_id=674810317 instance=ExtResource("2_yq216")]
+position = Vector2(-3729, 2453.0002)
+scale = Vector2(0.72229147, 1.1045095)
+ShowPersonality = 2
+
+[node name="HideAbleObject5" parent="Room2" unique_id=1228714094 instance=ExtResource("2_yq216")]
+position = Vector2(-5173, 2141)
+scale = Vector2(0.8170094, 0.6324717)
+ShowPersonality = 1
 
 [node name="Player" parent="." unique_id=167461092 instance=ExtResource("2_2rfvf")]
-position = Vector2(-1198, 130)
+position = Vector2(-4624, 1891)
 acceleration = 7200.0
 friction = 8000.0
 jump_time_to_peak = 0.3
 jump_time_to_descent = 0.2
 dash_speed = 4000.0
-dash_duration = 0.1
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1606168316]
 top_level = true
-position = Vector2(-235, -256)
-zoom = Vector2(0.43, 0.43)
+position = Vector2(-2678, 2144)
+zoom = Vector2(0.6, 0.6)
 editor_draw_limits = true
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D" unique_id=488027934]
@@ -49,19 +150,3 @@ process_priority = 300
 process_physics_priority = 300
 script = ExtResource("3_ji36m")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
-
-[node name="PhantomCamera2D" type="Node2D" parent="." unique_id=312504963]
-position = Vector2(-235, -256)
-script = ExtResource("4_ecgay")
-zoom = Vector2(0.43, 0.43)
-tween_resource = SubResource("Resource_dc0v6")
-draw_limits = true
-metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
-
-[node name="HideAbleObject4" parent="." unique_id=739299474 instance=ExtResource("2_yq216")]
-position = Vector2(-479, 642)
-ShowPersonality = 2
-
-[node name="HideAbleObject5" parent="." unique_id=281542724 instance=ExtResource("2_yq216")]
-position = Vector2(68, 628)
-ShowPersonality = 1
