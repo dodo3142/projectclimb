@@ -46,6 +46,10 @@ enum Personality {SAD,ANGRY,HAPPY,LOVE}
 var current_personality : int = Personality.SAD
 var tween: Tween
 
+@onready var player_visual: Node2D = $PlayerVisual
+@onready var face: AnimatedSprite2D = $PlayerVisual/Face
+
+
 func _ready() -> void:
 	GameManger.ChangePersonality(current_personality)
 	# Calculate gravity and jump velocity based on the configuration numbers
@@ -128,6 +132,10 @@ func handle_movement(delta: float) -> void:
 	if direction != 0:
 		# Apply acceleration
 		velocity.x = move_toward(velocity.x, direction * speed, acceleration * delta)
+		if direction > 0:
+			player_visual.scale.x = abs(player_visual.scale.x)
+		else:
+			player_visual.scale.x = -abs(player_visual.scale.x)
 	else:
 		# Apply friction
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
@@ -201,7 +209,7 @@ func ChangePersonality():
 		if $CanvasLayer/SelectionWheel.close() != -1:
 			current_personality= $CanvasLayer/SelectionWheel.close() 
 		GameManger.ChangePersonality(current_personality)
-		$PlayerSprite/Face.frame = current_personality
+		face.frame = current_personality
 
 
 func update_shader():

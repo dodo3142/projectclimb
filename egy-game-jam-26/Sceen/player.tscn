@@ -51,21 +51,19 @@ shape = SubResource("RectangleShape2D_igdd3")
 position = Vector2(4, -20.75)
 shape = SubResource("RectangleShape2D_igdd3")
 
-[node name="PlayerSprite" type="Node2D" parent="." unique_id=1229482326]
+[node name="PlayerVisual" type="Node2D" parent="." unique_id=1229482326]
 position = Vector2(0, 10)
 scale = Vector2(2.365, 2.365)
 
-[node name="Sprite2D" type="Sprite2D" parent="PlayerSprite" unique_id=1488909516]
+[node name="Sprite2D" type="Sprite2D" parent="PlayerVisual" unique_id=1488909516]
 position = Vector2(-0.9999999, -9)
 scale = Vector2(0.21111113, 0.22745098)
 texture = ExtResource("2_t5mpp")
 
-[node name="Face" type="AnimatedSprite2D" parent="PlayerSprite" unique_id=733508201]
+[node name="Face" type="AnimatedSprite2D" parent="PlayerVisual" unique_id=733508201]
 position = Vector2(4.9999995, -11)
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_v0eaq")
-frame = 3
-frame_progress = 0.9138151
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=447623359]
 

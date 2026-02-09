@@ -54,37 +54,37 @@ shape = SubResource("RectangleShape2D_2rfvf")
 [node name="HideAbleObject5" parent="Room1" unique_id=281542724 instance=ExtResource("2_yq216")]
 position = Vector2(-5010, 2495)
 scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 1
+ShowPersonality = 4
 
 [node name="HideAbleObject6" parent="Room1" unique_id=1625888095 instance=ExtResource("2_yq216")]
 position = Vector2(-4762, 2346)
 scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 1
+ShowPersonality = 4
 
 [node name="HideAbleObject7" parent="Room1" unique_id=740879024 instance=ExtResource("2_yq216")]
 position = Vector2(-5092, 2249)
 scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 1
+ShowPersonality = 4
 
 [node name="HideAbleObject8" parent="Room1" unique_id=1018438365 instance=ExtResource("2_yq216")]
 position = Vector2(-4745, 2053)
 scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 1
+ShowPersonality = 4
 
 [node name="HideAbleObject9" parent="Room1" unique_id=2112929569 instance=ExtResource("2_yq216")]
 position = Vector2(-4354, 1987)
 scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 1
+ShowPersonality = 4
 
 [node name="HideAbleObject10" parent="Room1" unique_id=1794158341 instance=ExtResource("2_yq216")]
 position = Vector2(-4050, 2034)
 scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 1
+ShowPersonality = 4
 
 [node name="HideAbleObject11" parent="Room1" unique_id=675711086 instance=ExtResource("2_yq216")]
 position = Vector2(-3732, 2091)
 scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 1
+ShowPersonality = 4
 
 [node name="Room2" type="Node2D" parent="." unique_id=1792315409]
 position = Vector2(1945, 3)

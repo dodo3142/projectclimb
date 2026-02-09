@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-enum Personality {SAD, ANGRY, HAPPY, LOVE}
+enum Personality {SAD, ANGRY, HAPPY, LOVE, RANDOM}
 @export var ShowPersonality := Personality.SAD
 
 @export_group("References")
@@ -20,11 +20,18 @@ const LOVE_OUT_LINE = preload("uid://c68trupi0dda8")
 const SAD_OUT_LINE = preload("uid://bay8a8dtroe88")
 
 func _ready() -> void:
-	# CRITICAL: Duplicate the material so changing parameters only affects THIS object
-	# Otherwise, all objects sharing this material would change color together.
+	# 1. HANDLE RANDOMNESS
+	if ShowPersonality == Personality.RANDOM:
+		# Create a list of the 4 valid types
+		var valid_options = [Personality.SAD, Personality.ANGRY, Personality.HAPPY, Personality.LOVE]
+		# Pick one and overwrite the variable so the rest of the script treats it as that type
+		ShowPersonality = valid_options.pick_random()
+
+	# 2. SETUP MATERIAL
 	if sprite.material:
 		sprite.material = sprite.material.duplicate()
 	
+	# 3. APPLY SHADER AND COLOR BASED ON THE (POSSIBLY RANDOMIZED) SELECTION
 	match ShowPersonality:
 		Personality.SAD:
 			sprite.material.shader = SAD_OUT_LINE
@@ -42,9 +49,8 @@ func _ready() -> void:
 			sprite.material.shader = LOVE_OUT_LINE
 			sprite.material.set_shader_parameter("color", color_love)
 
-
 func _process(delta: float) -> void:
-	# Assuming 'GameManger' is your Autoload/Singleton
+	# Because we overwrote ShowPersonality in _ready, this logic works automatically!
 	if ShowPersonality == GameManger.current_personality:
 		collision.disabled = false
 	else:
