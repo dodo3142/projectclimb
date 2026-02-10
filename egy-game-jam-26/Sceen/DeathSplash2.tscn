@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cqdq4q314ddgx"]
+
+[ext_resource type="Texture2D" uid="uid://vwe34itxqa37" path="res://addons/BurstParticles2D/BurstParticles2D-demo/orb_soft.png" id="1_m4eyt"]
+
+[sub_resource type="Curve" id="Curve_ifc7o"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.79317266, 0.7171501), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_igb5t"]
+curve = SubResource("Curve_ifc7o")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1885t"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 20.33
+angle_min = 1.0728835e-05
+angle_max = 1.0728835e-05
+spread = 180.0
+initial_velocity_max = 35.73
+gravity = Vector3(0, 0, 0)
+scale_min = 0.01
+scale_max = 0.01
+scale_curve = SubResource("CurveTexture_igb5t")
+hue_variation_min = -2.2351742e-08
+hue_variation_max = -2.2351742e-08
+
+[node name="DeathSplash2" type="GPUParticles2D" unique_id=1587444299]
+amount = 30
+texture = ExtResource("1_m4eyt")
+process_material = SubResource("ParticleProcessMaterial_1885t")

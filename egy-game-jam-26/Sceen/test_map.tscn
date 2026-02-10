@@ -19,6 +19,9 @@ transition = 1
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2rfvf"]
 size = Vector2(130, 124)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dc0v6"]
+size = Vector2(246, 436)
+
 [node name="TestMap" type="Node2D" unique_id=438535392]
 
 [node name="Room1" type="Node2D" parent="." unique_id=1340462363]
@@ -52,39 +55,45 @@ texture = ExtResource("1_okd0l")
 shape = SubResource("RectangleShape2D_2rfvf")
 
 [node name="HideAbleObject5" parent="Room1" unique_id=281542724 instance=ExtResource("2_yq216")]
-position = Vector2(-5010, 2495)
+position = Vector2(-5007, 2488)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
 [node name="HideAbleObject6" parent="Room1" unique_id=1625888095 instance=ExtResource("2_yq216")]
-position = Vector2(-4762, 2346)
+position = Vector2(-4759, 2339)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
 [node name="HideAbleObject7" parent="Room1" unique_id=740879024 instance=ExtResource("2_yq216")]
-position = Vector2(-5092, 2249)
+position = Vector2(-5089, 2242)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
 [node name="HideAbleObject8" parent="Room1" unique_id=1018438365 instance=ExtResource("2_yq216")]
-position = Vector2(-4745, 2053)
+position = Vector2(-4742, 2046)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
 [node name="HideAbleObject9" parent="Room1" unique_id=2112929569 instance=ExtResource("2_yq216")]
-position = Vector2(-4354, 1987)
+position = Vector2(-4351, 1980)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
 [node name="HideAbleObject10" parent="Room1" unique_id=1794158341 instance=ExtResource("2_yq216")]
-position = Vector2(-4050, 2034)
+position = Vector2(-4047, 2027)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
 [node name="HideAbleObject11" parent="Room1" unique_id=675711086 instance=ExtResource("2_yq216")]
-position = Vector2(-3732, 2091)
+position = Vector2(-3729, 2084)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
+
+[node name="Area2D" type="Area2D" parent="Room1" unique_id=1908824826 groups=["Kill"]]
+position = Vector2(-4166, 2331)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/Area2D" unique_id=1621810179]
+shape = SubResource("RectangleShape2D_dc0v6")
 
 [node name="Room2" type="Node2D" parent="." unique_id=1792315409]
 position = Vector2(1945, 3)
@@ -132,7 +141,7 @@ scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 1
 
 [node name="Player" parent="." unique_id=167461092 instance=ExtResource("2_2rfvf")]
-position = Vector2(-4624, 1891)
+position = Vector2(-4505, 2528)
 acceleration = 7200.0
 friction = 8000.0
 jump_time_to_peak = 0.3
