@@ -10,8 +10,8 @@ shader_parameter/distortion_speed = 3.0
 shader_parameter/edge_softness = 10.0
 shader_parameter/color_angry = Color(0.7262234, 2.695322e-06, 2.8878452e-07, 1)
 shader_parameter/color_happy = Color(0.7886802, 0.63051474, 0, 1)
-shader_parameter/color_love = Color(0.7611371, 2.4065375e-06, 0.48006243, 1)
-shader_parameter/color_sad = Color(4.5242905e-06, 0, 0.87186384, 1)
+shader_parameter/color_love = Color(0.7607843, 0, 0.47843137, 1)
+shader_parameter/color_sad = Color(0, 0, 0.87058824, 1)
 
 [node name="GameManger" type="Node" unique_id=1517116595]
 script = ExtResource("1_enjny")

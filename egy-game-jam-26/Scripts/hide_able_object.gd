@@ -34,24 +34,29 @@ func _ready() -> void:
 	# 3. APPLY SHADER AND COLOR BASED ON THE (POSSIBLY RANDOMIZED) SELECTION
 	match ShowPersonality:
 		Personality.SAD:
+			sprite.modulate = color_sad
 			sprite.material.shader = SAD_OUT_LINE
 			sprite.material.set_shader_parameter("color", color_sad)
 			
 		Personality.ANGRY:
+			sprite.modulate = color_angry
 			sprite.material.shader = ANGRY_OUT_LINE
 			sprite.material.set_shader_parameter("color", color_angry)
 			
 		Personality.HAPPY:
+			sprite.modulate = color_happy
 			sprite.material.shader = HAPPY_OUT_LINE
 			sprite.material.set_shader_parameter("color", color_happy)
 			
 		Personality.LOVE:
+			sprite.modulate = color_love
 			sprite.material.shader = LOVE_OUT_LINE
 			sprite.material.set_shader_parameter("color", color_love)
 
 func _process(delta: float) -> void:
 	# Because we overwrote ShowPersonality in _ready, this logic works automatically!
 	if ShowPersonality == GameManger.current_personality:
-		collision.disabled = false
-	else:
 		collision.disabled = true
+	else:
+		collision.disabled = false
+	

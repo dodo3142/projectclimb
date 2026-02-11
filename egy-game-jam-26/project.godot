@@ -13,12 +13,18 @@ config_version=5
 config/name="EgyGameJam26"
 run/main_scene="uid://cyxwyhfpb7q0x"
 config/features=PackedStringArray("4.6", "Forward Plus")
+boot_splash/show_image=false
+boot_splash/use_filter=false
 config/icon="res://icon.svg"
 
 [autoload]
 
 PhantomCameraManager="*uid://duq6jhf6unyis"
 GameManger="*uid://bnymj65od67fe"
+
+[display]
+
+window/size/always_on_top=true
 
 [editor_plugins]
 

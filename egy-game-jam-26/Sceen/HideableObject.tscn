@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://du2jdcgp8547c" path="res://Scripts/hide_able_object.gd" id="1_j00kt"]
 [ext_resource type="Shader" uid="uid://littsc76xsrx" path="res://Shader/HappyOutLine.gdshader" id="2_5xp2y"]
-[ext_resource type="Texture2D" uid="uid://d21o152ecdjqm" path="res://icon.svg" id="3_37qjy"]
+[ext_resource type="Texture2D" uid="uid://bklnvwp67y4ka" path="res://Sprites/WHITE.png" id="3_j00kt"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_yq216"]
 frequency = 0.02
@@ -14,7 +14,7 @@ seamless = true
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rfslm"]
 shader = ExtResource("2_5xp2y")
 shader_parameter/color = Color(0.9428, 0.5761555, 0.70596427, 1)
-shader_parameter/inner_stroke_thickness = 4.9370002345075
+shader_parameter/inner_stroke_thickness = 10.0
 shader_parameter/inner_stroke_opacity = 1.0
 shader_parameter/frequency = 9.046000429685
 shader_parameter/phase_speed = 3.1030001473925
@@ -25,6 +25,7 @@ shader_parameter/dissolve_smoothness = 0.10000000149012
 size = Vector2(130, 124)
 
 [node name="HideAbleObject3" type="StaticBody2D" unique_id=1625888095 node_paths=PackedStringArray("collision", "sprite")]
+modulate = Color(1, 1, 1, 0.007843138)
 scale = Vector2(2.265178, 3.114599)
 script = ExtResource("1_j00kt")
 ShowPersonality = 3
@@ -33,8 +34,11 @@ sprite = NodePath("Sprite2D")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2012439086]
+modulate = Color(0, 0, 0.87058824, 1)
 material = SubResource("ShaderMaterial_rfslm")
-texture = ExtResource("3_37qjy")
+position = Vector2(0.441467, 0.16053809)
+scale = Vector2(1.0208911, 0.9707308)
+texture = ExtResource("3_j00kt")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2110042685]
 shape = SubResource("RectangleShape2D_2rfvf")

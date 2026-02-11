@@ -37,6 +37,83 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_ylgtf"]
+resource_name = "Dash"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayerVisual/Head:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-0.9999999, -9)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PlayerVisual/ArmLeft:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-14.799153, -10.14799)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PlayerVisual/LeftLeg:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-13.953488, -2.1141648)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PlayerVisual/RightLeg:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-9.302326, 2.1141648)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("PlayerVisual/Head:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.7853982]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("PlayerVisual/LeftLeg:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.5707964]
+}
+
 [sub_resource type="Animation" id="Animation_v0eaq"]
 resource_name = "Falling"
 length = 0.1
@@ -165,6 +242,18 @@ tracks/4/keys = {
 "update": 0,
 "values": [0.0]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("PlayerVisual/LeftLeg:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_hdd7n"]
 resource_name = "Jumping"
@@ -280,6 +369,18 @@ tracks/4/keys = {
 "update": 0,
 "values": [0.0]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("PlayerVisual/LeftLeg:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.5707964]
+}
 
 [sub_resource type="Animation" id="Animation_v7kt4"]
 resource_name = "Running"
@@ -346,13 +447,92 @@ tracks/4/keys = {
 "values": [0.0]
 }
 
+[sub_resource type="Animation" id="Animation_qasc8"]
+resource_name = "WallSlide"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayerVisual/Head:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-0.9999999, -9)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PlayerVisual/ArmLeft:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-11.41649, -16.490486)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("PlayerVisual/LeftLeg:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-10.570825, -3.382664)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PlayerVisual/RightLeg:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(7.1881604, 5.0739956)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("PlayerVisual/Head:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.5235988]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("PlayerVisual/LeftLeg:rotation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.5707964]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_v7kt4"]
 _data = {
+&"Dash": SubResource("Animation_ylgtf"),
 &"Falling": SubResource("Animation_v0eaq"),
 &"Idle": SubResource("Animation_hb638"),
 &"Jumping": SubResource("Animation_hdd7n"),
 &"RESET": SubResource("Animation_773cy"),
-&"Running": SubResource("Animation_v7kt4")
+&"Running": SubResource("Animation_v7kt4"),
+&"WallSlide": SubResource("Animation_qasc8")
 }
 
 [node name="Player" type="CharacterBody2D" unique_id=167461092]
@@ -362,9 +542,13 @@ acceleration = 3600.0
 friction = 4000.0
 jump_height = 240.0
 jump_time_to_peak = 0.2
+jump_time_to_descent = 0.4
 hang_time_threshold = 10.0
+wall_slide_speed = 70.0
+wall_jump_push_back = 2000.0
+wall_jump_force = -1600.0
 dash_duration = 0.1
-sad_glide_gravity = 0.015
+dash_cooldown = 0.1
 happy_explosion_height = 700.0
 smash_speed = 3000.0
 
@@ -401,7 +585,7 @@ texture = ExtResource("7_hb638")
 
 [node name="LeftLeg" type="Sprite2D" parent="PlayerVisual" unique_id=1224435063]
 position = Vector2(-0.8456657, 2.5369978)
-rotation = 0.49652877
+rotation = 1.5707964
 scale = Vector2(0.1562198, 0.16892591)
 texture = ExtResource("7_hb638")
 
@@ -419,6 +603,12 @@ visible = false
 libraries/ = SubResource("AnimationLibrary_v7kt4")
 
 [node name="DeathEffects" type="Node2D" parent="." unique_id=358103311]
+
+[node name="WallCheckRight" type="RayCast2D" parent="." unique_id=1526605415]
+target_position = Vector2(50, 0)
+
+[node name="WallCheckLeft" type="RayCast2D" parent="." unique_id=1331817104]
+target_position = Vector2(-40, 0)
 
 [connection signal="area_entered" from="HitBox" to="HitBox" method="_on_area_entered"]
 [connection signal="area_exited" from="HitBox" to="HitBox" method="_on_area_exited"]

@@ -19,9 +19,6 @@ transition = 1
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2rfvf"]
 size = Vector2(130, 124)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dc0v6"]
-size = Vector2(246, 436)
-
 [node name="TestMap" type="Node2D" unique_id=438535392]
 
 [node name="Room1" type="Node2D" parent="." unique_id=1340462363]
@@ -32,6 +29,7 @@ script = ExtResource("1_dc0v6")
 area_pcam = NodePath("PhantomCamera2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/RoomCameraArea" unique_id=1326061836]
+visible = false
 position = Vector2(74.5, -117)
 shape = SubResource("RectangleShape2D_mfdc4")
 
@@ -55,17 +53,31 @@ texture = ExtResource("1_okd0l")
 shape = SubResource("RectangleShape2D_2rfvf")
 
 [node name="HideAbleObject5" parent="Room1" unique_id=281542724 instance=ExtResource("2_yq216")]
-position = Vector2(-5007, 2488)
-scale = Vector2(0.8170094, 0.6324717)
-ShowPersonality = 4
+position = Vector2(-5244, 2406)
+scale = Vector2(0.8170094, 2.3124716)
+ShowPersonality = 0
 
-[node name="HideAbleObject6" parent="Room1" unique_id=1625888095 instance=ExtResource("2_yq216")]
-position = Vector2(-4759, 2339)
+[node name="HideAbleObject12" parent="Room1" unique_id=1625888095 instance=ExtResource("2_yq216")]
+position = Vector2(-5089, 2406)
+scale = Vector2(0.8170094, 2.3124716)
+ShowPersonality = 1
+
+[node name="HideAbleObject13" parent="Room1" unique_id=367478646 instance=ExtResource("2_yq216")]
+position = Vector2(-4947, 2406)
+scale = Vector2(0.8170094, 2.3124716)
+ShowPersonality = 2
+
+[node name="HideAbleObject14" parent="Room1" unique_id=1528067788 instance=ExtResource("2_yq216")]
+position = Vector2(-4794, 2406)
+scale = Vector2(0.8170094, 2.3124716)
+
+[node name="HideAbleObject6" parent="Room1" unique_id=410985430 instance=ExtResource("2_yq216")]
+position = Vector2(-4594, 2149)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
 [node name="HideAbleObject7" parent="Room1" unique_id=740879024 instance=ExtResource("2_yq216")]
-position = Vector2(-5089, 2242)
+position = Vector2(-4739, 2156)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
@@ -89,12 +101,6 @@ position = Vector2(-3729, 2084)
 scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 4
 
-[node name="Area2D" type="Area2D" parent="Room1" unique_id=1908824826 groups=["Kill"]]
-position = Vector2(-4166, 2331)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/Area2D" unique_id=1621810179]
-shape = SubResource("RectangleShape2D_dc0v6")
-
 [node name="Room2" type="Node2D" parent="." unique_id=1792315409]
 position = Vector2(1945, 3)
 
@@ -104,6 +110,7 @@ script = ExtResource("1_dc0v6")
 area_pcam = NodePath("PhantomCamera2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/RoomCameraArea" unique_id=1457841232]
+visible = false
 position = Vector2(74.5, -117)
 shape = SubResource("RectangleShape2D_mfdc4")
 
@@ -141,7 +148,7 @@ scale = Vector2(0.8170094, 0.6324717)
 ShowPersonality = 1
 
 [node name="Player" parent="." unique_id=167461092 instance=ExtResource("2_2rfvf")]
-position = Vector2(-4505, 2528)
+position = Vector2(-5470, 2527)
 acceleration = 7200.0
 friction = 8000.0
 jump_time_to_peak = 0.3
