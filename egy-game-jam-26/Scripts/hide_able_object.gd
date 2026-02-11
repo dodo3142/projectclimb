@@ -56,7 +56,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	# Because we overwrote ShowPersonality in _ready, this logic works automatically!
 	if ShowPersonality == GameManger.current_personality:
-		collision.disabled = true
-	else:
 		collision.disabled = false
+	else:
+		collision.disabled = true
 	
