@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://c3qop8d1lf2v5"]
+
+[ext_resource type="Script" uid="uid://b3638jgiqc5ei" path="res://Scripts/hide_able_object_ver_2.gd" id="1_eroge"]
+[ext_resource type="Texture2D" uid="uid://bklnvwp67y4ka" path="res://Sprites/WHITE.png" id="1_qirta"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eroge"]
+size = Vector2(126, 128)
+
+[node name="HideAbleObjectVer2" type="StaticBody2D" unique_id=192104009 node_paths=PackedStringArray("collision", "sprite")]
+script = ExtResource("1_eroge")
+collision = NodePath("CollisionShape2D")
+sprite = NodePath("Sprite2D")
+color_sad = Color(0, 0, 0.87058824, 1)
+color_angry = Color(0.7254902, 0, 0, 1)
+color_happy = Color(0.7882353, 0.6313726, 0, 1)
+color_love = Color(0.7607843, 0, 0.47843137, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1647845988]
+texture = ExtResource("1_qirta")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=572164821]
+shape = SubResource("RectangleShape2D_eroge")

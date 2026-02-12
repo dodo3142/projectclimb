@@ -1,4 +1,3 @@
-@tool
 extends Control
 
 const SPRITE_SIZE = Vector2(128 * 2, 90 * 2)
@@ -22,9 +21,18 @@ var selection = -1
 # Track which input device was last used
 var is_using_gamepad = false
 
+var IS_open = false
+
 func get_selection() -> int:
 	hide()
+	$Close.play()
+	IS_open = false
 	return selection
+
+func open() -> void:
+	show()
+	$Open.play()
+	IS_open = true
 
 # Detect if the user is moving the mouse or the controller
 func _input(event: InputEvent) -> void:
@@ -34,16 +42,20 @@ func _input(event: InputEvent) -> void:
 		is_using_gamepad = true
 
 func _process(delta: float) -> void:
+	if not IS_open: return
+	# Store the selection BEFORE we update it
+	var previous_selection = selection
+
+	# --- EXISTING LOGIC START ---
 	# 1. CONTROLLER MODE
 	if is_using_gamepad:
 		var controller_dir = Input.get_vector("select_left", "select_right", "select_up", "select_down")
 		
-		# Only update selection if stick is moved past deadzone.
-		# If stick is released (inside deadzone), we KEEP the last selection.
 		if controller_dir.length() > joystick_deadzone:
 			var controller_rads = fposmod(controller_dir.angle() * -1, TAU)
-			selection = int((controller_rads / TAU) * len(options))
-			selection = clampi(selection, 0, len(options) - 1)
+			# Create a temp variable so we don't overwrite 'selection' immediately if we needed to do math
+			var new_sel = int((controller_rads / TAU) * len(options))
+			selection = clampi(new_sel, 0, len(options) - 1)
 			
 	# 2. MOUSE MODE
 	else:
@@ -56,8 +68,18 @@ func _process(delta: float) -> void:
 		else:
 			# Calculate angle
 			var mouse_rads = fposmod(mouse_pos.angle() * -1, TAU)
-			selection = int((mouse_rads / TAU) * len(options))
-			selection = clampi(selection, 0, len(options) - 1)
+			var new_sel = int((mouse_rads / TAU) * len(options))
+			selection = clampi(new_sel, 0, len(options) - 1)
+	# --- EXISTING LOGIC END ---
+	
+	# 3. SOUND LOGIC
+	# If the selection changed this frame...
+	if selection != previous_selection:
+		# And we didn't just move to the "dead zone" (-1)...
+		if selection != -1:
+			# Play the sound!
+			$Hover.stop() 
+			$Hover.play() 
 	
 	queue_redraw()
 

@@ -194,7 +194,9 @@ func change_state(new_state: int) -> void:
 	match current_state:
 		State.IDLE: anim.play("Idle")
 		State.RUN: anim.play("Running")
-		State.JUMP: anim.play("Jumping")
+		State.JUMP: 
+			anim.play("Jumping")
+			$Audios/Jump.play()
 		State.FALL: anim.play("Falling")
 		State.WALL_SLIDE: 
 			if anim.has_animation("WallSlide"): anim.play("WallSlide")
@@ -370,7 +372,7 @@ func check_fall_transition() -> void:
 func handle_personality_switching() -> void:
 	if Input.is_action_just_pressed("Change"):
 		Engine.time_scale = 0.2
-		$CanvasLayer/SelectionWheel.show()
+		$CanvasLayer/SelectionWheel.open()
 	elif Input.is_action_just_released("Change"):
 		Engine.time_scale = 1
 		var selected_personality = $CanvasLayer/SelectionWheel.get_selection()
@@ -385,6 +387,8 @@ func handle_personality_switching() -> void:
 	if Input.is_action_just_pressed("swap_prev"): apply_personality((current_personality - 1 + 4) % 4)
 
 func apply_personality(new_personality: int) -> void:
+	if current_personality != new_personality:
+		$Audios/ChangePersonality.play()
 	if current_personality == new_personality and not Engine.get_process_frames() > 0: return
 	current_personality = new_personality
 	GameManger.ChangePersonality(current_personality)

@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://dbtcet84e8j74" path="res://Sceen/selection_wheel.tscn" id="6_xv6io"]
 [ext_resource type="Texture2D" uid="uid://chfln6i660oer" path="res://Sprites/arm_right (1).png" id="7_hb638"]
 [ext_resource type="Texture2D" uid="uid://nkwjbpvmdo85" path="res://Sprites/arm_left (1).png" id="8_773cy"]
+[ext_resource type="AudioStream" uid="uid://co4f2f3ex7ipt" path="res://SFX/UI/African4.ogg" id="11_v7kt4"]
+[ext_resource type="AudioStream" uid="uid://dp8gaask81m7u" path="res://SFX/Jump.ogg" id="12_v0eaq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_igdd3"]
 size = Vector2(62, 61.5)
@@ -535,6 +537,11 @@ _data = {
 &"WallSlide": SubResource("Animation_qasc8")
 }
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_hdd7n"]
+random_pitch = 1.7817973
+streams_count = 1
+stream_0/stream = ExtResource("12_v0eaq")
+
 [node name="Player" type="CharacterBody2D" unique_id=167461092]
 script = ExtResource("1_ukytw")
 speed = 1000.0
@@ -609,6 +616,16 @@ target_position = Vector2(50, 0)
 
 [node name="WallCheckLeft" type="RayCast2D" parent="." unique_id=1331817104]
 target_position = Vector2(-40, 0)
+
+[node name="Audios" type="Node" parent="." unique_id=1065652476]
+
+[node name="ChangePersonality" type="AudioStreamPlayer" parent="Audios" unique_id=214832835]
+stream = ExtResource("11_v7kt4")
+
+[node name="Jump" type="AudioStreamPlayer" parent="Audios" unique_id=54642826]
+stream = SubResource("AudioStreamRandomizer_hdd7n")
+pitch_scale = 2.0
+bus = &"SFX"
 
 [connection signal="area_entered" from="HitBox" to="HitBox" method="_on_area_entered"]
 [connection signal="area_exited" from="HitBox" to="HitBox" method="_on_area_exited"]

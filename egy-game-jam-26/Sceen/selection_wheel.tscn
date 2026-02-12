@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://dpqpuf6aoc0q0" path="res://Sprites/sad (2).png" id="4_ksarm"]
 [ext_resource type="Texture2D" uid="uid://c8qunuaffbb2q" path="res://Sprites/happy (2).png" id="5_jns86"]
 [ext_resource type="Texture2D" uid="uid://dq0ris7xdrm7l" path="res://Sprites/love (2).png" id="6_qa72u"]
+[ext_resource type="AudioStream" uid="uid://dgaar1xeyiu30" path="res://SFX/UI/Retro1.ogg" id="8_jns86"]
+[ext_resource type="AudioStream" uid="uid://6igr4q4etrnt" path="res://SFX/UI/African1.ogg" id="9_kyumy"]
+[ext_resource type="AudioStream" uid="uid://b2tihd0rkc5ok" path="res://SFX/UI/African2.ogg" id="9_qa72u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mqqtr"]
 atlas = ExtResource("4_ksarm")
@@ -35,6 +38,11 @@ script = ExtResource("2_fch6c")
 name = "Happy"
 metadata/_custom_type_script = "uid://h88uk6ilqxni"
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_qa72u"]
+random_pitch = 1.3348398
+streams_count = 1
+stream_0/stream = ExtResource("8_jns86")
+
 [node name="SelectionWheel" type="Control" unique_id=428102102]
 layout_mode = 3
 anchors_preset = 8
@@ -49,3 +57,15 @@ bkg_color = Color(0.22745098, 0.22745098, 0.22745098, 0.21176471)
 line_color = Color(0.72156864, 0.72156864, 0.72156864, 0.30980393)
 highlight_color = Color(0.44313726, 0.44313726, 0.44313726, 0.25490198)
 options = Array[ExtResource("2_fch6c")]([SubResource("AtlasTexture_mqqtr"), SubResource("AtlasTexture_fch6c"), SubResource("AtlasTexture_iyw21"), SubResource("AtlasTexture_ksarm")])
+
+[node name="Close" type="AudioStreamPlayer" parent="." unique_id=1977288300]
+stream = ExtResource("9_qa72u")
+bus = &"SFX"
+
+[node name="Hover" type="AudioStreamPlayer" parent="." unique_id=587982828]
+stream = SubResource("AudioStreamRandomizer_qa72u")
+bus = &"SFX"
+
+[node name="Open" type="AudioStreamPlayer" parent="." unique_id=404420516]
+stream = ExtResource("9_kyumy")
+bus = &"SFX"

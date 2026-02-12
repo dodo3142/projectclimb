@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" uid="uid://iftcpfgs3yeq" path="res://Scripts/game_manger.gd" id="1_enjny"]
 [ext_resource type="Shader" uid="uid://hn81lrqn8xfk" path="res://Shader/ShockWave.gdshader" id="2_wp6qv"]
+[ext_resource type="AudioStream" uid="uid://cdhj8moijkmxi" path="res://Music/Sketchbook 2025-12-03 LOOP.ogg" id="3_cgi0e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cgi0e"]
 shader = ExtResource("2_wp6qv")
 shader_parameter/distortion_strength = 10.0
 shader_parameter/distortion_speed = 3.0
 shader_parameter/edge_softness = 10.0
-shader_parameter/color_angry = Color(0.7262234, 2.695322e-06, 2.8878452e-07, 1)
+shader_parameter/color_angry = Color(0.7254902, 0, 0, 1)
 shader_parameter/color_happy = Color(0.7886802, 0.63051474, 0, 1)
 shader_parameter/color_love = Color(0.7607843, 0, 0.47843137, 1)
 shader_parameter/color_sad = Color(0, 0, 0.87058824, 1)
@@ -46,3 +47,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=165054269]
+stream = ExtResource("3_cgi0e")
+autoplay = true
+bus = &"Music"

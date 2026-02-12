@@ -24,21 +24,20 @@ shader_parameter/dissolve_smoothness = 0.10000000149012
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2rfvf"]
 size = Vector2(130, 124)
 
-[node name="HideAbleObject3" type="StaticBody2D" unique_id=1625888095 node_paths=PackedStringArray("collision", "sprite")]
+[node name="HideAbleObject" type="StaticBody2D" unique_id=1625888095 node_paths=PackedStringArray("collision", "sprite")]
 modulate = Color(1, 1, 1, 0.007843138)
 scale = Vector2(2.265178, 3.114599)
 script = ExtResource("1_j00kt")
 ShowPersonality = 3
-collision = NodePath("CollisionShape2D")
+collision = NodePath("Sprite2D2")
 sprite = NodePath("Sprite2D")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2012439086]
-modulate = Color(0, 0, 0.87058824, 1)
 material = SubResource("ShaderMaterial_rfslm")
 position = Vector2(0.441467, 0.16053809)
 scale = Vector2(1.0208911, 0.9707308)
 texture = ExtResource("3_j00kt")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2110042685]
+[node name="Sprite2D2" type="CollisionShape2D" parent="." unique_id=2110042685]
 shape = SubResource("RectangleShape2D_2rfvf")
