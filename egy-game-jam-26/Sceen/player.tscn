@@ -547,9 +547,9 @@ script = ExtResource("1_ukytw")
 speed = 1000.0
 acceleration = 3600.0
 friction = 4000.0
-jump_height = 240.0
-jump_time_to_peak = 0.2
-jump_time_to_descent = 0.4
+jump_height = 360.0
+jump_time_to_peak = 0.3
+jump_time_to_descent = 0.2
 hang_time_threshold = 10.0
 wall_slide_speed = 70.0
 wall_jump_push_back = 2000.0
@@ -558,6 +558,7 @@ dash_duration = 0.1
 dash_cooldown = 0.1
 happy_explosion_height = 700.0
 smash_speed = 3000.0
+jump_stretch = Vector2(0.5, 1.7)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1425792876]
 position = Vector2(4, -19.75)

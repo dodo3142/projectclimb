@@ -30,8 +30,14 @@ extends CharacterBody2D
 @export var dash_cooldown: float = 0.5
 @export var dash_buffer_time: float = 0.15 
 @export_range(0.0, 1.0) var sad_glide_gravity: float = 0.1
+@export var max_sad_gravity : float = 100
 @export var happy_explosion_height: float = 300.0
 @export var smash_speed: float = 1500.0
+
+@export_category("Visual Feel")
+@export var squash_speed: float = 15.0
+@export var jump_stretch: Vector2 = Vector2(0.7, 1.3) # Thinner, Taller
+@export var land_squash: Vector2 = Vector2(1.3, 0.7)  # Wider, Shorter
 
 # --- INTERNAL VARIABLES ---
 
@@ -46,6 +52,9 @@ var dash_timer: float = 0.0
 var dash_cooldown_timer: float = 0.0
 var happy_charge_timer: float = 0.0 
 
+# STORE ORIGINAL SCALE
+var default_visual_scale: Vector2 = Vector2.ONE
+
 # State Machine
 enum State { IDLE, RUN, JUMP, FALL, DASH, SMASH, WALL_SLIDE }
 var current_state: int = State.FALL
@@ -59,7 +68,7 @@ var current_personality : int = Personality.SAD
 @onready var face: AnimatedSprite2D = %Face
 @onready var anim: AnimationPlayer = $Anim
 
-# RAYCAST REFERENCES (Make sure these match your node names!)
+# RAYCAST REFERENCES
 @onready var wall_check_right: RayCast2D = $WallCheckRight
 @onready var wall_check_left: RayCast2D = $WallCheckLeft
 
@@ -67,14 +76,19 @@ const MULTI_PARTICLE_EXAMPLE_2 = preload("uid://duqam6ffexoc8")
 
 
 func _ready() -> void:
+	# Capture the scale BEFORE doing anything else so we don't shrink the player
+	default_visual_scale = player_visual.scale
+	
 	apply_personality(current_personality)
-	GameManger.ChangePersonality(current_personality)
+	GameManger.ChangePersonality(current_personality) 
+	
 	jump_gravity = (2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)
 	fall_gravity = (2.0 * jump_height) / (jump_time_to_descent * jump_time_to_descent)
 
 func _physics_process(delta: float) -> void:
 	update_shader()
 	handle_personality_switching()
+	recover_squash_and_stretch(delta) # Added this line
 	
 	# 1. Update Timers
 	if not is_on_floor():
@@ -133,8 +147,9 @@ func _physics_process(delta: float) -> void:
 			
 			if velocity.y > 0: 
 				change_state(State.FALL)
-			# FIX: Only go to IDLE if on floor AND NOT moving up
+			# Only go to IDLE if on floor AND NOT moving up
 			elif is_on_floor() and velocity.y >= 0: 
+				apply_squash(land_squash) # Added squash
 				change_state(State.IDLE)
 
 		State.FALL:
@@ -145,7 +160,9 @@ func _physics_process(delta: float) -> void:
 			if current_state != State.FALL: return
 
 			check_wall_slide_transition() 
-			if is_on_floor(): change_state(State.IDLE)
+			if is_on_floor(): 
+				apply_squash(land_squash) # Added squash
+				change_state(State.IDLE)
 		
 		State.WALL_SLIDE:
 			can_dash = true 
@@ -155,9 +172,9 @@ func _physics_process(delta: float) -> void:
 			if current_state != State.WALL_SLIDE: return
 
 			if is_on_floor():
+				apply_squash(land_squash) # Added squash
 				change_state(State.IDLE)
 			
-			# FIX: Check Rays instead of is_on_wall()
 			elif get_wall_direction() == 0:
 				change_state(State.FALL)
 				
@@ -172,14 +189,36 @@ func _physics_process(delta: float) -> void:
 		State.SMASH:
 			velocity.y = smash_speed
 			if is_on_floor():
+				apply_squash(land_squash * 1.5) # Extra squash
 				perform_smash_impact()
 				change_state(State.IDLE)
 
 	move_and_slide()
 
+# --- SQUASH HELPERS ---
+
+func apply_squash(target_mod: Vector2) -> void:
+	# Calculate facing direction based on current scale
+	var facing_dir = sign(player_visual.scale.x)
+	if facing_dir == 0: facing_dir = 1
+	
+	# Apply squash relative to the DEFAULT scale we saved
+	player_visual.scale.x = default_visual_scale.x * target_mod.x * facing_dir
+	player_visual.scale.y = default_visual_scale.y * target_mod.y
+
+func recover_squash_and_stretch(delta: float) -> void:
+	var facing_dir = sign(player_visual.scale.x)
+	if facing_dir == 0: facing_dir = 1
+	
+	# Lerp back to the DEFAULT scale
+	var target_x = default_visual_scale.x * facing_dir
+	var target_y = default_visual_scale.y
+	
+	player_visual.scale.x = lerp(player_visual.scale.x, target_x, squash_speed * delta)
+	player_visual.scale.y = lerp(player_visual.scale.y, target_y, squash_speed * delta)
+
 # --- LOGIC HELPERS ---
 
-# NEW HELPER: Returns 1 (Right), -1 (Left), or 0 (None)
 func get_wall_direction() -> int:
 	if wall_check_right.is_colliding():
 		return 1
@@ -209,46 +248,46 @@ func handle_movement(delta: float) -> void:
 	
 	if direction != 0:
 		velocity.x = move_toward(velocity.x, direction * speed, acceleration * delta)
-		if direction > 0: player_visual.scale.x = abs(player_visual.scale.x)
-		else: player_visual.scale.x = -abs(player_visual.scale.x)
+		
+		# --- MODIFIED TO PRESERVE SQUASH ---
+		# Instead of resetting to hard 1/-1, we use the current squashed size
+		var current_abs_scale = abs(player_visual.scale.x)
+		if direction > 0: 
+			player_visual.scale.x = current_abs_scale
+		else: 
+			player_visual.scale.x = -current_abs_scale
+		# -----------------------------------
 	else:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 func check_wall_slide_transition() -> void:
-	# Only enter wall slide if we are falling (velocity.y > 0)
 	if velocity.y > 0 and not is_on_floor():
 		if get_wall_direction() != 0:
 			change_state(State.WALL_SLIDE)
 
 func handle_wall_slide_movement(delta: float) -> void:
-	# Just apply slow gravity. We don't need to force velocity.x anymore because Rays do the work.
 	velocity.y = min(velocity.y + fall_gravity * delta, wall_slide_speed)
-	
-	# Optional: Allow slight movement off the wall? 
-	# Usually best to lock X movement or dampen it heavily
 	velocity.x = move_toward(velocity.x, 0, friction * delta)
 	
 	# Face away from the wall
 	var wall_dir = get_wall_direction()
+	var current_abs_scale = abs(player_visual.scale.x)
+	
 	if wall_dir == 1: # Wall is Right
-		player_visual.scale.x = -abs(player_visual.scale.x)
+		player_visual.scale.x = -current_abs_scale
 	elif wall_dir == -1: # Wall is Left
-		player_visual.scale.x = abs(player_visual.scale.x)
+		player_visual.scale.x = current_abs_scale
 
 func perform_wall_jump() -> void:
 	var wall_dir = get_wall_direction()
-	
-	# If we somehow lost the wall for a microsecond, try to guess based on visual
 	if wall_dir == 0:
 		wall_dir = 1 if player_visual.scale.x > 0 else -1
 	
-	# Jump AWAY from wall (-wall_dir)
 	velocity.x = -wall_dir * wall_jump_push_back
 	velocity.y = wall_jump_force
-	
-	# Flip character visual
 	player_visual.scale.x = -player_visual.scale.x
-		
+	
+	apply_squash(jump_stretch) # Added squash
 	change_state(State.JUMP)
 
 func apply_gravity(delta: float) -> void:
@@ -259,6 +298,7 @@ func apply_gravity(delta: float) -> void:
 
 	if current_personality == Personality.SAD and velocity.y > 0 and Input.is_action_pressed("dash"):
 		applied_gravity *= sad_glide_gravity
+		applied_gravity = min(applied_gravity, max_sad_gravity)
 
 	velocity.y += applied_gravity * delta
 
@@ -270,6 +310,7 @@ func perform_jump() -> void:
 	velocity.y = -sqrt(2.0 * jump_gravity * jump_height)
 	jump_buffer_timer = 0 
 	coyote_timer = 0      
+	apply_squash(jump_stretch) # Added squash
 	change_state(State.JUMP)
 
 func handle_variable_jump_height() -> void:
@@ -283,21 +324,22 @@ func handle_ability_input() -> void:
 				if can_dash and dash_cooldown_timer <= 0:
 					start_dash()
 			Personality.LOVE:
-				perform_love_ability()
+				if not is_on_floor():
+					perform_love_ability()
+			Personality.SAD:
+				velocity.y = 0
 			_:
 				pass
 
 func start_dash() -> void:
 	var dash_dir = Input.get_axis("move_left", "move_right")
-	
-	# If no input, dash in facing direction
 	if dash_dir == 0:
 		dash_dir = 1 if player_visual.scale.x > 0 else -1
 
-	# If on wall, FORCE dash away from wall regardless of input
 	if current_state == State.WALL_SLIDE:
 		dash_dir = -get_wall_direction()
 
+	apply_squash(jump_stretch) # Added squash
 	velocity.y = 0 
 	velocity.x = dash_dir * dash_speed
 	dash_timer = dash_duration
@@ -318,25 +360,16 @@ func handle_happy_charge_mechanics(delta: float) -> void:
 		var intensity = clamp(happy_charge_timer / 2.0, 0.0, 1.0)
 		var shake_amount = intensity * 5.0
 		
-		# Shake Position
 		player_visual.position = Vector2(
 			randf_range(-shake_amount, shake_amount), 
 			randf_range(-shake_amount, shake_amount)
 		)
 		
-		# --- FLASHING MATH ---
-		# 1. Calculate a speed that gets faster as you charge
 		var flash_speed = 15.0 + (intensity * 30.0)
-		
-		# 2. Create a value that bounces between 0.0 and 1.0 using Sine wave
 		var flash_val = (sin(happy_charge_timer * flash_speed) + 1.0) / 2.0
 		
 		if $PlayerVisual/Head:
-			# 3. Blink between Normal (White) and Bright Yellow
-			# We use 'flash_val' to bounce back and forth
 			var flash_color = Color.WHITE.lerp(Color(2, 2, 0, 1), flash_val) 
-			
-			# 4. Add global brightness based on charge intensity
 			$PlayerVisual/Head.modulate = flash_color * (1.0 + intensity)
 
 	elif Input.is_action_just_released("dash"):
@@ -351,6 +384,7 @@ func perform_happy_explosion() -> void:
 	get_parent().add_child(explosion)
 	explosion.global_position = global_position
 	velocity.y = -sqrt(2.0 * jump_gravity * happy_explosion_height) * intensity
+	apply_squash(jump_stretch) # Added squash
 	change_state(State.JUMP)
 
 func reset_visual_offsets() -> void:
@@ -391,7 +425,7 @@ func apply_personality(new_personality: int) -> void:
 		$Audios/ChangePersonality.play()
 	if current_personality == new_personality and not Engine.get_process_frames() > 0: return
 	current_personality = new_personality
-	GameManger.ChangePersonality(current_personality)
+	GameManger.ChangePersonality(current_personality) # UNCOMMENTED THIS
 	face.frame = current_personality
 	reset_visual_offsets()
 

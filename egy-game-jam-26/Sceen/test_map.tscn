@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="4_ecgay"]
 [ext_resource type="Texture2D" uid="uid://bklnvwp67y4ka" path="res://Sprites/WHITE.png" id="4_mfdc4"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="5_yq216"]
+[ext_resource type="FontFile" uid="uid://bnh8mircs3b0a" path="res://SNPro-VariableFont_wght.ttf" id="6_mfdc4"]
+[ext_resource type="PackedScene" uid="uid://c3qop8d1lf2v5" path="res://Sceen/hide_able_object_ver_2.tscn" id="9_rfslm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mfdc4"]
 size = Vector2(1919, 1084)
@@ -16,7 +18,16 @@ duration = 0.6
 transition = 1
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yq216"]
-size = Vector2(127, 130)
+size = Vector2(127, 128.79478)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mfdc4"]
+font = ExtResource("6_mfdc4")
+font_size = 70
+outline_size = 9
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rfslm"]
+size = Vector2(59, 1024)
 
 [node name="TestMap" type="Node2D" unique_id=438535392]
 
@@ -28,6 +39,7 @@ script = ExtResource("1_dc0v6")
 area_pcam = NodePath("PhantomCamera2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/RoomCameraArea" unique_id=1326061836]
+visible = false
 position = Vector2(74.5, -117)
 shape = SubResource("RectangleShape2D_mfdc4")
 
@@ -38,6 +50,25 @@ zoom = Vector2(0.6, 0.6)
 tween_resource = SubResource("Resource_dc0v6")
 draw_limits = true
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="HideAbleObjectVer2" parent="Room1" unique_id=192104009 instance=ExtResource("9_rfslm")]
+position = Vector2(-527, -115)
+scale = Vector2(1, 13.926393)
+
+[node name="HideAbleObjectVer3" parent="Room1" unique_id=1296704824 instance=ExtResource("9_rfslm")]
+position = Vector2(-102, -115)
+scale = Vector2(1, 13.926393)
+ShowPersonality = 1
+
+[node name="HideAbleObjectVer4" parent="Room1" unique_id=405892508 instance=ExtResource("9_rfslm")]
+position = Vector2(316, -118)
+scale = Vector2(1, 13.926393)
+ShowPersonality = 2
+
+[node name="HideAbleObjectVer5" parent="Room1" unique_id=729562063 instance=ExtResource("9_rfslm")]
+position = Vector2(692, -114.99999)
+scale = Vector2(1, 13.926393)
+ShowPersonality = 3
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="Room1" unique_id=1272069266]
 position = Vector2(655, 471)
@@ -53,10 +84,24 @@ visible = false
 position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_yq216")
 
-[node name="StaticBody2D3" type="StaticBody2D" parent="Room1" unique_id=1863988801]
-position = Vector2(-964, 281)
-rotation = 1.5707964
+[node name="StaticBody2D4" type="StaticBody2D" parent="Room1" unique_id=605314843]
+position = Vector2(599, -751)
 scale = Vector2(35.639996, 1.7600006)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room1/StaticBody2D4" unique_id=183455701]
+modulate = Color(0, 0, 0, 1)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/StaticBody2D4" unique_id=40056958]
+visible = false
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Room1" unique_id=1863988801]
+position = Vector2(-964, 3.8146973e-06)
+rotation = 1.5707964
+scale = Vector2(10.696501, 1.7600006)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Room1/StaticBody2D3" unique_id=884969298]
@@ -68,6 +113,18 @@ visible = false
 position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_yq216")
 
+[node name="Label" type="Label" parent="Room1" unique_id=802577845]
+offset_left = -841.0
+offset_top = -628.0
+offset_right = -364.0
+offset_bottom = -583.0
+theme_override_fonts/font = ExtResource("6_mfdc4")
+theme_override_font_sizes/font_size = 32
+text = "Hold E To Change Your Identity"
+label_settings = SubResource("LabelSettings_mfdc4")
+horizontal_alignment = 1
+vertical_alignment = 3
+
 [node name="Room2" type="Node2D" parent="." unique_id=1792315409]
 position = Vector2(415, 0)
 
@@ -76,6 +133,7 @@ script = ExtResource("1_dc0v6")
 area_pcam = NodePath("PhantomCamera2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/RoomCameraArea" unique_id=1457841232]
+visible = false
 position = Vector2(74.5, -117)
 shape = SubResource("RectangleShape2D_mfdc4")
 
@@ -86,6 +144,28 @@ zoom = Vector2(0.6, 0.6)
 tween_resource = SubResource("Resource_dc0v6")
 draw_limits = true
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="StaticBody2D5" type="StaticBody2D" parent="Room2" unique_id=241574022]
+position = Vector2(-452, -641.99994)
+scale = Vector2(1.4255772, 6.4707465)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room2/StaticBody2D5" unique_id=403754311]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 64)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/StaticBody2D5" unique_id=1065624202]
+position = Vector2(0.8676756, 64.13918)
+scale = Vector2(1, 0.99999994)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="Respawn" type="Area2D" parent="Room2" unique_id=917800080 groups=["Respawn"]]
+position = Vector2(-826, 296)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/Respawn" unique_id=984037607]
+position = Vector2(0, -438)
+shape = SubResource("RectangleShape2D_rfslm")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1606168316]
 top_level = true
@@ -100,9 +180,7 @@ script = ExtResource("3_ji36m")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="Player" parent="." unique_id=167461092 instance=ExtResource("2_2rfvf")]
-position = Vector2(-2305, 123)
+position = Vector2(-585, 246)
 acceleration = 7200.0
 friction = 8000.0
-jump_time_to_peak = 0.3
-jump_time_to_descent = 0.2
 dash_speed = 4000.0
