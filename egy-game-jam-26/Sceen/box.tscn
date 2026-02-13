@@ -2,12 +2,18 @@
 
 [ext_resource type="Script" uid="uid://8db3rs0t8lxb" path="res://Scripts/box.gd" id="1_7uyqb"]
 [ext_resource type="Texture2D" uid="uid://dng7ieieyb5a4" path="res://Sprites/crate.png" id="1_u4c7h"]
+[ext_resource type="AudioStream" uid="uid://c13nq1gd2jj4r" path="res://SFX/boxhit.ogg" id="3_ecx04"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7uyqb"]
 size = Vector2(75, 68)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u4c7h"]
 size = Vector2(86, 75)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_rpdla"]
+random_pitch = 1.3348398
+streams_count = 1
+stream_0/stream = ExtResource("3_ecx04")
 
 [node name="Box" type="CharacterBody2D" unique_id=299030160]
 script = ExtResource("1_7uyqb")
@@ -22,11 +28,16 @@ texture = ExtResource("1_u4c7h")
 position = Vector2(-3.5, 9)
 shape = SubResource("RectangleShape2D_7uyqb")
 
-[node name="Area2D" type="Area2D" parent="." unique_id=1862574955]
+[node name="Area2D" type="Area2D" parent="." unique_id=1862574955 groups=["Box"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1339285173]
 visible = false
 position = Vector2(-3, 7.5)
 shape = SubResource("RectangleShape2D_u4c7h")
+
+[node name="Hit" type="AudioStreamPlayer2D" parent="." unique_id=1324852615]
+stream = SubResource("AudioStreamRandomizer_rpdla")
+volume_db = 5.0
+bus = &"SFX"
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

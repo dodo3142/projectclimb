@@ -14,6 +14,8 @@
 [ext_resource type="AudioStream" uid="uid://dp8gaask81m7u" path="res://SFX/Jump.ogg" id="12_v0eaq"]
 [ext_resource type="AudioStream" uid="uid://chlf1lwu75er8" path="res://SFX/Beep.ogg" id="13_hdd7n"]
 [ext_resource type="AudioStream" uid="uid://c6on8npmc4moy" path="res://SFX/Wosh.ogg" id="14_qasc8"]
+[ext_resource type="AudioStream" uid="uid://odfaip31vl1h" path="res://SFX/boom2.ogg" id="15_ylgtf"]
+[ext_resource type="AudioStream" uid="uid://df7b1jh6iesao" path="res://SFX/squish.ogg" id="16_v3ht4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_igdd3"]
 size = Vector2(62, 61.5)
@@ -557,6 +559,16 @@ random_pitch = 1.1892071
 streams_count = 1
 stream_0/stream = ExtResource("14_qasc8")
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_v3ht4"]
+random_pitch = 1.122462
+streams_count = 1
+stream_0/stream = ExtResource("15_ylgtf")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_dv1qk"]
+random_pitch = 1.3348398
+streams_count = 1
+stream_0/stream = ExtResource("16_v3ht4")
+
 [node name="Player" type="CharacterBody2D" unique_id=167461092]
 script = ExtResource("1_ukytw")
 speed = 1000.0
@@ -664,6 +676,17 @@ bus = &"SFX"
 stream = SubResource("AudioStreamRandomizer_ylgtf")
 volume_db = -10.0
 pitch_scale = 2.0
+bus = &"SFX"
+
+[node name="Boom" type="AudioStreamPlayer" parent="Audios" unique_id=1609723405]
+stream = SubResource("AudioStreamRandomizer_v3ht4")
+volume_db = -21.64
+pitch_scale = 2.4
+bus = &"SFX"
+
+[node name="Die" type="AudioStreamPlayer" parent="Audios" unique_id=141219438]
+stream = SubResource("AudioStreamRandomizer_dv1qk")
+pitch_scale = 0.69
 bus = &"SFX"
 
 [connection signal="area_entered" from="HitBox" to="HitBox" method="_on_area_entered"]

@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://iftcpfgs3yeq" path="res://Scripts/game_manger.gd" id="1_enjny"]
 [ext_resource type="Shader" uid="uid://hn81lrqn8xfk" path="res://Shader/ShockWave.gdshader" id="2_wp6qv"]
 [ext_resource type="AudioStream" uid="uid://cdhj8moijkmxi" path="res://Music/Sketchbook 2025-12-03 LOOP.ogg" id="3_cgi0e"]
+[ext_resource type="FontFile" uid="uid://dkte0csltdope" path="res://RobotoMono-VariableFont_wght.ttf" id="4_pb1c1"]
+[ext_resource type="Shader" uid="uid://crd3mp0ov30wo" path="res://Shader/Transtion.gdshader" id="5_amp62"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cgi0e"]
 shader = ExtResource("2_wp6qv")
@@ -13,6 +15,103 @@ shader_parameter/color_angry = Color(0.7254902, 0, 0, 1)
 shader_parameter/color_happy = Color(0.7882353, 0.6313726, 0, 1)
 shader_parameter/color_love = Color(0.7607843, 0, 0.47843137, 1)
 shader_parameter/color_sad = Color(0, 0, 0.87058824, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_amp62"]
+font = ExtResource("4_pb1c1")
+font_size = 42
+
+[sub_resource type="GDScript" id="GDScript_pb1c1"]
+script/source = "extends Label
+
+var time_elapsed: float = 0.0
+var is_running: bool = false
+
+func _process(delta: float) -> void:
+	if is_running:
+		time_elapsed += delta
+		update_label()
+
+func start_timer() -> void:
+	is_running = true
+
+func stop_timer() -> void:
+	is_running = false
+
+func reset_timer() -> void:
+	is_running = false
+	time_elapsed = 0.0
+	update_label()
+
+func update_label() -> void:
+	# Calculate minutes, seconds, and milliseconds
+	var minutes = int(time_elapsed / 60.0)
+	var seconds = int(time_elapsed) % 60
+	var milliseconds = int((time_elapsed - int(time_elapsed)) * 100)
+	
+	# Format text as \"00:00:00\"
+	text = \"%02d:%02d:%02d\" % [minutes, seconds, milliseconds]
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_225ex"]
+shader = ExtResource("5_amp62")
+shader_parameter/spacing = 25.0
+shader_parameter/animation_progress = 0.0
+shader_parameter/dot_size = 1.0
+shader_parameter/dot_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_amp62"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer2/Transtion:material:shader_parameter/animation_progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_225ex"]
+resource_name = "Start"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer2/Transtion:material:shader_parameter/animation_progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_f1hhx"]
+resource_name = "new_animation"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer2/Transtion:material:shader_parameter/animation_progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_f1hhx"]
+_data = {
+&"RESET": SubResource("Animation_amp62"),
+&"Start": SubResource("Animation_225ex"),
+&"Start_Level": SubResource("Animation_f1hhx")
+}
 
 [node name="GameManger" type="Node" unique_id=1517116595]
 script = ExtResource("1_enjny")
@@ -52,3 +151,27 @@ grow_vertical = 2
 stream = ExtResource("3_cgi0e")
 autoplay = true
 bus = &"Music"
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1188658825]
+
+[node name="Timer" type="Label" parent="CanvasLayer2" unique_id=1899672578]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -151.0
+offset_bottom = 57.0
+grow_horizontal = 0
+label_settings = SubResource("LabelSettings_amp62")
+script = SubResource("GDScript_pb1c1")
+
+[node name="Transtion" type="ColorRect" parent="CanvasLayer2" unique_id=220569630]
+material = SubResource("ShaderMaterial_225ex")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=233787016]
+libraries/ = SubResource("AnimationLibrary_f1hhx")

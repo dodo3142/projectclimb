@@ -22,9 +22,20 @@ var radii: Dictionary = {
 # Store the active tween so we can interrupt it if personality changes fast
 var _tween: Tween
 
+@onready var transtion: ColorRect = $CanvasLayer2/Transtion
+
 func _ready() -> void:
 	# Initialize the shader values immediately on start
+	#$CanvasLayer2/Timer.start_timer()
 	_update_all_shader_params()
+
+func Start():
+	$AnimationPlayer.play("Start")
+	await get_tree().create_timer(0.5).timeout 
+	get_tree().change_scene_to_file("res://Sceen/test_map.tscn")
+	$AnimationPlayer.play("Start_Level")
+	$CanvasLayer2/Timer.start_timer()
+
 
 func ChangePersonality(new_personality: int) -> void:
 	current_personality = new_personality

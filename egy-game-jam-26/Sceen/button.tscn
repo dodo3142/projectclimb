@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cx5ymalap000m"]
+
+[ext_resource type="Texture2D" uid="uid://bklnvwp67y4ka" path="res://Sprites/WHITE.png" id="1_ahfwn"]
+[ext_resource type="Script" uid="uid://bof6tqsa7ytct" path="res://Scripts/button.gd" id="2_8y1rn"]
+[ext_resource type="AudioStream" uid="uid://c0wen8axhovn4" path="res://SFX/UI/Minimalist3.ogg" id="3_o4ec8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hqjh4"]
+size = Vector2(129.05821, 77.29492)
+
+[node name="Button" type="Sprite2D" unique_id=26938375 node_paths=PackedStringArray("door")]
+modulate = Color(0.8521876, 0, 0.15482402, 1)
+rotation = 1.570797
+scale = Vector2(0.4339131, 0.43413675)
+texture = ExtResource("1_ahfwn")
+script = ExtResource("2_8y1rn")
+door = NodePath("")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1510157825]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=377689709]
+position = Vector2(-1.569397, 28.646484)
+shape = SubResource("RectangleShape2D_hqjh4")
+
+[node name="Click" type="AudioStreamPlayer2D" parent="." unique_id=1588542750]
+stream = ExtResource("3_o4ec8")
+volume_db = 13.394
+pitch_scale = 0.59
+bus = &"SFX"
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

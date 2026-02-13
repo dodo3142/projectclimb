@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://dkmdnjtlxq01c"]
+
+[ext_resource type="Script" uid="uid://tl4mfujgc0dh" path="res://Scripts/main_menu.gd" id="1_1ss7y"]
+[ext_resource type="FontFile" uid="uid://dkte0csltdope" path="res://RobotoMono-VariableFont_wght.ttf" id="1_uh1vy"]
+[ext_resource type="Script" uid="uid://d6tt2yppvo7q" path="res://Scripts/button_anim_module.gd" id="2_art70"]
+[ext_resource type="Script" uid="uid://fkn284i44k0y" path="res://Scripts/Volume_Slider.gd" id="4_vs23j"]
+
+[node name="MainMenu" type="Node2D" unique_id=843528889]
+script = ExtResource("1_1ss7y")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=6789214]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=442557004]
+custom_minimum_size = Vector2(100, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Play" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=508401679]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_uh1vy")
+theme_override_font_sizes/font_size = 49
+text = "Play"
+
+[node name="Button_Anim_Module" type="Node" parent="CanvasLayer/VBoxContainer/Play" unique_id=407045305]
+script = ExtResource("2_art70")
+ease_type = 2
+
+[node name="Settings" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=953216489]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_uh1vy")
+theme_override_font_sizes/font_size = 49
+text = "Settings"
+
+[node name="Button_Anim_Module" type="Node" parent="CanvasLayer/VBoxContainer/Settings" unique_id=1389447435]
+script = ExtResource("2_art70")
+ease_type = 2
+
+[node name="Quit" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=715157252]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_uh1vy")
+theme_override_font_sizes/font_size = 49
+text = "Quit"
+
+[node name="Button_Anim_Module" type="Node" parent="CanvasLayer/VBoxContainer/Quit" unique_id=1208189652]
+script = ExtResource("2_art70")
+ease_type = 2
+
+[node name="Settings" type="MarginContainer" parent="CanvasLayer" unique_id=860513436]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Settings" unique_id=657164894]
+self_modulate = Color(0.18864635, 0.2775224, 0.25233847, 1)
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Settings/Panel" unique_id=442892393]
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 500.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=1807563891]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("1_uh1vy")
+theme_override_font_sizes/font_size = 72
+text = "Master:"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=1495269030]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+script = ExtResource("4_vs23j")
+
+[node name="Label2" type="Label" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=1989784963]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("1_uh1vy")
+theme_override_font_sizes/font_size = 72
+text = "Music:"
+
+[node name="HSlider3" type="HSlider" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=31968453]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+script = ExtResource("4_vs23j")
+bus_name = "Music"
+
+[node name="Label3" type="Label" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=187096381]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("1_uh1vy")
+theme_override_font_sizes/font_size = 72
+text = "SFX:"
+
+[node name="HSlider2" type="HSlider" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=268111359]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+script = ExtResource("4_vs23j")
+bus_name = "SFX"
+
+[node name="Container" type="Container" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=1516186160]
+custom_minimum_size = Vector2(0, 38.605)
+layout_mode = 2
+
+[node name="Close" type="Button" parent="CanvasLayer/Settings/Panel/VBoxContainer" unique_id=1310420079]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_uh1vy")
+theme_override_font_sizes/font_size = 66
+text = "Close"
+
+[node name="ButtonEffect" type="Node" parent="CanvasLayer/Settings/Panel/VBoxContainer/Close" unique_id=666824472]
+script = ExtResource("2_art70")
+metadata/_custom_type_script = "uid://d6tt2yppvo7q"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1173153754]
+
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CanvasLayer/Settings/Panel/VBoxContainer/Close" to="." method="_on_close_pressed"]

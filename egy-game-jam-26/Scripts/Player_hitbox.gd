@@ -21,6 +21,7 @@ func _on_area_exited(area: Area2D) -> void:
 
 
 func die():
+	$"../Audios/Die".play()
 	var death_splash = DEATH_SPLASH.instantiate()
 	add_child(death_splash)
 	var death_splash2 = DEATH_SPLASH_2.instantiate()

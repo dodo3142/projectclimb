@@ -424,6 +424,7 @@ func reset_visual_offsets() -> void:
 	if $PlayerVisual/Head: $PlayerVisual/Head.modulate = Color.WHITE
 
 func perform_smash_impact() -> void:
+	$Audios/Boom.play()
 	var impact = MULTI_PARTICLE_EXAMPLE_2.instantiate()
 	get_parent().add_child(impact)
 	impact.global_position = global_position
