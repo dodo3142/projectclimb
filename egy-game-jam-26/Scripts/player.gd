@@ -63,6 +63,9 @@ var can_dash: bool = true
 enum Personality {SAD, ANGRY, HAPPY, LOVE}
 var current_personality : int = Personality.SAD
 
+var happy_charge_phase: float = 0.0 
+var last_flash_val: float = 0.0
+
 # NODE REFERENCES
 @onready var player_visual: Node2D = $PlayerVisual
 @onready var face: AnimatedSprite2D = %Face
@@ -169,10 +172,22 @@ func _physics_process(delta: float) -> void:
 			
 			handle_wall_slide_movement(delta)
 			handle_ability_input()
+			
+			# --- NEW: DETACH LOGIC ---
+			var input_dir = Input.get_axis("move_left", "move_right")
+			var wall_dir = get_wall_direction()
+			
+			# If pressing AWAY from the wall (Left input on Right wall, or vice versa)
+			if Input.is_action_just_pressed("move_down"):
+				velocity.x = -wall_dir * speed # Give immediate control
+				change_state(State.FALL)
+				return # Stop processing wall slide for this frame
+			# -------------------------
+
 			if current_state != State.WALL_SLIDE: return
 
 			if is_on_floor():
-				apply_squash(land_squash) # Added squash
+				apply_squash(land_squash)
 				change_state(State.IDLE)
 			
 			elif get_wall_direction() == 0:
@@ -229,7 +244,7 @@ func get_wall_direction() -> int:
 func change_state(new_state: int) -> void:
 	if current_state == new_state: return
 	current_state = new_state
-	
+	$PlayerVisual/PushArea/CollisionShape2D.disabled = true
 	match current_state:
 		State.IDLE: anim.play("Idle")
 		State.RUN: anim.play("Running")
@@ -240,8 +255,13 @@ func change_state(new_state: int) -> void:
 		State.WALL_SLIDE: 
 			if anim.has_animation("WallSlide"): anim.play("WallSlide")
 			else: anim.play("Falling")
-		State.SMASH: anim.play("Falling")
-		State.DASH: anim.play("Dash")
+		State.SMASH: 
+			anim.play("Falling")
+			$Audios/DashSound.play()
+		State.DASH: 
+			$PlayerVisual/PushArea/CollisionShape2D.disabled = false
+			anim.play("Dash")
+			$Audios/DashSound.play()
 
 func handle_movement(delta: float) -> void:
 	var direction = Input.get_axis("move_left", "move_right")
@@ -368,6 +388,15 @@ func handle_happy_charge_mechanics(delta: float) -> void:
 		var flash_speed = 15.0 + (intensity * 30.0)
 		var flash_val = (sin(happy_charge_timer * flash_speed) + 1.0) / 2.0
 		
+		# --- SOUND LOGIC ADDED HERE ---
+		# If brightness crosses 80% (0.8) this frame, play sound
+		if flash_val > 0.8 and last_flash_val <= 0.8:
+				$Audios/ChargeSound.pitch_scale = 1.0 + intensity
+				$Audios/ChargeSound.play()
+		
+		last_flash_val = flash_val # Remember for next frame
+		# -----------------------------
+		
 		if $PlayerVisual/Head:
 			var flash_color = Color.WHITE.lerp(Color(2, 2, 0, 1), flash_val) 
 			$PlayerVisual/Head.modulate = flash_color * (1.0 + intensity)
@@ -375,8 +404,10 @@ func handle_happy_charge_mechanics(delta: float) -> void:
 	elif Input.is_action_just_released("dash"):
 		perform_happy_explosion()
 		reset_visual_offsets()
+		last_flash_val = 0.0 # Reset sound trigger
 	else:
 		reset_visual_offsets()
+		last_flash_val = 0.0 # Reset sound trigger
 
 func perform_happy_explosion() -> void:
 	var intensity = clamp(happy_charge_timer / 2.0, 0.2, 1.0)
@@ -428,11 +459,23 @@ func apply_personality(new_personality: int) -> void:
 	GameManger.ChangePersonality(current_personality) # UNCOMMENTED THIS
 	face.frame = current_personality
 	reset_visual_offsets()
+	update_shader()
 
 func update_shader():
 	RenderingServer.global_shader_parameter_set("player_pos", global_position)
+	
+	# 1. Get the pixel position in the viewport
 	var screen_pos = get_global_transform_with_canvas().origin
-	RenderingServer.global_shader_parameter_set("player_screen_pos", screen_pos)
+	
+	# 2. Get the viewport size (logical resolution)
+	var viewport_size = get_viewport_rect().size
+	
+	# 3. Normalize the position (Result is between 0.0 and 1.0)
+	# This makes it resolution-independent!
+	var normalized_pos = screen_pos / viewport_size
+	
+	RenderingServer.global_shader_parameter_set("player_screen_pos", normalized_pos)
+	
 	var cam = get_viewport().get_camera_2d()
 	var current_zoom = cam.zoom.x if cam else 1.0
 	RenderingServer.global_shader_parameter_set("camera_zoom", current_zoom)

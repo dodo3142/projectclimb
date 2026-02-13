@@ -6,6 +6,8 @@ enum Personality {SAD, ANGRY, HAPPY, LOVE, RANDOM}
 @export_group("References")
 @export var collision : CollisionShape2D
 @export var sprite : Sprite2D
+@export var spikes : Node2D
+@export var spikes_collision : CollisionShape2D
 
 @export_group("Personality Colors")
 @export var color_sad : Color = Color(0.0, 0.0, 1.0)   # Blue
@@ -25,18 +27,30 @@ func _ready() -> void:
 	match ShowPersonality:
 		Personality.SAD:
 			sprite.modulate = color_sad
+			if spikes:
+				spikes.modulate = color_sad
 		Personality.ANGRY:
 			sprite.modulate = color_angry
+			if spikes:
+				spikes.modulate = color_angry
 		Personality.HAPPY:
 			sprite.modulate = color_happy
+			if spikes:
+				spikes.modulate = color_happy
 		Personality.LOVE:
 			sprite.modulate = color_love
+			if spikes:
+				spikes.modulate = color_love
 
 
 func _process(delta: float) -> void:
 	# Because we overwrote ShowPersonality in _ready, this logic works automatically!
 	if ShowPersonality == GameManger.current_personality:
 		collision.disabled = true
+		if spikes:
+			spikes_collision.disabled = true
 	else:
 		collision.disabled = false
+		if spikes:
+			spikes_collision.disabled = false
 	

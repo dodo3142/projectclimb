@@ -10,13 +10,13 @@ shader_parameter/distortion_strength = 10.0
 shader_parameter/distortion_speed = 3.0
 shader_parameter/edge_softness = 10.0
 shader_parameter/color_angry = Color(0.7254902, 0, 0, 1)
-shader_parameter/color_happy = Color(0.7886802, 0.63051474, 0, 1)
+shader_parameter/color_happy = Color(0.7882353, 0.6313726, 0, 1)
 shader_parameter/color_love = Color(0.7607843, 0, 0.47843137, 1)
 shader_parameter/color_sad = Color(0, 0, 0.87058824, 1)
 
 [node name="GameManger" type="Node" unique_id=1517116595]
 script = ExtResource("1_enjny")
-max_pulse_radius = 3000.0
+max_pulse_radius = 5000.0
 open_duration = 5.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1478123247]

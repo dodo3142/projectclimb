@@ -27,6 +27,10 @@ func die():
 	add_child(death_splash2)
 	var tween = get_tree().create_tween().set_trans(Tween.TRANS_CUBIC)
 	$"../PlayerVisual".visible = false
+	self.set_deferred("monitoring",false)
 	tween.tween_property(player,"global_position",respawn_pos,1)
 	tween.tween_callback(death_splash2.queue_free)
 	tween.tween_callback($"../PlayerVisual".show)
+	tween.tween_callback(func():
+		self.monitoring = true 
+		)

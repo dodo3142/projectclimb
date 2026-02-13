@@ -8,17 +8,9 @@
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="5_yq216"]
 [ext_resource type="FontFile" uid="uid://bnh8mircs3b0a" path="res://SNPro-VariableFont_wght.ttf" id="6_mfdc4"]
 [ext_resource type="PackedScene" uid="uid://c3qop8d1lf2v5" path="res://Sceen/hide_able_object_ver_2.tscn" id="9_rfslm"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mfdc4"]
-size = Vector2(1919, 1084)
-
-[sub_resource type="Resource" id="Resource_dc0v6"]
-script = ExtResource("5_yq216")
-duration = 0.6
-transition = 1
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_yq216"]
-size = Vector2(127, 128.79478)
+[ext_resource type="PackedScene" uid="uid://dg3tju5itv5g1" path="res://Sceen/Spikes.tscn" id="9_t4580"]
+[ext_resource type="PackedScene" uid="uid://bssi71vd1p4qo" path="res://Sceen/box.tscn" id="10_t4580"]
+[ext_resource type="PackedScene" uid="uid://8g72ex0sya4p" path="res://Sceen/HideableObject.tscn" id="11_hqjh4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mfdc4"]
 font = ExtResource("6_mfdc4")
@@ -26,30 +18,30 @@ font_size = 70
 outline_size = 9
 outline_color = Color(0, 0, 0, 1)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yq216"]
+size = Vector2(127.38916, 127.64857)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rfslm"]
 size = Vector2(59, 1024)
+
+[sub_resource type="LabelSettings" id="LabelSettings_rfslm"]
+font = ExtResource("6_mfdc4")
+font_size = 30
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mfdc4"]
+size = Vector2(1930, 1076)
+
+[sub_resource type="Resource" id="Resource_dc0v6"]
+script = ExtResource("5_yq216")
+duration = 0.6
+transition = 1
 
 [node name="TestMap" type="Node2D" unique_id=438535392]
 
 [node name="Room1" type="Node2D" parent="." unique_id=1340462363]
 position = Vector2(-1508, 0)
-
-[node name="RoomCameraArea" type="Area2D" parent="Room1" unique_id=894348433 node_paths=PackedStringArray("area_pcam")]
-script = ExtResource("1_dc0v6")
-area_pcam = NodePath("PhantomCamera2D")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/RoomCameraArea" unique_id=1326061836]
-visible = false
-position = Vector2(74.5, -117)
-shape = SubResource("RectangleShape2D_mfdc4")
-
-[node name="PhantomCamera2D" type="Node2D" parent="Room1/RoomCameraArea" unique_id=312504963]
-position = Vector2(75, -115)
-script = ExtResource("4_ecgay")
-zoom = Vector2(0.6, 0.6)
-tween_resource = SubResource("Resource_dc0v6")
-draw_limits = true
-metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 
 [node name="HideAbleObjectVer2" parent="Room1" unique_id=192104009 instance=ExtResource("9_rfslm")]
 position = Vector2(-527, -115)
@@ -70,49 +62,6 @@ position = Vector2(692, -114.99999)
 scale = Vector2(1, 13.926393)
 ShowPersonality = 3
 
-[node name="StaticBody2D2" type="StaticBody2D" parent="Room1" unique_id=1272069266]
-position = Vector2(655, 471)
-scale = Vector2(35.639996, 1.7600006)
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="Room1/StaticBody2D2" unique_id=221862711]
-modulate = Color(0, 0, 0, 1)
-texture = ExtResource("4_mfdc4")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/StaticBody2D2" unique_id=391846605]
-visible = false
-position = Vector2(0.5, 0)
-shape = SubResource("RectangleShape2D_yq216")
-
-[node name="StaticBody2D4" type="StaticBody2D" parent="Room1" unique_id=605314843]
-position = Vector2(599, -751)
-scale = Vector2(35.639996, 1.7600006)
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="Room1/StaticBody2D4" unique_id=183455701]
-modulate = Color(0, 0, 0, 1)
-texture = ExtResource("4_mfdc4")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/StaticBody2D4" unique_id=40056958]
-visible = false
-position = Vector2(0.5, 0)
-shape = SubResource("RectangleShape2D_yq216")
-
-[node name="StaticBody2D3" type="StaticBody2D" parent="Room1" unique_id=1863988801]
-position = Vector2(-964, 3.8146973e-06)
-rotation = 1.5707964
-scale = Vector2(10.696501, 1.7600006)
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="Room1/StaticBody2D3" unique_id=884969298]
-modulate = Color(0, 0, 0, 1)
-texture = ExtResource("4_mfdc4")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1/StaticBody2D3" unique_id=1883953147]
-visible = false
-position = Vector2(0.5, 0)
-shape = SubResource("RectangleShape2D_yq216")
-
 [node name="Label" type="Label" parent="Room1" unique_id=802577845]
 offset_left = -841.0
 offset_top = -628.0
@@ -128,26 +77,9 @@ vertical_alignment = 3
 [node name="Room2" type="Node2D" parent="." unique_id=1792315409]
 position = Vector2(415, 0)
 
-[node name="RoomCameraArea" type="Area2D" parent="Room2" unique_id=1127869779 node_paths=PackedStringArray("area_pcam")]
-script = ExtResource("1_dc0v6")
-area_pcam = NodePath("PhantomCamera2D")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/RoomCameraArea" unique_id=1457841232]
-visible = false
-position = Vector2(74.5, -117)
-shape = SubResource("RectangleShape2D_mfdc4")
-
-[node name="PhantomCamera2D" type="Node2D" parent="Room2/RoomCameraArea" unique_id=252283440]
-position = Vector2(75, -115)
-script = ExtResource("4_ecgay")
-zoom = Vector2(0.6, 0.6)
-tween_resource = SubResource("Resource_dc0v6")
-draw_limits = true
-metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
-
 [node name="StaticBody2D5" type="StaticBody2D" parent="Room2" unique_id=241574022]
 position = Vector2(-452, -641.99994)
-scale = Vector2(1.4255772, 6.4707465)
+scale = Vector2(0.72118336, 6.4707465)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Room2/StaticBody2D5" unique_id=403754311]
@@ -156,9 +88,51 @@ position = Vector2(1.5691458, 64)
 texture = ExtResource("4_mfdc4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/StaticBody2D5" unique_id=1065624202]
+visible = false
 position = Vector2(0.8676756, 64.13918)
 scale = Vector2(1, 0.99999994)
 shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D6" type="StaticBody2D" parent="Room2" unique_id=909367354]
+position = Vector2(-121, -462)
+scale = Vector2(0.72118336, 6.670746)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room2/StaticBody2D6" unique_id=789040797]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 64)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/StaticBody2D6" unique_id=668686156]
+visible = false
+position = Vector2(0.8676756, 64.13918)
+scale = Vector2(1, 0.99999994)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D7" type="StaticBody2D" parent="Room2" unique_id=2041161777]
+position = Vector2(898, -459)
+scale = Vector2(1.9611821, 6.670746)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room2/StaticBody2D7" unique_id=713414623]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 64)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2/StaticBody2D7" unique_id=97667968]
+visible = false
+position = Vector2(0.8676756, 64.13918)
+scale = Vector2(1, 0.99999994)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="HideAbleObjectVer7" parent="Room2" unique_id=1342773843 instance=ExtResource("9_rfslm")]
+position = Vector2(196, -405.00003)
+scale = Vector2(1.4155636, 0.90777296)
+
+[node name="HideAbleObjectVer9" parent="Room2" unique_id=2108642206 instance=ExtResource("9_rfslm")]
+position = Vector2(556, -405.00003)
+scale = Vector2(1.4155636, 0.90777296)
+ShowPersonality = 2
 
 [node name="Respawn" type="Area2D" parent="Room2" unique_id=917800080 groups=["Respawn"]]
 position = Vector2(-826, 296)
@@ -167,10 +141,652 @@ position = Vector2(-826, 296)
 position = Vector2(0, -438)
 shape = SubResource("RectangleShape2D_rfslm")
 
+[node name="Label" type="Label" parent="Room2" unique_id=300004939]
+offset_left = -863.0
+offset_top = -624.0
+offset_right = -232.0
+offset_bottom = -532.0
+theme_override_fonts/font = ExtResource("6_mfdc4")
+theme_override_font_sizes/font_size = 32
+text = "Try To Jump on Walls"
+label_settings = SubResource("LabelSettings_mfdc4")
+horizontal_alignment = 1
+vertical_alignment = 3
+
+[node name="Spikes" parent="Room2" unique_id=1997332539 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(54, 359.99997)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes2" parent="Room2" unique_id=1321778146 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(307, 360.00003)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes3" parent="Room2" unique_id=1696902739 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(556, 360.00003)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes4" parent="Room2" unique_id=1878013105 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(755, 363.00003)
+rotation = 0.03017399
+scale = Vector2(0.52000237, 0.44000036)
+
+[node name="Room3" type="Node2D" parent="." unique_id=178009313]
+position = Vector2(1974, 0)
+
+[node name="StaticBody2D11" type="StaticBody2D" parent="Room3" unique_id=1502037829]
+position = Vector2(487.21362, -663.3197)
+scale = Vector2(1.961, 6.088)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room3/StaticBody2D11" unique_id=1868042981]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 63.69518)
+scale = Vector2(1, 0.9952372)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room3/StaticBody2D11" unique_id=1037174871]
+visible = false
+position = Vector2(1.0622559, 63.566032)
+scale = Vector2(0.9999999, 0.9999997)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D12" type="StaticBody2D" parent="Room3" unique_id=427776876]
+position = Vector2(1278, 364)
+rotation = -3.1415925
+scale = Vector2(2.11788, 5.260047)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room3/StaticBody2D12" unique_id=2121984988]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 63.69518)
+scale = Vector2(1, 0.9952372)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room3/StaticBody2D12" unique_id=33024180]
+visible = false
+position = Vector2(1.0622559, 63.566032)
+scale = Vector2(0.9999999, 0.9999997)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D9" type="StaticBody2D" parent="Room3" unique_id=1888500649]
+position = Vector2(-164.78638, -288.3197)
+scale = Vector2(2.6811872, 0.5907459)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room3/StaticBody2D9" unique_id=1742980215]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 64)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room3/StaticBody2D9" unique_id=1085052974]
+visible = false
+position = Vector2(0.8676756, 64.13918)
+scale = Vector2(1, 0.99999994)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D10" type="StaticBody2D" parent="Room3" unique_id=292672661]
+position = Vector2(188.78638, 35.680298)
+scale = Vector2(2.6811872, 0.5907459)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room3/StaticBody2D10" unique_id=826647910]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 64)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room3/StaticBody2D10" unique_id=113035666]
+visible = false
+position = Vector2(0.8676756, 64.13918)
+scale = Vector2(1, 0.99999994)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="Spikes5" parent="Room3" unique_id=1501462392 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-366.78638, -285.31967)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes6" parent="Room3" unique_id=111635561 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-114.572754, -284.63943)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes7" parent="Room3" unique_id=1599853310 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(151.21362, 40.040894)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes8" parent="Room3" unique_id=908537781 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(402.78638, 39.680298)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes9" parent="Room3" unique_id=1936926994 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-156.78638, 372.6803)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Label" type="Label" parent="Room3" unique_id=575922421]
+offset_left = -471.78638
+offset_top = -624.3197
+offset_right = 159.21362
+offset_bottom = -532.3197
+theme_override_fonts/font = ExtResource("6_mfdc4")
+theme_override_font_sizes/font_size = 32
+text = "Sad + Ability = Low Gravity"
+label_settings = SubResource("LabelSettings_mfdc4")
+horizontal_alignment = 1
+vertical_alignment = 3
+
+[node name="Label3" type="Label" parent="Room3" unique_id=2138893076]
+offset_left = 512.0
+offset_top = 341.0
+offset_right = 1400.0
+offset_bottom = 433.0
+theme_override_fonts/font = ExtResource("6_mfdc4")
+theme_override_font_sizes/font_size = 32
+text = "Happy + Ability = Boom Jump"
+label_settings = SubResource("LabelSettings_mfdc4")
+horizontal_alignment = 1
+vertical_alignment = 3
+
+[node name="Label4" type="Label" parent="Room3" unique_id=489924366]
+offset_left = 1142.0
+offset_top = 274.0
+offset_right = 2030.0
+offset_bottom = 366.0
+theme_override_fonts/font = ExtResource("6_mfdc4")
+theme_override_font_sizes/font_size = 32
+text = "Hold"
+label_settings = SubResource("LabelSettings_mfdc4")
+vertical_alignment = 3
+
+[node name="Label2" type="Label" parent="Room3" unique_id=1938512735]
+offset_left = -595.0
+offset_top = -539.0
+offset_right = 216.0
+offset_bottom = -447.0
+theme_override_fonts/font = ExtResource("6_mfdc4")
+theme_override_font_sizes/font_size = 32
+text = "Shift or R2
+"
+label_settings = SubResource("LabelSettings_rfslm")
+horizontal_alignment = 1
+vertical_alignment = 3
+
+[node name="StaticBody2D8" type="StaticBody2D" parent="Room3" unique_id=1305583017]
+position = Vector2(-412.99988, -459)
+scale = Vector2(1.9611821, 6.670746)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room3/StaticBody2D8" unique_id=1302220880]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 64)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room3/StaticBody2D8" unique_id=1522962079]
+visible = false
+position = Vector2(0.8676756, 64.13918)
+scale = Vector2(1, 0.99999994)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="Respawn2" type="Area2D" parent="Room3" unique_id=304316642 groups=["Respawn"]]
+position = Vector2(-479, -473)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room3/Respawn2" unique_id=1635418541]
+position = Vector2(0, -438)
+shape = SubResource("RectangleShape2D_rfslm")
+
+[node name="Room4" type="Node2D" parent="." unique_id=2117054223]
+position = Vector2(4249, -88)
+
+[node name="HideAbleObjectVer8" parent="Room4" unique_id=1152251808 instance=ExtResource("9_rfslm")]
+position = Vector2(295, -464)
+scale = Vector2(0.9755636, 2.307773)
+ShowPersonality = 2
+
+[node name="HideAbleObjectVer9" parent="Room4" unique_id=1961298477 node_paths=PackedStringArray("spikes", "spikes_collision") instance=ExtResource("9_rfslm")]
+position = Vector2(464, 57)
+rotation = -1.5707964
+scale = Vector2(0.9755636, 1.867773)
+ShowPersonality = 3
+spikes = NodePath("Spikes7")
+spikes_collision = NodePath("Spikes7/Area2D/CollisionShape2D")
+
+[node name="Spikes7" parent="Room4/HideAbleObjectVer9" unique_id=440126482 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(59.452805, 1.9922853e-05)
+rotation = 1.635798
+scale = Vector2(0.2716984, 0.44000033)
+
+[node name="HideAbleObjectVer10" parent="Room4" unique_id=1446179953 node_paths=PackedStringArray("spikes", "spikes_collision") instance=ExtResource("9_rfslm")]
+position = Vector2(702, 57)
+rotation = -1.5707964
+scale = Vector2(0.9755636, 1.867773)
+ShowPersonality = 3
+spikes = NodePath("Spikes7")
+spikes_collision = NodePath("Spikes7/Area2D/CollisionShape2D")
+
+[node name="Spikes7" parent="Room4/HideAbleObjectVer10" unique_id=223403776 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(59.452805, 1.9922853e-05)
+rotation = 1.635798
+scale = Vector2(0.2716984, 0.44000033)
+
+[node name="HideAbleObjectVer11" parent="Room4" unique_id=1987398393 node_paths=PackedStringArray("spikes", "spikes_collision") instance=ExtResource("9_rfslm")]
+position = Vector2(931, 57)
+rotation = -1.5707964
+scale = Vector2(0.9755636, 1.7077731)
+ShowPersonality = 3
+spikes = NodePath("Spikes7")
+spikes_collision = NodePath("Spikes7/Area2D/CollisionShape2D")
+
+[node name="Spikes7" parent="Room4/HideAbleObjectVer11" unique_id=213777391 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(59.452805, 1.9922853e-05)
+rotation = 1.635798
+scale = Vector2(0.2716984, 0.44000033)
+
+[node name="StaticBody2D13" type="StaticBody2D" parent="Room4" unique_id=355222147]
+position = Vector2(-307, -560)
+scale = Vector2(1.008, 6.887)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room4/StaticBody2D13" unique_id=1950062977]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 63.69518)
+scale = Vector2(1, 0.9952372)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room4/StaticBody2D13" unique_id=1745417889]
+visible = false
+position = Vector2(1.0622559, 63.566032)
+scale = Vector2(0.9999999, 0.9999997)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D14" type="StaticBody2D" parent="Room4" unique_id=1597126360]
+position = Vector2(293, -337)
+scale = Vector2(1.008, 6.887)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room4/StaticBody2D14" unique_id=1989878157]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 63.69518)
+scale = Vector2(1, 0.9952372)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room4/StaticBody2D14" unique_id=138178920]
+visible = false
+position = Vector2(1.0622559, 63.566032)
+scale = Vector2(0.9999999, 0.9999997)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="Box" parent="Room4" unique_id=299030160 instance=ExtResource("10_t4580")]
+position = Vector2(-300, 370)
+scale = Vector2(1.6367836, 1.7664411)
+
+[node name="Label5" type="Label" parent="Room4" unique_id=785911643]
+offset_left = -838.0
+offset_top = -536.0
+offset_right = -27.0
+offset_bottom = -444.0
+theme_override_fonts/font = ExtResource("6_mfdc4")
+theme_override_font_sizes/font_size = 32
+text = "Angry + Ability = PushDash"
+label_settings = SubResource("LabelSettings_mfdc4")
+horizontal_alignment = 1
+vertical_alignment = 3
+
+[node name="Respawn2" type="Area2D" parent="Room4" unique_id=268836101 groups=["Respawn"]]
+position = Vector2(-777, 401)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room4/Respawn2" unique_id=588780049]
+position = Vector2(0, -438)
+shape = SubResource("RectangleShape2D_rfslm")
+
+[node name="Room5" type="Node2D" parent="." unique_id=980201156]
+position = Vector2(6160, -88)
+
+[node name="HideAbleObject" parent="Room5" unique_id=1625888095 instance=ExtResource("11_hqjh4")]
+position = Vector2(54, 237)
+scale = Vector2(6.665188, 3.114599)
+ShowPersonality = 1
+
+[node name="Spikes10" parent="Room5" unique_id=292057605 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-316, 447.99997)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes11" parent="Room5" unique_id=645616328 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-65.78613, 448.6803)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes12" parent="Room5" unique_id=1775748119 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(186.21387, 448.6803)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes13" parent="Room5" unique_id=310949633 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(436.21387, 448.68033)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Respawn2" type="Area2D" parent="Room5" unique_id=1062884024 groups=["Respawn"]]
+position = Vector2(-792, 427)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room5/Respawn2" unique_id=2006068346]
+position = Vector2(0, -438)
+shape = SubResource("RectangleShape2D_rfslm")
+
+[node name="StaticBody2D15" type="StaticBody2D" parent="Room5" unique_id=171176886]
+position = Vector2(995, -686)
+scale = Vector2(1.008, 6.887)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room5/StaticBody2D15" unique_id=323877066]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 63.69518)
+scale = Vector2(1, 0.9952372)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room5/StaticBody2D15" unique_id=1087777901]
+visible = false
+position = Vector2(1.0622559, 63.566032)
+scale = Vector2(0.9999999, 0.9999997)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D17" type="StaticBody2D" parent="Room5" unique_id=2093346642]
+position = Vector2(2916, -335)
+scale = Vector2(1.008, 6.887)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room5/StaticBody2D17" unique_id=187548577]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 63.69518)
+scale = Vector2(1, 0.9952372)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room5/StaticBody2D17" unique_id=1703020793]
+visible = false
+position = Vector2(1.0622559, 63.566032)
+scale = Vector2(0.9999999, 0.9999997)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D16" type="StaticBody2D" parent="Room5" unique_id=1767330181]
+position = Vector2(-914, -684)
+scale = Vector2(1.008, 6.887)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Room5/StaticBody2D16" unique_id=1253448636]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(1.5691458, 63.69518)
+scale = Vector2(1, 0.9952372)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room5/StaticBody2D16" unique_id=1499193850]
+visible = false
+position = Vector2(1.0622559, 63.566032)
+scale = Vector2(0.9999999, 0.9999997)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="Room6" type="Node2D" parent="." unique_id=26520790]
+position = Vector2(8082, -110)
+
+[node name="HideAbleObject2" parent="Room6" unique_id=1447220411 instance=ExtResource("11_hqjh4")]
+position = Vector2(-212, 387.00003)
+scale = Vector2(1.3051977, 3.114599)
+ShowPersonality = 0
+
+[node name="HideAbleObject3" parent="Room6" unique_id=1258572574 instance=ExtResource("11_hqjh4")]
+position = Vector2(254, 68.999985)
+scale = Vector2(1.3051977, 0.874599)
+
+[node name="HideAbleObject4" parent="Room6" unique_id=314212412 instance=ExtResource("11_hqjh4")]
+position = Vector2(662, -94)
+scale = Vector2(1.3051977, 0.99459904)
+ShowPersonality = 2
+
+[node name="Spikes10" parent="Room6" unique_id=1135654993 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(-185, 475)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes11" parent="Room6" unique_id=84758745 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(67, 476)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes12" parent="Room6" unique_id=1573402004 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(315, 476)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes13" parent="Room6" unique_id=43458504 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(567, 476)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes14" parent="Room6" unique_id=1830510199 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(818, 475.99997)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Spikes15" parent="Room6" unique_id=162902303 instance=ExtResource("9_t4580")]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(921, 475.99997)
+scale = Vector2(0.52000237, 0.44000033)
+
+[node name="Room7" type="Node2D" parent="." unique_id=841107087]
+position = Vector2(10014, -110)
+
+[node name="Room" type="Node2D" parent="." unique_id=1427168765]
+
+[node name="RoomCameraArea2" type="Area2D" parent="Room" unique_id=1017645708 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(22, 88)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room/RoomCameraArea2" unique_id=154043760]
+visible = false
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Room/RoomCameraArea2" unique_id=289936128]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.6, 0.6)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="MainWalls" type="Node2D" parent="." unique_id=777198907]
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="MainWalls" unique_id=1272069266]
+position = Vector2(-853, 471)
+scale = Vector2(507.16486, 1.7600006)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="MainWalls/StaticBody2D2" unique_id=221862711]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(0, 636.46564)
+scale = Vector2(1, 10.944776)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainWalls/StaticBody2D2" unique_id=391846605]
+visible = false
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="MainWalls" unique_id=605314843]
+position = Vector2(-909, -751)
+scale = Vector2(509.40002, 1.7600006)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="MainWalls/StaticBody2D4" unique_id=183455701]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(0, -678.5111)
+scale = Vector2(1, 11.601736)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainWalls/StaticBody2D4" unique_id=40056958]
+visible = false
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="MainWalls" unique_id=1863988801]
+position = Vector2(-2472, 3.8146973e-06)
+rotation = 1.5707964
+scale = Vector2(49.806194, 1.7600006)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="MainWalls/StaticBody2D3" unique_id=884969298]
+modulate = Color(0, 0, 0, 1)
+position = Vector2(0, 789.33466)
+scale = Vector2(1, 13.333354)
+texture = ExtResource("4_mfdc4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MainWalls/StaticBody2D3" unique_id=1883953147]
+visible = false
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_yq216")
+
+[node name="Cameras" type="Node2D" parent="." unique_id=1214961085]
+position = Vector2(-49, -11)
+
+[node name="RoomCameraArea" type="Area2D" parent="Cameras" unique_id=894348433 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(-1508, 0)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cameras/RoomCameraArea" unique_id=1326061836]
+visible = false
+position = Vector2(80, -121)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Cameras/RoomCameraArea" unique_id=312504963]
+position = Vector2(66, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.675, 0.675)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="RoomCameraArea2" type="Area2D" parent="Cameras" unique_id=1127869779 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(415, 0)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cameras/RoomCameraArea2" unique_id=1457841232]
+visible = false
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Cameras/RoomCameraArea2" unique_id=252283440]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.675, 0.675)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="RoomCameraArea3" type="Area2D" parent="Cameras" unique_id=1470806127 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(2345.214, 0)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cameras/RoomCameraArea3" unique_id=946653691]
+visible = false
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Cameras/RoomCameraArea3" unique_id=1946418310]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.675, 0.675)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="RoomCameraArea4" type="Area2D" parent="Cameras" unique_id=35811206 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(4271, 0)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cameras/RoomCameraArea4" unique_id=800726547]
+visible = false
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Cameras/RoomCameraArea4" unique_id=2119324378]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.675, 0.675)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="RoomCameraArea6" type="Area2D" parent="Cameras" unique_id=194451888 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(6182, 0)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cameras/RoomCameraArea6" unique_id=56350767]
+visible = false
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Cameras/RoomCameraArea6" unique_id=127872650]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.675, 0.675)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="RoomCameraArea5" type="Area2D" parent="Cameras" unique_id=1180414010 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(8104, 0)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cameras/RoomCameraArea5" unique_id=1222094826]
+visible = false
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Cameras/RoomCameraArea5" unique_id=172291113]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.675, 0.675)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
+[node name="RoomCameraArea7" type="Area2D" parent="Cameras" unique_id=1790412407 node_paths=PackedStringArray("area_pcam")]
+position = Vector2(10014, 0)
+script = ExtResource("1_dc0v6")
+area_pcam = NodePath("PhantomCamera2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cameras/RoomCameraArea7" unique_id=564834629]
+visible = false
+position = Vector2(74.5, -117)
+shape = SubResource("RectangleShape2D_mfdc4")
+
+[node name="PhantomCamera2D" type="Node2D" parent="Cameras/RoomCameraArea7" unique_id=2021202717]
+position = Vector2(75, -115)
+script = ExtResource("4_ecgay")
+zoom = Vector2(0.675, 0.675)
+tween_resource = SubResource("Resource_dc0v6")
+draw_limits = true
+metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
+
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1606168316]
 top_level = true
-position = Vector2(490, -115)
-zoom = Vector2(0.6, 0.6)
+position = Vector2(10040, -126)
+zoom = Vector2(0.675, 0.675)
 editor_draw_limits = true
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D" unique_id=488027934]
@@ -180,7 +796,11 @@ script = ExtResource("3_ji36m")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="Player" parent="." unique_id=167461092 instance=ExtResource("2_2rfvf")]
-position = Vector2(-585, 246)
+position = Vector2(-2282, 235)
 acceleration = 7200.0
 friction = 8000.0
 dash_speed = 4000.0
+
+[editable path="Room4/HideAbleObjectVer9/Spikes7"]
+[editable path="Room4/HideAbleObjectVer10/Spikes7"]
+[editable path="Room4/HideAbleObjectVer11/Spikes7"]

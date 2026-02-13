@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dg3tju5itv5g1"]
+
+[ext_resource type="Texture2D" uid="uid://bn57da3gvvecd" path="res://Sprites/spikes.png" id="1_drh7k"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_drh7k"]
+size = Vector2(568.37964, 66.90362)
+
+[node name="Sprite2D" type="Sprite2D" unique_id=1501462392]
+rotation = 0.028748872
+texture = ExtResource("1_drh7k")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1928735600 groups=["Kill"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=79217236]
+position = Vector2(-8.596804, -69.778496)
+rotation = -0.03421694
+scale = Vector2(0.8497905, 2.03209)
+shape = SubResource("RectangleShape2D_drh7k")

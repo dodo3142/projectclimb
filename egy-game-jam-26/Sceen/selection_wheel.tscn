@@ -53,9 +53,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1kkiy")
-bkg_color = Color(0.22745098, 0.22745098, 0.22745098, 0.21176471)
-line_color = Color(0.72156864, 0.72156864, 0.72156864, 0.30980393)
-highlight_color = Color(0.44313726, 0.44313726, 0.44313726, 0.25490198)
+segment_colors = Array[Color]([Color(0, 0, 0.87058824, 0.5058824), Color(0.7254902, 0, 0, 0.5019608), Color(0.7882353, 0.6313726, 0, 0.54901963), Color(0.7607843, 0, 0.47843137, 0.50980395)])
 options = Array[ExtResource("2_fch6c")]([SubResource("AtlasTexture_mqqtr"), SubResource("AtlasTexture_fch6c"), SubResource("AtlasTexture_iyw21"), SubResource("AtlasTexture_ksarm")])
 
 [node name="Close" type="AudioStreamPlayer" parent="." unique_id=1977288300]

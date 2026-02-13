@@ -19,4 +19,5 @@ color_love = Color(0.7607843, 0, 0.47843137, 1)
 texture = ExtResource("1_qirta")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=572164821]
+visible = false
 shape = SubResource("RectangleShape2D_eroge")

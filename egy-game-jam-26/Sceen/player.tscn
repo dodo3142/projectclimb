@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://nkwjbpvmdo85" path="res://Sprites/arm_left (1).png" id="8_773cy"]
 [ext_resource type="AudioStream" uid="uid://co4f2f3ex7ipt" path="res://SFX/UI/African4.ogg" id="11_v7kt4"]
 [ext_resource type="AudioStream" uid="uid://dp8gaask81m7u" path="res://SFX/Jump.ogg" id="12_v0eaq"]
+[ext_resource type="AudioStream" uid="uid://chlf1lwu75er8" path="res://SFX/Beep.ogg" id="13_hdd7n"]
+[ext_resource type="AudioStream" uid="uid://c6on8npmc4moy" path="res://SFX/Wosh.ogg" id="14_qasc8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_igdd3"]
 size = Vector2(62, 61.5)
@@ -38,6 +40,9 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qasc8"]
+size = Vector2(12.000011, 63.000004)
 
 [sub_resource type="Animation" id="Animation_ylgtf"]
 resource_name = "Dash"
@@ -542,6 +547,16 @@ random_pitch = 1.7817973
 streams_count = 1
 stream_0/stream = ExtResource("12_v0eaq")
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_qasc8"]
+random_pitch = 1.0594631
+streams_count = 1
+stream_0/stream = ExtResource("13_hdd7n")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ylgtf"]
+random_pitch = 1.1892071
+streams_count = 1
+stream_0/stream = ExtResource("14_qasc8")
+
 [node name="Player" type="CharacterBody2D" unique_id=167461092]
 script = ExtResource("1_ukytw")
 speed = 1000.0
@@ -558,7 +573,8 @@ dash_duration = 0.1
 dash_cooldown = 0.1
 happy_explosion_height = 700.0
 smash_speed = 3000.0
-jump_stretch = Vector2(0.5, 1.7)
+jump_stretch = Vector2(0.5, 2)
+land_squash = Vector2(2, 0.7)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1425792876]
 position = Vector2(4, -19.75)
@@ -602,6 +618,16 @@ position = Vector2(-5.4968286, -5.0739946)
 scale = Vector2(0.17346068, 0.19495356)
 texture = ExtResource("8_773cy")
 
+[node name="PushArea" type="Area2D" parent="PlayerVisual" unique_id=2012333177 groups=["Push"]]
+position = Vector2(0, -4.2283297)
+scale = Vector2(0.42283297, 0.42283297)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerVisual/PushArea" unique_id=81820601]
+position = Vector2(40.999996, -18.499996)
+scale = Vector2(0.9999998, 0.9999998)
+shape = SubResource("RectangleShape2D_qasc8")
+disabled = true
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=447623359]
 
 [node name="SelectionWheel" parent="CanvasLayer" unique_id=428102102 instance=ExtResource("6_xv6io")]
@@ -622,9 +648,21 @@ target_position = Vector2(-40, 0)
 
 [node name="ChangePersonality" type="AudioStreamPlayer" parent="Audios" unique_id=214832835]
 stream = ExtResource("11_v7kt4")
+bus = &"SFX"
 
 [node name="Jump" type="AudioStreamPlayer" parent="Audios" unique_id=54642826]
 stream = SubResource("AudioStreamRandomizer_hdd7n")
+pitch_scale = 2.0
+bus = &"SFX"
+
+[node name="ChargeSound" type="AudioStreamPlayer" parent="Audios" unique_id=1277832195]
+stream = SubResource("AudioStreamRandomizer_qasc8")
+pitch_scale = 0.56
+bus = &"SFX"
+
+[node name="DashSound" type="AudioStreamPlayer" parent="Audios" unique_id=279746424]
+stream = SubResource("AudioStreamRandomizer_ylgtf")
+volume_db = -10.0
 pitch_scale = 2.0
 bus = &"SFX"
 
