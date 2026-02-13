@@ -10,6 +10,8 @@ class_name ButtonEffect
 @onready var button : Button = get_parent()
 
 var tween : Tween
+@export var can_change: bool = true
+
 
 func _ready() -> void:
 	# Connect signals
@@ -33,7 +35,7 @@ func _on_mouse_hoverd(hovered: bool) -> void:
 	tween.tween_property(button, "rotation_degrees", rotation_amount * [-1, 1].pick_random() if hovered else 0.0, anim_duration)
 	
 	# --- NEW PERSONALITY LOGIC ---
-	if hovered:
+	if hovered and can_change:
 		# 1. Update the shader first so the effect happens at the button location
 		update_shader()
 		

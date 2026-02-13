@@ -5,6 +5,8 @@
 [ext_resource type="AudioStream" uid="uid://cdhj8moijkmxi" path="res://Music/Sketchbook 2025-12-03 LOOP.ogg" id="3_cgi0e"]
 [ext_resource type="FontFile" uid="uid://dkte0csltdope" path="res://RobotoMono-VariableFont_wght.ttf" id="4_pb1c1"]
 [ext_resource type="Shader" uid="uid://crd3mp0ov30wo" path="res://Shader/Transtion.gdshader" id="5_amp62"]
+[ext_resource type="Script" uid="uid://fkn284i44k0y" path="res://Scripts/Volume_Slider.gd" id="6_f1hhx"]
+[ext_resource type="Script" uid="uid://d6tt2yppvo7q" path="res://Scripts/button_anim_module.gd" id="7_tc4ob"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cgi0e"]
 shader = ExtResource("2_wp6qv")
@@ -114,6 +116,7 @@ _data = {
 }
 
 [node name="GameManger" type="Node" unique_id=1517116595]
+process_mode = 3
 script = ExtResource("1_enjny")
 max_pulse_radius = 5000.0
 open_duration = 5.0
@@ -173,5 +176,94 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
+[node name="Settings" type="MarginContainer" parent="CanvasLayer2" unique_id=267440932]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="CanvasLayer2/Settings" unique_id=691205901]
+self_modulate = Color(0.18864635, 0.2775224, 0.25233847, 1)
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer2/Settings/Panel" unique_id=701886902]
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 500.0
+
+[node name="Label" type="Label" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=44934354]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("4_pb1c1")
+theme_override_font_sizes/font_size = 72
+text = "Master:"
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=376449156]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+script = ExtResource("6_f1hhx")
+
+[node name="Label2" type="Label" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=1091956527]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("4_pb1c1")
+theme_override_font_sizes/font_size = 72
+text = "Music:"
+
+[node name="HSlider3" type="HSlider" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=1122807097]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+script = ExtResource("6_f1hhx")
+bus_name = "Music"
+
+[node name="Label3" type="Label" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=315434807]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("4_pb1c1")
+theme_override_font_sizes/font_size = 72
+text = "SFX:"
+
+[node name="HSlider2" type="HSlider" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=135707758]
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.1
+value = 0.5
+script = ExtResource("6_f1hhx")
+bus_name = "SFX"
+
+[node name="Container" type="Container" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=1537068016]
+custom_minimum_size = Vector2(0, 38.605)
+layout_mode = 2
+
+[node name="Close" type="Button" parent="CanvasLayer2/Settings/Panel/VBoxContainer" unique_id=1405432576]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_pb1c1")
+theme_override_font_sizes/font_size = 66
+text = "Quit"
+
+[node name="ButtonEffect" type="Node" parent="CanvasLayer2/Settings/Panel/VBoxContainer/Close" unique_id=396203926]
+script = ExtResource("7_tc4ob")
+can_change = false
+metadata/_custom_type_script = "uid://d6tt2yppvo7q"
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=233787016]
+process_mode = 3
 libraries/ = SubResource("AnimationLibrary_f1hhx")
+
+[connection signal="pressed" from="CanvasLayer2/Settings/Panel/VBoxContainer/Close" to="." method="_on_close_pressed"]

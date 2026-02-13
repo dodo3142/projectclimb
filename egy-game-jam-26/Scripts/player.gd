@@ -32,6 +32,8 @@ extends CharacterBody2D
 @export_range(0.0, 1.0) var sad_glide_gravity: float = 0.1
 @export var max_sad_gravity : float = 100
 @export var happy_explosion_height: float = 300.0
+@export var happy_min_explosion_height: float = 100.0 ## NEW: Minimum jump height
+@export var happy_charge_time: float = 1.5 ## NEW: Seconds to reach max charge
 @export var smash_speed: float = 1500.0
 
 @export_category("Visual Feel")
@@ -377,9 +379,11 @@ func perform_love_ability() -> void:
 func handle_happy_charge_mechanics(delta: float) -> void:
 	if Input.is_action_pressed("dash"):
 		happy_charge_timer += delta
-		var intensity = clamp(happy_charge_timer / 2.0, 0.0, 1.0)
-		var shake_amount = intensity * 5.0
 		
+		# Use the new variable instead of hardcoded 2.0
+		var intensity = clamp(happy_charge_timer / happy_charge_time, 0.0, 1.0)
+		
+		var shake_amount = intensity * 5.0
 		player_visual.position = Vector2(
 			randf_range(-shake_amount, shake_amount), 
 			randf_range(-shake_amount, shake_amount)
@@ -388,34 +392,41 @@ func handle_happy_charge_mechanics(delta: float) -> void:
 		var flash_speed = 15.0 + (intensity * 30.0)
 		var flash_val = (sin(happy_charge_timer * flash_speed) + 1.0) / 2.0
 		
-		# --- SOUND LOGIC ADDED HERE ---
-		# If brightness crosses 80% (0.8) this frame, play sound
 		if flash_val > 0.8 and last_flash_val <= 0.8:
 				$Audios/ChargeSound.pitch_scale = 1.0 + intensity
 				$Audios/ChargeSound.play()
 		
-		last_flash_val = flash_val # Remember for next frame
-		# -----------------------------
+		last_flash_val = flash_val
 		
 		if $PlayerVisual/Head:
 			var flash_color = Color.WHITE.lerp(Color(2, 2, 0, 1), flash_val) 
 			$PlayerVisual/Head.modulate = flash_color * (1.0 + intensity)
-
 	elif Input.is_action_just_released("dash"):
 		perform_happy_explosion()
 		reset_visual_offsets()
-		last_flash_val = 0.0 # Reset sound trigger
+		last_flash_val = 0.0 
 	else:
 		reset_visual_offsets()
-		last_flash_val = 0.0 # Reset sound trigger
+		last_flash_val = 0.0
 
 func perform_happy_explosion() -> void:
-	var intensity = clamp(happy_charge_timer / 2.0, 0.2, 1.0)
+	velocity.y = 0
+	
+	# Calculate percentage (0.0 to 1.0)
+	var charge_percent = clamp(happy_charge_timer / happy_charge_time, 0.0, 1.0)
+	
+	# Lerp between the MIN height and MAX height
+	# If you just tap the button (0%), you get exactly happy_min_explosion_height
+	var target_height = lerp(happy_min_explosion_height, happy_explosion_height, charge_percent)
+	
 	var explosion = MULTI_PARTICLE_EXAMPLE_2.instantiate()
 	get_parent().add_child(explosion)
 	explosion.global_position = global_position
-	velocity.y = -sqrt(2.0 * jump_gravity * happy_explosion_height) * intensity
-	apply_squash(jump_stretch) # Added squash
+	
+	# Calculate physics velocity for that specific height
+	velocity.y = -sqrt(2.0 * jump_gravity * target_height)
+	
+	apply_squash(jump_stretch)
 	change_state(State.JUMP)
 
 func reset_visual_offsets() -> void:

@@ -5,6 +5,12 @@
 [ext_resource type="Script" uid="uid://d6tt2yppvo7q" path="res://Scripts/button_anim_module.gd" id="2_art70"]
 [ext_resource type="Script" uid="uid://fkn284i44k0y" path="res://Scripts/Volume_Slider.gd" id="4_vs23j"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_1ss7y"]
+font = ExtResource("1_uh1vy")
+font_size = 75
+font_color = Color(1, 1, 1, 0)
+outline_size = 5
+
 [node name="MainMenu" type="Node2D" unique_id=843528889]
 script = ExtResource("1_1ss7y")
 
@@ -23,6 +29,12 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer" unique_id=1877180520]
+layout_mode = 2
+text = "4 Of Me"
+label_settings = SubResource("LabelSettings_1ss7y")
+horizontal_alignment = 1
 
 [node name="Play" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=508401679]
 layout_mode = 2
@@ -105,7 +117,7 @@ layout_mode = 2
 size_flags_vertical = 1
 max_value = 1.0
 step = 0.1
-value = 0.5
+value = 0.3
 script = ExtResource("4_vs23j")
 bus_name = "Music"
 
@@ -121,7 +133,7 @@ layout_mode = 2
 size_flags_vertical = 1
 max_value = 1.0
 step = 0.1
-value = 0.5
+value = 0.7
 script = ExtResource("4_vs23j")
 bus_name = "SFX"
 

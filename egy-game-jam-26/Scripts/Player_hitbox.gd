@@ -15,6 +15,7 @@ func _on_area_entered(area: Area2D) -> void:
 		die()
 	if area.is_in_group("Respawn"):
 		respawn_pos = area.global_position
+		GameManger.main_cam_update()
 
 func _on_area_exited(area: Area2D) -> void:
 	pass # Replace with function body.
@@ -28,10 +29,16 @@ func die():
 	add_child(death_splash2)
 	var tween = get_tree().create_tween().set_trans(Tween.TRANS_CUBIC)
 	$"../PlayerVisual".visible = false
+	Engine.time_scale = 1
+	var selected_personality = $"../CanvasLayer/SelectionWheel".get_selection()
+	player.set_physics_process(false)
+	player.set_process(false)
 	self.set_deferred("monitoring",false)
 	tween.tween_property(player,"global_position",respawn_pos,1)
-	tween.tween_callback(death_splash2.queue_free)
-	tween.tween_callback($"../PlayerVisual".show)
 	tween.tween_callback(func():
+		player.set_physics_process(true)
+		player.set_process(true)
+		death_splash2.queue_free()
+		$"../PlayerVisual".show()
 		self.monitoring = true 
 		)
