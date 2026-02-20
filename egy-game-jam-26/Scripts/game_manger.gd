@@ -66,8 +66,8 @@ func _process(delta: float) -> void:
 			Engine.time_scale = 0
 		IS_paused = not IS_paused
 
-func main_cam_update():
-	main_cam.start_pos = main_cam.global_position
+func main_cam_update(area):
+	main_cam.start_pos.y = area.global_position.y
 
 func ChangePersonality(new_personality: int) -> void:
 	current_personality = new_personality

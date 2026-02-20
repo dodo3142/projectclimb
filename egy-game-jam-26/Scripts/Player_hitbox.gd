@@ -15,7 +15,7 @@ func _on_area_entered(area: Area2D) -> void:
 		die()
 	if area.is_in_group("Respawn"):
 		respawn_pos = area.global_position
-		GameManger.main_cam_update()
+		GameManger.main_cam_update(area)
 
 func _on_area_exited(area: Area2D) -> void:
 	pass # Replace with function body.
